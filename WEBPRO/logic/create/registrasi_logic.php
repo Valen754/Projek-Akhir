@@ -1,6 +1,6 @@
 <?php
 // Include file koneksi database
-require_once '../../config/database.php';
+require_once '../../koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ambil data dari form registrasi
@@ -50,5 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Tutup koneksi
     $stmt->close();
     $conn->close();
+} else {
+    die('Metode request tidak valid.');
 }
+
+header('Location: ../../pages/login.php');
+exit();
 ?>
