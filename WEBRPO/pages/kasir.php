@@ -184,7 +184,7 @@
               Rp. 20.000
             </p>
             <p class="text-[10px]">
-              20 available
+              80 available
             </p>
           </li>
         </ul>
