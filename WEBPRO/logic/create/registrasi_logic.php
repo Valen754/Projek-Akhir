@@ -8,9 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $role = trim($_POST['role']); // Ambil role dari form
 
     // Validasi input
-    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
+    if (empty($username) || empty($email) || empty($password) || empty($confirm_password) || empty($role)) {
         die('Semua field harus diisi.');
     }
 
@@ -20,6 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($password !== $confirm_password) {
         die('Password dan konfirmasi password tidak cocok.');
+    }
+
+    // Validasi role
+    $allowed_roles = ['member', 'admin', 'kasir'];
+    if (!in_array($role, $allowed_roles)) {
+        die('Role tidak valid.');
     }
 
     // Hash password
@@ -38,11 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Simpan data ke database
     $query = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
+    $query = "INSERT INTO user (username, email, password, role) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('sss', $username, $email, $hashed_password);
+    $stmt->bind_param('ssss', $username, $email, $hashed_password, $role);
 
     if ($stmt->execute()) {
-        echo 'Registrasi berhasil. Silakan login.';
+        header('Location: ../../pages/login.php');
+        exit();
     } else {
         echo 'Terjadi kesalahan. Silakan coba lagi.';
     }
@@ -53,7 +62,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     die('Metode request tidak valid.');
 }
-
-header('Location: ../../pages/login.php');
-exit();
 ?>
