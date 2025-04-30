@@ -38,6 +38,14 @@
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
+                    <!-- Tambahkan dropdown untuk memilih role -->
+                    <div class="inputBx">
+                        <select name="role" id="role" required>
+                            <option value="member" selected>Member</option>
+                            <option value="admin">Admin</option>
+                            <option value="kasir">Kasir</option>
+                        </select>
+                    </div>
                     <div class="inputBx"> 
                         <input type="submit" name="submit" value="Register" id="submit">
                     </div>
