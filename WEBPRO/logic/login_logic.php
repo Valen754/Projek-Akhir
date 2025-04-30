@@ -6,13 +6,14 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 // Query data berdasarkan username
-$query = mysqli_query($conn, "SELECT * FROM users WHERE Username='$username'");
+$stmt = $conn->prepare("SELECT * FROM user WHERE Username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if (mysqli_num_rows($query) === 1) {
-    $data = mysqli_fetch_assoc($query);
-
-    // Verifikasi password
-    if (password_verify($password, $data['Password'])) {
+if ($result->num_rows === 1) {
+    $data = $result->fetch_assoc();
+    if ($password === $data['Password']) {
         $_SESSION['ID_User'] = $data['ID_User'];
         $_SESSION['Username'] = $data['Username'];
         $_SESSION['Role'] = $data['Role'];
@@ -23,10 +24,10 @@ if (mysqli_num_rows($query) === 1) {
                 header("Location: admin_dashboard.php");
                 break;
             case 'kasir':
-                header("Location: kasir_dashboard.php");
+                header("Location: kasir.php");
                 break;
             case 'member':
-                header("Location: member_dashboard.php");
+                header("Location: ../produk.php");
                 break;
             default:
                 echo "Role tidak dikenal.";

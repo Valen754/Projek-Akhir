@@ -6,14 +6,24 @@
     <meta charset="utf-8">
     <title>Login Page</title>
     <link rel="stylesheet" href="../css/login.css">
+    <style>
+    body, h2, input, a, span {
+        color: black !important;
+    }
+
+    input::placeholder {
+        color: #444 !important;
+    }
+</style>
+
 </head>
 <body>
    <section>
         <div class="box">
             <div class="form">
-                <img src="../logic/login.php" class="user" alt="">
+                <img src="" class="user" alt="">
                 <h2>Login to Your Account</h2>
-                <form action="dashboard.html" method="post">
+                <form action="../logic/login_logic.php" method="post">
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" required autofocus>
                         <img src="login-form/images/user.png" alt="">
@@ -21,7 +31,7 @@
                     <div class="inputBx">
                         <input type="password" name="password" placeholder="Password" id="password" required>
                         <img src="login-form/images/lock.png" alt="">
-                        <button type="button" id="toggleLoginPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: white;">
+                        <button type="button" id="toggleLoginPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: black;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -30,7 +40,7 @@
                     </div>
                 </form>
                 <div>
-                    <span style="float: left;"><a href="register.html">Don't have an account? Register</a></span>
+                    <span style="float: left;"><a href="registrasi.php">Don't have an account? Register</a></span>
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Cek apakah username atau email sudah terdaftar
-    $query = "SELECT * FROM users WHERE username = ? OR email = ?";
+    $query = "SELECT * FROM user WHERE username = ? OR email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('ss', $username, $email);
     $stmt->execute();
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Simpan data ke database
-    $query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    $query = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('sss', $username, $email, $hashed_password);
 
