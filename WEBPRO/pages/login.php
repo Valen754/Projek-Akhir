@@ -29,7 +29,7 @@
                         <input type="submit" name="submit" value="Login">
                     </div>
                 </form>
-                <div>
+                <div> 
                     <span style="float: left;"><a href="registrasi.php" style="color: black;">Don't have an account? Register</a></span>
                 </div>
             </div>
