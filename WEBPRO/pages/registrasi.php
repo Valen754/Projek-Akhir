@@ -14,7 +14,8 @@
             <div class="form">
                 <img src="login-form/images/profile.jpg" class="user" alt="">
                 <h2>Create a New Account</h2>
-                <form class="" action="login.html" method="post" enctype="multipart/form-data">
+                <!-- Form mengarah ke registrasi_logic.php -->
+                <form action="../logic/create/registrasi_logic.php" method="post" enctype="multipart/form-data">
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
                         <img src="login-form/images/user.png" alt="">
@@ -31,14 +32,14 @@
                         </button>
                     </div>
                     <div class="inputBx">
-                        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" oninput="validation()" required>
+                        <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm Password" oninput="validation()" required>
                         <img src="login-form/images/lock.png" alt="">
                         <button type="button" id="toggleConfirmPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: white;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
                     <div class="inputBx"> 
-                        <input type="submit" name="submit" value="Register" id="submit" disabled>
+                        <input type="submit" name="submit" value="Register" id="submit">
                     </div>
                 </form>
                 <div>
