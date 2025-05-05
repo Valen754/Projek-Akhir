@@ -1,3 +1,3 @@
 <?php
-include("pages/registrasi.php");
+include("pages/registrasi/registrasi.php");
 ?>
