@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Login Page</title>
-    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../../css/login.css">
     <style>
     body, h2, input, a, span {
         color: black !important;
@@ -23,7 +23,7 @@
             <div class="form">
                 <img src="" class="user" alt="">
                 <h2>Login to Your Account</h2>
-                <form action="../logic/login_logic.php" method="post">
+                <form action="logic/update/login_logic.php" method="post" enctype="multipart/form-data">
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" required autofocus>
                         <img src="login-form/images/user.png" alt="">

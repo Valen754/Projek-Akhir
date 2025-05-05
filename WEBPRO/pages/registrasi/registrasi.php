@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Register Page</title>
-    <link rel="stylesheet" href="../css/login.css">
-    <link rel="stylesheet" href="../js/register.js">
+    <link rel="stylesheet" href="../../css/login.css">
+    <link rel="stylesheet" href="../../js/register.js">
 </head>
 <body>
    <section>
@@ -15,7 +15,7 @@
                 <img src="login-form/images/profile.jpg" class="user" alt="">
                 <h2>Create a New Account</h2>
                 <!-- Form mengarah ke registrasi_logic.php -->
-                <form action="../logic/create/registrasi_logic.php" method="post" enctype="multipart/form-data">
+                <form action="logic/create/registrasi_logic.php" method="post" enctype="multipart/form-data">
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
                         <img src="login-form/images/user.png" alt="">
