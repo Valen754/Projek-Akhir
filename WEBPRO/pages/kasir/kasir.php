@@ -1,342 +1,507 @@
 <html lang="en">
-
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
-  <title>
-    Tapal Kuda
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tapal Kuda</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #1c2431;
+}
+
+
+  .container {
+  display: flex;          /* Menggunakan flexbox untuk menata elemen dalam satu baris */
+  height: 100vh;          /* Memastikan tinggi kontainer mengisi seluruh layar */
+}
+  /* Sidebar */
+  .sidebar {
+  background-color: #222b3a;
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0;
+  gap: 40px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  height: 100vh;          /* Mengisi seluruh tinggi layar */
+  position: relative;
+}
+
+  .sidebar button {
+    background: none;
+    border: none;
+    color: #e07b6c;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  /* Main content */
+  main {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100vh; /* Membuat main mengambil seluruh tinggi layar */
+  min-height: 100vh; /* Pastikan elemen ini minimal mengisi layar */
+}
+
+main header {
+  margin-bottom: 24px;
+}
+
+main header h1 {
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0 0 4px 0;
+}
+
+main header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+  nav.tabs {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  nav.tabs button {
+    background: none;
+    border: none;
+    color: #6b7280;
+    padding-bottom: 4px;
+    cursor: pointer;
+  }
+  nav.tabs button.active {
+    color: #e07b6c;
+    border-bottom: 2px solid #e07b6c;
+  }
+  .search-container {
+    margin-left: auto;
+    position: relative;
+    width: 240px;
+  }
+  .search-container input[type="search"] {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border-radius: 6px;
+    border: none;
+    background-color: #2a3345;
+    color: #9ca3af;
+    font-size: 14px;
+  }
+  .search-container input::placeholder {
+    color: #6b7280;
+  }
+  .search-container .icon-search {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-size: 14px;
+    pointer-events: none;
+  }
+  select.dine-in {
+    margin-left: 16px;
+    background-color: #2a3345;
+    border: none;
+    border-radius: 6px;
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  /* Choose Dishes */
+  section.choose-dishes h2 {
+    font-weight: 700;
+    color: white;
+    margin-bottom: 16px;
+  }
+  .dishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+    gap: 24px;
+  }
+  .dish-card {
+    background-color: #2a3345;
+    border-radius: 12px;
+    padding: 24px 24px 32px 24px;
+    text-align: center;
+    color: #9ca3af;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dish-card img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+  }
+  .dish-card h3 {
+    color: white;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+  .dish-card p.price {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+  }
+  .dish-card p.available {
+    margin: 0;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  /* Orders panel */
+  aside.orders-panel {
+  background-color: #2a3345;
+  width: 384px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;          /* Mengisi seluruh tinggi layar */
+  position: relative;
+}
+  aside.orders-panel header h2 {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 12px 0;
+  }
+  aside.orders-panel header h2 span {
+    color: #6b7280;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  nav.order-types {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  nav.order-types button {
+    border-radius: 8px;
+    border: none;
+    padding: 6px 16px;
+    cursor: pointer;
+    color: #9ca3af;
+    background-color: #3f4556;
+  }
+  nav.order-types button.active {
+    background-color: #e07b6c;
+    color: white;
+  }
+  ul.order-list {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  ul.order-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  ul.order-list li img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  ul.order-list li .order-info {
+    flex: 1;
+  }
+  ul.order-list li .order-info p.name {
+    margin: 0 0 4px 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+  }
+  ul.order-list li .order-info p.price {
+    margin: 0 0 6px 0;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  ul.order-list li .order-info input[type="text"] {
+    width: 100%;
+    background-color: #1c2431;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  ul.order-list li .order-info input::placeholder {
+    color: #6b7280;
+  }
+  ul.order-list li .order-qty-delete {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  ul.order-list li .order-qty-delete span.qty {
+    background-color: #1c2431;
+    color: #9ca3af;
+    font-size: 12px;
+    border-radius: 8px;
+    padding: 2px 8px;
+    user-select: none;
+  }
+  ul.order-list li .order-qty-delete button {
+    background: none;
+    border: none;
+    color: #e07b6c;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  ul.order-list li .order-qty-delete button:hover {
+    color: #f28a7a;
+  }
+  /* Footer */
+  aside.orders-panel footer {
+    border-top: 1px solid #374151;
+    padding-top: 24px;
+  }
+  aside.orders-panel footer .discount,
+  aside.orders-panel footer .subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  aside.orders-panel footer .subtotal {
+    font-weight: 700;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+  aside.orders-panel footer button {
+    width: 100%;
+    background-color: #e07b6c;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 0;
+    font-weight: 700;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  aside.orders-panel footer button:hover {
+    background-color: #d46a5a;
+  }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      min-height: auto;
+      border-radius: 0;
     }
-  </style>
+    .sidebar {
+      flex-direction: row;
+      width: 100%;
+      padding: 16px 0;
+      gap: 24px;
+      border-radius: 0;
+      justify-content: center;
+    }
+    main {
+      padding: 16px;
+    }
+    aside.orders-panel {
+      width: 100%;
+      border-radius: 0;
+      padding: 16px;
+      margin-top: 24px;
+    }
+    .dishes-grid {
+      grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
+      gap: 16px;
+    }
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
-
-<body class="bg-[#1E2532] text-[#D1D5DB] min-h-screen flex items-center justify-center p-4">
-  <div class="max-w-[1200px] w-full rounded-2xl bg-[#1E2532] flex flex-col md:flex-row overflow-hidden shadow-lg">
-    <!-- Left Sidebar -->
-    <aside class="bg-[#2B2F3A] w-16 flex flex-col items-center py-6 space-y-8 rounded-l-2xl">
-      <button aria-label="Cutlery" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-utensils">
-        </i>
-      </button>
-      <button aria-label="Home" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-home">
-        </i>
-      </button>
-      <button aria-label="Settings" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-cog">
-        </i>
-      </button>
-      <button aria-label="Clock" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-clock">
-        </i>
-      </button>
-      <button aria-label="Mail" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-envelope">
-        </i>
-      </button>
-      <button aria-label="Bell" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-bell">
-        </i>
-      </button>
-      <button aria-label="User" class="text-[#E37B6A] text-xl">
-        <i class="fas fa-user">
-        </i>
-      </button>
+<body>
+  <div class="container" role="main">
+    <aside class="sidebar" aria-label="Sidebar navigation">
+      <button aria-label="Hot Dishes"><i class="fas fa-utensils"></i></button>
+      <button aria-label="Home"><i class="fas fa-home"></i></button>
+      <button aria-label="Settings"><i class="fas fa-cog"></i></button>
+      <button aria-label="Clock"><i class="fas fa-clock"></i></button>
+      <button aria-label="Mail"><i class="fas fa-envelope"></i></button>
+      <button aria-label="Notification"><i class="fas fa-bell"></i></button>
+      <button aria-label="User"><i class="fas fa-user"></i></button>
     </aside>
-    <!-- Main Content -->
-    <main class="flex-1 bg-[#1E2532] p-6 md:p-8 flex flex-col md:flex-row gap-6">
-      <!-- Left main panel -->
-      <section class="flex-1 flex flex-col">
-        <header class="mb-6">
-          <h1 class="text-white font-semibold text-lg leading-6">
-            Tapal Kuda
-          </h1>
-          <p class="text-[#6B7280] text-xs mt-1">
-            Tuesday, 29 April 2025
-          </p>
-        </header>
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
-          <nav class="flex space-x-4 text-xs font-semibold text-[#9CA3AF]">
-            <button class="text-[]">
-
-            </button>
-            <button class="text-[]">
-
-            </button>
-            <button class="text-[#E37B6A] border-b-2 border-[#E37B6A] pb-1">
-              Hot Dishes
-            </button>
-            <button>
-              Cold Dishes
-            </button>
-            <button>
-              Beverages
-            </button>
-            <button>
-              Dessert
-            </button>
-          </nav>
-          <div class="relative w-full md:w-64">
-            <input
-              class="w-full rounded-md bg-[#2B2F3A] text-[#9CA3AF] text-xs py-2 pl-10 pr-3 placeholder-[#9CA3AF] focus:outline-none focus:ring-1 focus:ring-[#E37B6A]"
-              placeholder="Search for food, coffe, etc.." type="search" />
-            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs">
-            </i>
-          </div>
+    <main>
+      <header>
+        <h1>Tapal Kuda</h1>
+        <p>Tuesday, 29 April 2025</p>
+      </header>
+      <nav class="tabs" aria-label="Dish categories">
+        <button class="active" type="button">Hot Dishes</button>
+        <button type="button">Cold Dishes</button>
+        <button type="button">Beverages</button>
+        <button type="button">Dessert</button>
+        <div class="search-container">
+          <input type="search" placeholder="Search for food, coffe, etc.." aria-label="Search for food, coffee, etc." />
+          <i class="fas fa-search icon-search" aria-hidden="true"></i>
         </div>
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-white font-semibold text-sm">
-            Choose Dishes
-          </h2>
-          <button class="flex items-center gap-1 text-xs text-[#9CA3AF] bg-[#2B2F3A] rounded-md py-1 px-3"
-            type="button">
-            Dine In
-            <i class="fas fa-chevron-down text-xs">
-            </i>
-          </button>
-        </div>
-        <ul class="grid grid-cols-2 sm:grid-cols-3 gap-6">
-          <!-- Dish 1 -->
-          <li class="bg-[#2B2F3A] rounded-xl p-4 flex flex-col items-center text-center text-[#9CA3AF] text-xs">
-            <img alt="One Pot Chicken Biryani in a round bowl with yellow rice and chicken pieces"
-              class="w-24 h-24 rounded-full mb-3 object-cover" height="96" src="../asset/CAPPUCINO.jpg" width="96" />
-            <h3 class="text-white text-xs font-semibold mb-1">
-              Cappucino
-            </h3>
-            <p class="mb-1">
-              Rp. 15.000
-            </p>
-            <p class="text-[10px]">
-              30 available
-            </p>
-          </li>
-          <!-- Dish 2 -->
-          <li class="bg-[#2B2F3A] rounded-xl p-4 flex flex-col items-center text-center text-[#9CA3AF] text-xs">
-            <img alt="Fresh Corn Grill Tacos in a round bowl with grilled corn and toppings"
-              class="w-24 h-24 rounded-full mb-3 object-cover" height="96" src="../asset/ESPRESSO.jpg" width="96" />
-            <h3 class="text-white text-xs font-semibold mb-1">
-              Espresso
-            </h3>
-            <p class="mb-1">
-              Rp. 15.000
-            </p>
-            <p class="text-[10px]">
-              25 available
-            </p>
-          </li>
-          <!-- Dish 3 -->
-          <li class="bg-[#2B2F3A] rounded-xl p-4 flex flex-col items-center text-center text-[#9CA3AF] text-xs">
-            <img alt="Crispy Chicken Parmesan in a round bowl with crispy chicken and parmesan cheese"
-              class="w-24 h-24 rounded-full mb-3 object-cover" height="96" src="../asset/JAPAN.jpg" width="96" />
-            <h3 class="text-white text-xs font-semibold mb-1">
-              Japan
-            </h3>
-            <p class="mb-1">
-              Rp. 20.000
-            </p>
-            <p class="text-[10px]">
-              20 available
-            </p>
-          </li>
-          <!-- Dish 4 -->
-          <li class="bg-[#2B2F3A] rounded-xl p-4 flex flex-col items-center text-center text-[#9CA3AF] text-xs">
-            <img alt="Prawns Wrapped In Noodles in a round bowl with prawns and noodles"
-              class="w-24 h-24 rounded-full mb-3 object-cover" height="96" src="../asset/KOPI TUBRUK ARABIKA.jpg" width="96" />
-            <h3 class="text-white text-xs font-semibold mb-1">
-              Kopi Tubruk Arabika
-            </h3>
-            <p class="mb-1">
-              Rp. 20.000
-            </p>
-            <p class="text-[10px]">
-              35 available
-            </p>
-          </li>
-          <!-- Dish 5 -->
-          <li class="bg-[#2B2F3A] rounded-xl p-4 flex flex-col items-center text-center text-[#9CA3AF] text-xs">
-            <img alt="Spicy Ginger Szechuan Beef in a round bowl with beef and vegetables"
-              class="w-24 h-24 rounded-full mb-3 object-cover" height="96" src="../asset/Latte.jpg" width="96" />
-            <h3 class="text-white text-xs font-semibold mb-1">
-              Latte
-            </h3>
-            <p class="mb-1">
-              Rp. 15.000
-            </p>
-            <p class="text-[10px]">
-              15 available
-            </p>
-          </li>
-          <!-- Dish 6 -->
-          <li class="bg-[#2B2F3A] rounded-xl p-4 flex flex-col items-center text-center text-[#9CA3AF] text-xs">
-            <img alt="Sushi Spicy Tuna Roll in a round bowl with sushi rolls and lemon slice"
-              class="w-24 h-24 rounded-full mb-3 object-cover" height="96" src="../asset/SUKOMON.jpg" width="96" />
-            <h3 class="text-white text-xs font-semibold mb-1">
-              Sukomon
-            </h3>
-            <p class="mb-1">
-              Rp. 20.000
-            </p>
-            <p class="text-[10px]">
-              80 available
-            </p>
-          </li>
-        </ul>
-      </section>
-      <!-- Right panel -->
-      <section class="bg-[#2B2F3A] rounded-2xl w-full md:w-[360px] p-6 flex flex-col text-xs text-[#9CA3AF]">
-        <header class="flex justify-between items-center mb-6">
-          <h2 class="text-white font-semibold text-sm">
-            Orders
-            <span class="text-[#6B7280]">
-              #001
-            </span>
-          </h2>
-          <div class="flex gap-2">
-            <button class="bg-[#E37B6A] text-white rounded-md px-3 py-1 text-xs font-semibold" type="button">
-              Dine In
-            </button>
-            <button class="bg-[#3B3F4A] rounded-md px-3 py-1 text-xs font-semibold" type="button">
-              To Go
-            </button>
-            <button class="bg-[#3B3F4A] rounded-md px-3 py-1 text-xs font-semibold" type="button">
-              Delivery
-            </button>
-          </div>
-        </header>
-        <ul class="flex flex-col gap-4 flex-1 overflow-y-auto pr-1">
-          <!-- Order item 1 -->
-          <li class="flex gap-3">
-            <img alt="One Pot Chicken Biryani small round bowl with yellow rice and chicken pieces"
-              class="w-8 h-8 rounded-full object-cover mt-1" height="32" src="CAPPUCINO.jpg" width="32" />
-            <div class="flex-1">
-              <p class="text-white font-semibold truncate">
-                Cappucino
-              </p>
-              <p class="text-[#6B7280] text-[10px] mb-1">
-                Rp. 15.000
-              </p>
-              <textarea
-                class="w-full resize-none rounded-md bg-[#1E2532] text-[#9CA3AF] text-[10px] p-1 placeholder-[#6B7280] focus:outline-none"
-                placeholder="Less sugar bangg" rows="1">Less sugar aja yaa</textarea>
-            </div>
-            <div class="flex flex-col items-center justify-center gap-2">
-              <input class="w-10 text-center rounded-md bg-[#1E2532] text-white text-xs focus:outline-none" min="1"
-                type="number" value="1" />
-              <button aria-label="Delete One Pot Chicken Biryani" class="text-[#E37B6A] hover:text-red-500"
-                type="button">
-                <i class="fas fa-trash-alt">
-                </i>
-              </button>
-            </div>
-          </li>
-          <!-- Order item 2 -->
-          <li class="flex gap-3">
-            <img alt="Sushi Spicy Tuna Roll small round bowl with sushi rolls and lemon slice"
-              class="w-8 h-8 rounded-full object-cover mt-1" height="32" src="ESPRESSO1.jpg" width="32" />
-            <div class="flex-1">
-              <p class="text-white font-semibold truncate">
-                Espresso
-              </p>
-              <p class="text-[#6B7280] text-[10px] mb-1">
-                Rp. 15.000
-              </p>
-              <textarea
-                class="w-full resize-none rounded-md bg-[#1E2532] text-[#9CA3AF] text-[10px] p-1 placeholder-[#6B7280] focus:outline-none"
-                placeholder="Order Note..." rows="1"></textarea>
-            </div>
-            <div class="flex flex-col items-center justify-center gap-2">
-              <input class="w-10 text-center rounded-md bg-[#1E2532] text-white text-xs focus:outline-none" min="1"
-                type="number" value="3" />
-              <button aria-label="Delete Sushi Spicy Tuna Roll" class="text-[#E37B6A] hover:text-red-500" type="button">
-                <i class="fas fa-trash-alt">
-                </i>
-              </button>
-            </div>
-          </li>
-          <!-- Order item 3 -->
-          <li class="flex gap-3">
-            <img alt="Crispy Chicken Parmesan small round bowl with crispy chicken and parmesan cheese"
-              class="w-8 h-8 rounded-full object-cover mt-1" height="32" src="KOPI TUBRUK ARABIKA.jpg" width="32" />
-            <div class="flex-1">
-              <p class="text-white font-semibold truncate">
-                Kopi Tubruk Arabica
-              </p>
-              <p class="text-[#6B7280] text-[10px] mb-1">
-                Rp. 20.000
-              </p>
-              <textarea
-                class="w-full resize-none rounded-md bg-[#1E2532] text-[#9CA3AF] text-[10px] p-1 placeholder-[#6B7280] focus:outline-none"
-                placeholder="Order Note..." rows="1"></textarea>
-            </div>
-            <div class="flex flex-col items-center justify-center gap-2">
-              <input class="w-10 text-center rounded-md bg-[#1E2532] text-white text-xs focus:outline-none" min="1"
-                type="number" value="2" />
-              <button aria-label="Delete Crispy Chicken Parmesan" class="text-[#E37B6A] hover:text-red-500"
-                type="button">
-                <i class="fas fa-trash-alt">
-                </i>
-              </button>
-            </div>
-          </li>
-          <!-- Order item 4 -->
-          <li class="flex gap-3">
-            <img alt="Spicy Ginger Szechuan Beef small round bowl with beef and vegetables"
-              class="w-8 h-8 rounded-full object-cover mt-1" height="32" src="Latte.jpg" width="32" />
-            <div class="flex-1">
-              <p class="text-white font-semibold truncate">
-                Latte
-              </p>
-              <p class="text-[#6B7280] text-[10px] mb-1">
-                Rp. 15.000
-              </p>
-              <textarea
-                class="w-full resize-none rounded-md bg-[#1E2532] text-[#9CA3AF] text-[10px] p-1 placeholder-[#6B7280] focus:outline-none"
-                placeholder="Order Note..." rows="1"></textarea>
-            </div>
-            <div class="flex flex-col items-center justify-center gap-2">
-              <input class="w-10 text-center rounded-md bg-[#1E2532] text-white text-xs focus:outline-none" min="1"
-                type="number" value="1" />
-              <button aria-label="Delete Spicy Ginger Szechuan Beef" class="text-[#E37B6A] hover:text-red-500"
-                type="button">
-                <i class="fas fa-trash-alt">
-                </i>
-              </button>
-            </div>
-          </li>
-        </ul>
-        <div class="mt-6 border-t border-[#3B3F4A] pt-4">
-          <div class="flex justify-between mb-2">
-            <span>
-              Discount
-            </span>
-            <span>
-              Rp. 10.000
-            </span>
-          </div>
-          <div class="flex justify-between font-semibold text-white text-sm mb-6">
-            <span>
-              Sub total
-            </span>
-            <span>
-              Rp. 105.000
-            </span>
-          </div>
-          <button
-            class="w-full bg-[#E37B6A] text-white rounded-lg py-2 text-sm font-semibold hover:bg-[#d66a5a] transition-colors"
-            type="button">
-            Continue to Payment
-          </button>
+        <select class="dine-in" aria-label="Select dining option">
+          <option>Dine In</option>
+          <option>To Go</option>
+          <option>Delivery</option>
+        </select>
+      </nav>
+      <section class="choose-dishes" aria-label="Choose Dishes">
+        <h2>Choose Dishes</h2>
+        <div class="dishes-grid">
+          <article class="dish-card">
+            <img src="https://storage.googleapis.com/a1aa/image/49e0285c-95f3-422d-b3f1-b885c97899f9.jpg" alt="A cup of cappuccino coffee in a red cup on a saucer with coffee beans around" width="96" height="96" />
+            <h3>Cappucino</h3>
+            <p class="price">Rp. 15.000</p>
+            <p class="available">30 available</p>
+          </article>
+          <article class="dish-card">
+            <img src="https://storage.googleapis.com/a1aa/image/d58102ca-ea06-4f69-88e8-5c3af13016b9.jpg" alt="A glass of espresso coffee with coffee beans around on a table" width="96" height="96" />
+            <h3>Espresso</h3>
+            <p class="price">Rp. 15.000</p>
+            <p class="available">25 available</p>
+          </article>
+          <article class="dish-card">
+            <img src="https://storage.googleapis.com/a1aa/image/b3130950-f8f9-431d-e7c3-c370e2c1d6ff.jpg" alt="A glass of iced coffee with a slice of lime and coffee beans on table" width="96" height="96" />
+            <h3>Japan</h3>
+            <p class="price">Rp. 20.000</p>
+            <p class="available">20 available</p>
+          </article>
+          <article class="dish-card">
+            <img src="https://storage.googleapis.com/a1aa/image/0cd16336-44cd-42fa-9ab9-b95b64fe5ae0.jpg" alt="A blue cup of Kopi Tubruk Arabika coffee on saucer with coffee beans" width="96" height="96" />
+            <h3>Kopi Tubruk Arabika</h3>
+            <p class="price">Rp. 20.000</p>
+            <p class="available">35 available</p>
+          </article>
+          <article class="dish-card">
+            <img src="https://storage.googleapis.com/a1aa/image/7ba0a7e8-e3ca-4a85-2543-9a0bc4231536.jpg" alt="A cup of latte coffee with frothy milk on top and coffee beans" width="96" height="96" />
+            <h3>Latte</h3>
+            <p class="price">Rp. 15.000</p>
+            <p class="available">15 available</p>
+          </article>
+          <article class="dish-card">
+            <img src="https://storage.googleapis.com/a1aa/image/42de4c42-323a-4fc0-19f9-d8c0ea734b03.jpg" alt="A cup of black coffee with steam and a slice of lime on a white saucer" width="96" height="96" />
+            <h3>Sukomon</h3>
+            <p class="price">Rp. 20.000</p>
+            <p class="available">20 available</p>
+          </article>
         </div>
       </section>
     </main>
+    <aside class="orders-panel" aria-label="Orders panel">
+      <header>
+        <h2>Orders <span>#001</span></h2>
+        <nav class="order-types" aria-label="Order types">
+          <button class="active" type="button">Dine In</button>
+          <button type="button">To Go</button>
+          <button type="button">Delivery</button>
+        </nav>
+      </header>
+      <ul class="order-list">
+        <li>
+          <img src="https://storage.googleapis.com/a1aa/image/8294678e-e685-4081-dce2-181e85ee96b9.jpg" alt="Small image of a cup of cappuccino coffee in a red cup on a saucer with coffee beans around" width="40" height="40" />
+          <div class="order-info">
+            <p class="name">Cappucino</p>
+            <p class="price">Rp. 15.000</p>
+            <input type="text" placeholder="Less sugar aja yaa" value="Less sugar aja yaa" aria-label="Order note for Cappucino" />
+          </div>
+          <div class="order-qty-delete">
+            <span class="qty">1</span>
+            <button aria-label="Delete Cappucino order" type="button"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </li>
+        <li>
+          <img src="https://storage.googleapis.com/a1aa/image/4ef37ba9-80d1-4e0f-3f08-904ef555fbae.jpg" alt="Small image of a glass of espresso coffee with coffee beans around on a table" width="40" height="40" />
+          <div class="order-info">
+            <p class="name">Espresso</p>
+            <p class="price">Rp. 15.000</p>
+            <input type="text" placeholder="Order Note..." aria-label="Order note for Espresso" />
+          </div>
+          <div class="order-qty-delete">
+            <span class="qty">3</span>
+            <button aria-label="Delete Espresso order" type="button"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </li>
+        <li>
+          <img src="https://storage.googleapis.com/a1aa/image/2b314b52-7258-4e5d-ffb3-3c33c84c8a61.jpg" alt="Small image of a blue cup of Kopi Tubruk Arabika coffee on saucer with coffee beans" width="40" height="40" />
+          <div class="order-info">
+            <p class="name">Kopi Tubruk Arabica</p>
+            <p class="price">Rp. 20.000</p>
+            <input type="text" placeholder="Order Note..." aria-label="Order note for Kopi Tubruk Arabica" />
+          </div>
+          <div class="order-qty-delete">
+            <span class="qty">2</span>
+            <button aria-label="Delete Kopi Tubruk Arabica order" type="button"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </li>
+        <li>
+          <img src="https://storage.googleapis.com/a1aa/image/fb37ce92-8a2e-4f08-5c15-471e9ea4ac5a.jpg" alt="Small image of a cup of latte coffee with frothy milk on top and coffee beans" width="40" height="40" />
+          <div class="order-info">
+            <p class="name">Latte</p>
+            <p class="price">Rp. 15.000</p>
+            <input type="text" placeholder="Order Note..." aria-label="Order note for Latte" />
+          </div>
+          <div class="order-qty-delete">
+            <span class="qty">1</span>
+            <button aria-label="Delete Latte order" type="button"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </li>
+        <li>
+          <img src="https://storage.googleapis.com/a1aa/image/fb37ce92-8a2e-4f08-5c15-471e9ea4ac5a.jpg" alt="Small image of a cup of latte coffee with frothy milk on top and coffee beans" width="40" height="40" />
+          <div class="order-info">
+            <p class="name">Latte</p>
+            <p class="price">Rp. 15.000</p>
+            <input type="text" placeholder="Order Note..." aria-label="Order note for Latte" />
+          </div>
+          <div class="order-qty-delete">
+            <span class="qty">1</span>
+            <button aria-label="Delete Latte order" type="button"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </li>
+      </ul>
+      <footer>
+        <div class="discount">
+          <span>Discount</span>
+          <span>Rp. 10.000</span>
+        </div>
+        <div class="subtotal">
+          <span>Sub total</span>
+          <span>Rp. 105.000</span>
+        </div>
+        <button type="button">Continue to Payment</button>
+      </footer>
+    </aside>
   </div>
 </body>
-
 </html>
