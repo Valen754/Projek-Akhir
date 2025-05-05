@@ -373,7 +373,7 @@ main header p {
         </div>
         <select class="dine-in" aria-label="Select dining option">
           <option>Dine In</option>
-          <option>To Go</option>
+          <option>Take Away</option>
           <option>Delivery</option>
         </select>
       </nav>
@@ -381,37 +381,37 @@ main header p {
         <h2>Choose Dishes</h2>
         <div class="dishes-grid">
           <article class="dish-card">
-            <img src="https://storage.googleapis.com/a1aa/image/49e0285c-95f3-422d-b3f1-b885c97899f9.jpg" alt="A cup of cappuccino coffee in a red cup on a saucer with coffee beans around" width="96" height="96" />
+            <img src="../../asset/CAPPUCINO.jpg" />
             <h3>Cappucino</h3>
             <p class="price">Rp. 15.000</p>
             <p class="available">30 available</p>
           </article>
           <article class="dish-card">
-            <img src="https://storage.googleapis.com/a1aa/image/d58102ca-ea06-4f69-88e8-5c3af13016b9.jpg" alt="A glass of espresso coffee with coffee beans around on a table" width="96" height="96" />
+            <img src="../../asset/ESPRESSO.jpg" />
             <h3>Espresso</h3>
             <p class="price">Rp. 15.000</p>
             <p class="available">25 available</p>
           </article>
           <article class="dish-card">
-            <img src="https://storage.googleapis.com/a1aa/image/b3130950-f8f9-431d-e7c3-c370e2c1d6ff.jpg" alt="A glass of iced coffee with a slice of lime and coffee beans on table" width="96" height="96" />
+            <img src="../../asset/JAPAN.jpg"/>
             <h3>Japan</h3>
             <p class="price">Rp. 20.000</p>
             <p class="available">20 available</p>
           </article>
           <article class="dish-card">
-            <img src="https://storage.googleapis.com/a1aa/image/0cd16336-44cd-42fa-9ab9-b95b64fe5ae0.jpg" alt="A blue cup of Kopi Tubruk Arabika coffee on saucer with coffee beans" width="96" height="96" />
+            <img src="../../asset/KOPI TUBRUK ARABIKA.jpg"/>
             <h3>Kopi Tubruk Arabika</h3>
             <p class="price">Rp. 20.000</p>
             <p class="available">35 available</p>
           </article>
           <article class="dish-card">
-            <img src="https://storage.googleapis.com/a1aa/image/7ba0a7e8-e3ca-4a85-2543-9a0bc4231536.jpg" alt="A cup of latte coffee with frothy milk on top and coffee beans" width="96" height="96" />
+            <img src="../../asset/Latte.jpg" alt="A cup of latte coffee with frothy milk on top and coffee beans" width="96" height="96" />
             <h3>Latte</h3>
             <p class="price">Rp. 15.000</p>
             <p class="available">15 available</p>
           </article>
           <article class="dish-card">
-            <img src="https://storage.googleapis.com/a1aa/image/42de4c42-323a-4fc0-19f9-d8c0ea734b03.jpg" alt="A cup of black coffee with steam and a slice of lime on a white saucer" width="96" height="96" />
+            <img src="../../asset/SUKOMON.jpg" alt="A cup of black coffee with steam and a slice of lime on a white saucer" width="96" height="96" />
             <h3>Sukomon</h3>
             <p class="price">Rp. 20.000</p>
             <p class="available">20 available</p>
@@ -424,7 +424,7 @@ main header p {
         <h2>Orders <span>#001</span></h2>
         <nav class="order-types" aria-label="Order types">
           <button class="active" type="button">Dine In</button>
-          <button type="button">To Go</button>
+          <button type="button">Take Away</button>
           <button type="button">Delivery</button>
         </nav>
       </header>
@@ -478,17 +478,6 @@ main header p {
           </div>
         </li>
         <li>
-          <img src="https://storage.googleapis.com/a1aa/image/fb37ce92-8a2e-4f08-5c15-471e9ea4ac5a.jpg" alt="Small image of a cup of latte coffee with frothy milk on top and coffee beans" width="40" height="40" />
-          <div class="order-info">
-            <p class="name">Latte</p>
-            <p class="price">Rp. 15.000</p>
-            <input type="text" placeholder="Order Note..." aria-label="Order note for Latte" />
-          </div>
-          <div class="order-qty-delete">
-            <span class="qty">1</span>
-            <button aria-label="Delete Latte order" type="button"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </li>
       </ul>
       <footer>
         <div class="discount">
