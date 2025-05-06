@@ -4,9 +4,9 @@
         Tapal<span>Kuda</span>
     </a>
     <nav class="navbar">
-        <a href="../../Vemas(Homepage)/new tugas akhir/homepage/html/newhomepage1.html">Home</a>
+        <a href="../home/home.php">Home</a>
         <a href="../../Vemas(Homepage)/new tugas akhir/homepage/html/aboutus.html">About</a>
-        <a href="../../Vemas(Homepage)/new tugas akhir/homepage/html/menulist.html">Menu</a>
+        <a href="../menu/menu.php">Menu</a>
         <a href="../../Vemas(Homepage)/new tugas akhir/homepage/html/berita.html">News</a>
         <a href="../../Vemas(Homepage)/new tugas akhir/homepage/html/referensi.html">Reservasi</a>
         <a href="../../Vemas(Homepage)/new tugas akhir/homepage/html/contact.html">Contact</a>
