@@ -413,7 +413,7 @@
     </aside>
     <main>
       <header>
-        <h1>Tapal Kuda</h1>
+        <h1>Tapal Kudaa</h1>
         <p>Tuesday, 29 April 2025</p>
       </header>
       <nav class="tabs" aria-label="Dish categories">
