@@ -13,14 +13,32 @@
             <div class="form">
                 <img src="login-form/images/profile.jpg" class="user" alt="">
                 <h2>Create a New Account</h2>
-                <form class="" action="login.html" method="post" enctype="multipart/form-data">
+                <form action="logic/registrasi_logic.php" method="post" enctype="multipart/form-data">
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
                         <img src="login-form/images/user.png" alt="">
                     </div>
                     <div class="inputBx">
+                        <input type="text" name="nama" placeholder="Full Name" id="nama" oninput="validation()" required>
+                        <img src="login-form/images/user.png" alt="">
+                    </div>
+                    <div class="inputBx">
                         <input type="email" name="email" placeholder="Email" id="email" oninput="validation()" required>
                         <img src="login-form/images/email.png" alt="">
+                    </div>
+                    <div class="inputBx">
+                        <input type="text" name="no_telp" placeholder="Phone Number" id="no_telp" oninput="validation()" required>
+                        <img src="login-form/images/phone.png" alt="">
+                    </div>
+                    <div class="inputBx">
+                        <select name="gender" id="gender" oninput="validation()" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="inputBx">
+                        <textarea name="alamat" placeholder="Address" id="alamat" oninput="validation()" required></textarea>
                     </div>
                     <div class="inputBx">
                         <input type="password" name="password" id="password" placeholder="Password" oninput="validation()" required>
@@ -50,10 +68,14 @@
     <script type="text/javascript">
         function validation() {
             let username = document.getElementById("username").value;
+            let nama = document.getElementById("nama").value;
             let email = document.getElementById("email").value;
+            let no_telp = document.getElementById("no_telp").value;
+            let gender = document.getElementById("gender").value;
+            let alamat = document.getElementById("alamat").value;
             let pass = document.getElementById("password").value;
             let confirmPass = document.getElementById("confirmPassword").value;
-            if (username != "" && email != "" && pass != "" && confirmPass != "" && pass === confirmPass) {
+            if (username != "" && nama != "" && email != "" && no_telp != "" && gender != "" && alamat != "" && pass != "" && confirmPass != "" && pass === confirmPass) {
                 document.getElementById("submit").disabled = false;
             } else {
                 document.getElementById("submit").disabled = true;

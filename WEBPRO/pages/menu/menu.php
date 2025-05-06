@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tapal Kuda | Menu</title>
-    <link href="../css/menu.css" rel="stylesheet">
+    <link href="../../css/menu.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
     <!--BAGIAN NAVBAR-->
     <?php
-        include '../views/header.php';
+        include '../../views/header.php';
     ?>
 
     <!-- BANNER -->
@@ -2187,16 +2187,15 @@
         </div>
     </div>
 
-
     <!-- FOOTER -->
     <?php
-        include '../views/footer.php';
+        include '../../views/footer.php';
     ?>
 
     <!-- NOTIFICATION -->
     <div id="notification" class="notification" style="display: none;"></div>
 
-    <script src="menu.js"></script>
+    <script src="../../js/menu.js"></script>
 </body>
 
 </html>

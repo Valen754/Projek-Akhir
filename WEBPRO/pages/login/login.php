@@ -17,8 +17,7 @@
             <div class="form">
                 <img src="login-form/images/profile.jpg" class="user" alt="">
                 <h2>Login to your Account</h2>
-                <form class="" action="../Vemas(Homepage)/new tugas akhir/homepage/html/profil.html" method="post"
-                    enctype="multipart/form-data">
+                <form action="logic/login_logic.php" method="post">
 
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()"
@@ -41,7 +40,7 @@
                 </form>
                 <div style="margin-top: 20px;">
                     <span style="float: left;"><a href="reset-password.html">Forgot Password</a></span>
-                    <span style="float: right;"><a href="register.html">Register Here</a></span>
+                    <span style="float: right;"><a href="registrasi.php">Register Here</a></span>
                 </div>
 
             </div>
