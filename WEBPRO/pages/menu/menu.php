@@ -24,13 +24,54 @@
 
     <!-- TAB CARD -->
     <div class="container">
+        <!-- KATEGORI -->
+        <ul class="nav-pills">
+            <div class="kategori">PRODUCT CATEGORIES</div>
+            <li><a class="nav-link active" data-tab="semua">All<span>27</span></a></li>
+            <li><a class="nav-link" data-tab="kopi">Coffe<span>11</span></a></li>
+            <li><a class="nav-link" data-tab="nonkopi">Non Coffe<span>5</span></a></li>
+            <li><a class="nav-link" data-tab="makanan">Foods<span>5</span></a></li>
+            <li><a class="nav-link" data-tab="cemilan">Snacks<span>6</span></a></li>
+            <div class="pilter">FILTER BY PRICE</div>
+            <div class="price-filter">
+                <!-- Range slider dengan dua pointer -->
+                <div class="slide-control">
+                    <input id="min-price" type="range" min="0" max="27000" step="500" value="0" />
+                    <input id="max-price" type="range" min="0" max="27000" step="500" value="27000" />
+                </div>
+                <!-- Container untuk tombol dan teks harga -->
+                <div class="filter-container">
+                    <button class="btn-filter" id="filter-btn">FILTER</button>
+                    <div class="price--" id="price-value">Price: Rp0 - Rp27.000</div>
+                </div>
+            </div>
+        </ul>
         <!-- PRODUK -->
         <div class="tab-content">
             <div class="tab-pane active" id="semua">
                 <div class="row">
                     <?php
-                    // Query untuk mengambil semua data dari tabel menu
-                    $sql = "SELECT * FROM menu";
+                    // Query dasar
+                    $sql = "SELECT * FROM menu WHERE 1=1";
+
+                    // Filter berdasarkan kategori
+                    if (isset($_GET['type']) && !empty($_GET['type'])) {
+                        $type = $_GET['type'];
+                        $sql .= " AND type = '$type'";
+                    }
+
+                    // Filter berdasarkan harga minimum
+                    if (isset($_GET['min_price']) && is_numeric($_GET['min_price'])) {
+                        $min_price = $_GET['min_price'];
+                        $sql .= " AND price >= $min_price";
+                    }
+
+                    // Filter berdasarkan harga maksimum
+                    if (isset($_GET['max_price']) && is_numeric($_GET['max_price'])) {
+                        $max_price = $_GET['max_price'];
+                        $sql .= " AND price <= $max_price";
+                    }
+
                     $result = $conn->query($sql);
 
                     if ($result->num_rows > 0) {
@@ -56,13 +97,6 @@
                                                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                                                 </svg>
                                             </a>
-                                            <div class="btn btn-outline-warning" id="openModal">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                                    fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
-                                                </svg>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -82,7 +116,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- FOOTER -->
     <?php
     include '../../views/footer.php';
