@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <title>Register Page</title>
     <link rel="stylesheet" href="../../css/login.css">
-    <link rel="stylesheet" href="../../js/register.js">
 </head>
 <body>
    <section>
@@ -14,8 +13,7 @@
             <div class="form">
                 <img src="login-form/images/profile.jpg" class="user" alt="">
                 <h2>Create a New Account</h2>
-                <!-- Form mengarah ke registrasi_logic.php -->
-                <form action="logic/create/registrasi_logic.php" method="post" enctype="multipart/form-data">
+                <form class="" action="login.html" method="post" enctype="multipart/form-data">
                     <div class="inputBx">
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
                         <img src="login-form/images/user.png" alt="">
@@ -32,22 +30,14 @@
                         </button>
                     </div>
                     <div class="inputBx">
-                        <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm Password" oninput="validation()" required>
+                        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" oninput="validation()" required>
                         <img src="login-form/images/lock.png" alt="">
                         <button type="button" id="toggleConfirmPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: white;">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
-                    <!-- Tambahkan dropdown untuk memilih role -->
-                    <div class="inputBx">
-                        <select name="role" id="role" required>
-                            <option value="member" selected>Member</option>
-                            <option value="admin">Admin</option>
-                            <option value="kasir">Kasir</option>
-                        </select>
-                    </div>
                     <div class="inputBx"> 
-                        <input type="submit" name="submit" value="Register" id="submit">
+                        <input type="submit" name="submit" value="Register" id="submit" disabled>
                     </div>
                 </form>
                 <div>
@@ -57,5 +47,34 @@
         </div>
     </section>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function validation() {
+            let username = document.getElementById("username").value;
+            let email = document.getElementById("email").value;
+            let pass = document.getElementById("password").value;
+            let confirmPass = document.getElementById("confirmPassword").value;
+            if (username != "" && email != "" && pass != "" && confirmPass != "" && pass === confirmPass) {
+                document.getElementById("submit").disabled = false;
+            } else {
+                document.getElementById("submit").disabled = true;
+            }
+        }
+
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('password');
+            const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', passwordFieldType);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            const confirmPasswordFieldType = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', confirmPasswordFieldType);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 </html>
