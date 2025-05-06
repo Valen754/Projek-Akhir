@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Table Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/admin.css">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        main {
+            margin: 20px auto;
+            width: 90%;
+        }
+        table {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+        <?php include '../../views/admin/header.php'; ?>
+        <?php include '../../views/admin/sidebar.php'; ?>
+
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Data</a>
+                                </div>
+                                <div>
+                                    <button class="btn btn-success" id="downloadPdf">Download PDF</button>
+                                </div>
+                            </div>
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>ID Menu</th>
+                                        <th>Nama Menu</th>
+                                        <th>Harga</th>
+                                        <th>Stok</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>MNU001</td>
+                                        <td>Kopi Tubruk Robusta</td>
+                                        <td>Rp 12.000</td>
+                                        <td>20</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>MNU002</td>
+                                        <td>Kopi Tubruk Arabika</td>
+                                        <td>Rp 14.000</td>
+                                        <td>12</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>MNU003</td>
+                                        <td>Roti Bakar</td>
+                                        <td>Rp 13.000</td>
+                                        <td>10</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>MNU004</td>
+                                        <td>Teh Manis</td>
+                                        <td>Rp 7.000</td>
+                                        <td>13</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>MNU005</td>
+                                        <td>Lemon Tea</td>
+                                        <td>Rp 10.000</td>
+                                        <td>25</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>MNU006</td>
+                                        <td>Taro</td>
+                                        <td>Rp 17.000</td>
+                                        <td>15</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>MNU007</td>
+                                        <td>Yellow Ginger</td>
+                                        <td>Rp 17.000</td>
+                                        <td>0</td>
+                                        <td><span class="badge bg-danger">Habis</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>MNU008</td>
+                                        <td>Matcha</td>
+                                        <td>Rp 17.000</td>
+                                        <td>20</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td>MNU009</td>
+                                        <td>Coklat Latte</td>
+                                        <td>Rp 17.000</td>
+                                        <td>19</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td>MNU010</td>
+                                        <td>Wedang</td>
+                                        <td>Rp 5.000</td>
+                                        <td>30</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>11</td>
+                                        <td>MNU011</td>
+                                        <td>Sukomon</td>
+                                        <td>Rp 20.000</td>
+                                        <td>8</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>12</td>
+                                        <td>MNU012</td>
+                                        <td>Cappucino</td>
+                                        <td>Rp 22.000</td>
+                                        <td>20</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>13</td>
+                                        <td>MNU013</td>
+                                        <td>Es Kopi Susu</td>
+                                        <td>Rp 22.000</td>
+                                        <td>20</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>14</td>
+                                        <td>MNU014</td>
+                                        <td>Espresso</td>
+                                        <td>Rp 14.000</td>
+                                        <td>23</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>15</td>
+                                        <td>MNU015</td>
+                                        <td>Latte</td>
+                                        <td>Rp 25.000</td>
+                                        <td>22</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>16</td>
+                                        <td>MNU016</td>
+                                        <td>Americano</td>
+                                        <td>Rp 19.000</td>
+                                        <td>21</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>17</td>
+                                        <td>MNU017</td>
+                                        <td>Vietnam Drip</td>
+                                        <td>Rp 19.000</td>
+                                        <td>0</td>
+                                        <td><span class="badge bg-danger">Habis</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>18</td>
+                                        <td>MNU018</td>
+                                        <td>Chciken Teriyaki</td>
+                                        <td>Rp 20.000</td>
+                                        <td>30</td>
+                                        <td><span class="badge bg-primary">Tersedia</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <?php include '../../views/admin/footer.php'; ?>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Data Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="editIdMenu" class="form-label">ID Menu</label>
+                            <input type="text" class="form-control" id="editIdMenu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editNamaMenu" class="form-label">Nama Menu</label>
+                            <input type="text" class="form-control" id="editNamaMenu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editHarga" class="form-label">Harga</label>
+                            <input type="text" class="form-control" id="editHarga">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editQuantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="editQuantity">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-select" id="editStatus">
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="Habis">Habis</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="edit">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add Data Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="addIdMenu" class="form-label">ID Menu</label>
+                            <input type="text" class="form-control" id="addIdMenu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addNamaMenu" class="form-label">Nama Menu</label>
+                            <input type="text" class="form-control" id="addNamaMenu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addHarga" class="form-label">Harga</label>
+                            <input type="text" class="form-control" id="addHarga">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addQuantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="addQuantity">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addStatus" class="form-label">Status</label>
+                            <select class="form-select" id="addStatus">
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="Habis">Habis</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="simpan">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Delete -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus data ini?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmDownloadModal" tabindex="-1" aria-labelledby="confirmDownloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDownloadModalLabel">Confirm Download</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to download the PDF?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmDownload">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="../../js/table-menu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/chart-area-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="../../js/datatables-simple-demo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        // notifikasi delete modal
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            alert('Data berhasil dihapus!');
+            // Tambahkan logika penghapusan data di sini
+            // ...
+            // Tutup modal
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.hide();
+            // Redirect ke halaman tabel
+            window.location.href = 'table-menu.html';
+        });
+
+        // notifikasi edit modal
+        document.getElementById('edit').addEventListener('click', function() {
+            alert('Data berhasil diubah!');
+            // Tambahkan logika penghapusan data di sini
+            // ...
+            // Tutup modal
+            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.hide();
+            // Redirect ke halaman tabel
+            window.location.href = 'table-menu.html';
+        });
+
+        // notikasi add modal
+        document.getElementById('simpan').addEventListener('click', function() {
+            alert('Data berhasil ditambahkan!');
+            // Tambahkan logika penghapusan data di sini
+            // ...
+            // Tutup modal
+            var addModal = new bootstrap.Modal(document.getElementById('addModal'));
+            addModal.hide();
+            // Redirect ke halaman tabel
+            window.location.href = 'table-menu.html';
+        });
+
+        // download PDF
+        document.getElementById('downloadPdf').addEventListener('click', function() {
+            var confirmDownloadModal = new bootstrap.Modal(document.getElementById('confirmDownloadModal'));
+            confirmDownloadModal.show();
+        });
+
+        document.getElementById('confirmDownload').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.autoTable({ html: '#datatablesSimple' });
+            doc.save('table-menu.pdf');
+
+            var confirmDownloadModal = new bootstrap.Modal(document.getElementById('confirmDownloadModal'));
+            confirmDownloadModal.hide();
+            window.location.href = 'table-menu.html';
+        });
+    </script>
+</body>
+</html>
