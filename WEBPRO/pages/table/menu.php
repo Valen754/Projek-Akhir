@@ -1,30 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Table Menu</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../css/admin.css">
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        main {
-            margin: 20px auto;
-            width: 90%;
-        }
-
-        table {
-            margin: 0 auto;
-        }
-    </style>
-</head>
-
-<body class="sb-nav-fixed">
     <?php
     //bagian header
     include '../../views/admin/header.php';
@@ -401,60 +374,6 @@
         crossorigin="anonymous"></script>
     <script src="../../js/datatables-simple-demo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
-    <script>
-        // notifikasi delete modal
-        document.getElementById('confirmDelete').addEventListener('click', function () {
-            alert('Data berhasil dihapus!');
-            // Tambahkan logika penghapusan data di sini
-            // ...
-            // Tutup modal
-            var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.hide();
-            // Redirect ke halaman tabel
-            window.location.href = 'table-menu.html';
-        });
-
-        // notifikasi edit modal
-        document.getElementById('edit').addEventListener('click', function () {
-            alert('Data berhasil diubah!');
-            // Tambahkan logika penghapusan data di sini
-            // ...
-            // Tutup modal
-            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            editModal.hide();
-            // Redirect ke halaman tabel
-            window.location.href = 'table-menu.html';
-        });
-
-        // notikasi add modal
-        document.getElementById('simpan').addEventListener('click', function () {
-            alert('Data berhasil ditambahkan!');
-            // Tambahkan logika penghapusan data di sini
-            // ...
-            // Tutup modal
-            var addModal = new bootstrap.Modal(document.getElementById('addModal'));
-            addModal.hide();
-            // Redirect ke halaman tabel
-            window.location.href = 'table-menu.html';
-        });
-
-        // download PDF
-        document.getElementById('downloadPdf').addEventListener('click', function () {
-            var confirmDownloadModal = new bootstrap.Modal(document.getElementById('confirmDownloadModal'));
-            confirmDownloadModal.show();
-        });
-
-        document.getElementById('confirmDownload').addEventListener('click', function () {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.autoTable({ html: '#datatablesSimple' });
-            doc.save('table-menu.pdf');
-
-            var confirmDownloadModal = new bootstrap.Modal(document.getElementById('confirmDownloadModal'));
-            confirmDownloadModal.hide();
-            window.location.href = 'table-menu.html';
-        });
-    </script>
 </body>
 
 </html>
