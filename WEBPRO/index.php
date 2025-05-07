@@ -3,7 +3,7 @@ session_start();
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['role'])) {
-    header("Location: pages/login.php"); // Redirect ke halaman login jika belum login
+    header("Location: pages/home/home.php"); // Redirect ke halaman login jika belum login
     exit();
 }
 
