@@ -37,55 +37,133 @@
 
         ?>
 
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Data</a>
-                                </div>
-                                <div>
-                                    <button class="btn btn-success" id="downloadPdf">Download PDF</button>
-                                </div>
+<div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Data</a>
+        </div>
+    <div>
+        <button class="btn btn-success" id="downloadPdf">Download PDF</button>
+    </div>
+</div>
+
+<?php if (isset($_GET['msg']) && $_GET['msg'] === 'updated') : ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Data berhasil diperbarui!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
+
+
+<table id="datatablesSimple">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama Menu</th>
+            <th>Foto</th>
+            <th>Harga</th>
+            <th>Stok</th>
+            <th>Kategori</th>
+            <th>Deskripsi</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $no = 1;
+        $query = mysqli_query($conn, "SELECT * FROM menu");
+        while ($row = mysqli_fetch_assoc($query)) {
+            $statusBadge = ($row['status'] === 'tersedia') ? 'primary' : 'danger';
+        ?>
+        <tr>
+            <td><?= $no ?></td>
+            <td><?= $row['nama'] ?></td>
+            <td><img src="../../asset/<?= $row['url_foto'] ?>" width="60" alt="Foto Menu"></td>
+            <td>Rp <?= number_format($row['price'], 0, ',', '.') ?></td>
+            <td><?= $row['quantity'] ?></td>
+            <td><?= $row['type'] ?></td>
+            <td><?= $row['deskripsi'] ?></td>
+            <td><span class="badge bg-<?= $statusBadge ?>"><?= $row['status'] ?></span></td>
+            <td>
+                <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $row['id'] ?>">Edit</a>
+                <a href="delete-menu.php?id=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus?')">Delete</a>
+            </td>
+        </tr>
+
+        <!-- Modal Edit -->
+        <div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1" aria-labelledby="editModalLabel<?= $row['id'] ?>" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="logic/edit-menu.php" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel<?= $row['id'] ?>">Edit Menu</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                            <input type="hidden" name="url_foto_lama" value="<?= $row['url_foto'] ?>">
+
+                            <div class="mb-3">
+                                <label class="form-label">Nama</label>
+                                <input type="text" name="nama" class="form-control" value="<?= $row['nama'] ?>" required>
                             </div>
-                            <table id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Menu</th>
-                                        <th>Foto</th>
-                                        <th>Harga</th>
-                                        <th>Stok</th>
-                                        <th>kategori</th>
-                                        <th>Deskripsi</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+
+                            <div class="mb-3">
+                                <label class="form-label">Foto (Kosongkan jika tidak diubah)</label>
+                                <input type="file" name="foto" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Jenis</label>
+                                <select name="type" class="form-select" required>
                                     <?php
-                                    $no = 1;
-                                    $query = mysqli_query($conn, "SELECT * FROM menu");
-                                    while ($row = mysqli_fetch_assoc($query)) {
-                                        $statusBadge = ($row['status'] === 'Tersedia') ? 'primary' : 'danger';
-                                        echo "<tr>
-                                                <td>{$no}</td>
-                                                <td>{$row['nama']}</td>
-                                                <td><img src='../../asset/{$row['url_foto']}' width='60' alt='Foto Menu'></td>
-                                                <td>Rp " . number_format($row['price'], 0, ',', '.') . "</td>
-                                                <td>{$row['quantity']}</td>
-                                                <td>{$row['type']}</td>
-                                                <td>{$row['deskripsi']}</td>
-                                                <td>{$row['status']}</td>
-                                                <td><span class='badge bg-{$statusBadge}'>{$row['status']}</span></td>
-                                                <td>";
-                                                    echo "<a href='#' class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#editModal" . $row['id'] . "'>Edit</a>";
-                                                    echo "<a href='delete-menu.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Yakin ingin hapus?\")'>Delete</a>
-                                                </td>";
-                                            echo "</tr>";
-                                        $no++;
+                                    $types = ['makanan_berat', 'minuman', 'cemilan', 'kopi'];
+                                    foreach ($types as $type) {
+                                        $selected = $row['type'] === $type ? 'selected' : '';
+                                        echo "<option value='$type' $selected>$type</option>";
                                     }
                                     ?>
-                                </tbody>
-                            </table>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Harga</label>
+                                <input type="text" name="price" class="form-control" value="<?= $row['price'] ?>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Quantity</label>
+                                <input type="number" name="quantity" class="form-control" value="<?= $row['quantity'] ?>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea name="deskripsi" class="form-control" required><?= $row['deskripsi'] ?></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="tersedia" <?= $row['status'] === 'tersedia' ? 'selected' : '' ?>>Tersedia</option>
+                                    <option value="habis" <?= $row['status'] === 'habis' ? 'selected' : '' ?>>Habis</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+        <?php $no++; } ?>
+    </tbody>
+</table>
+
                         </div>
                     </div>
                 </div>
@@ -103,7 +181,7 @@ if (isset($_GET['edit_id'])) {
     if ($data) {
 ?>
 <!-- Modal Edit -->
-<div class="modal fade show" id="editModalPHP" tabindex="-1" aria-labelledby="editModalLabel" aria-modal="true" style="display: block;">
+<div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1" aria-labelledby="editModalLabel<?= $row['id'] ?>" aria-hidden="true">
   <div class="modal-dialog">
     <form action="edit-menu.php" method="POST" enctype="multipart/form-data" class="modal-content">
       <div class="modal-header">
@@ -168,14 +246,6 @@ if (isset($_GET['edit_id'])) {
   </div>
 </div>
 
-<!-- Tambahkan sedikit script agar modal ditampilkan langsung -->
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const modal = document.getElementById('editModalPHP');
-    const modalBootstrap = new bootstrap.Modal(modal);
-    modalBootstrap.show();
-  });
-</script>
 <?php
     }
 }
@@ -283,7 +353,7 @@ if (isset($_GET['edit_id'])) {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/table-menu.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="assets/demo/chart-area-demo.js"></script>
