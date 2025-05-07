@@ -69,20 +69,6 @@
                     Snacks <span>(<?php echo isset($menuCounts['cemilan']) ? $menuCounts['cemilan'] : 0; ?>)</span>
                 </a>
             </li>
-            <div class="price-filter">
-                <!-- Range slider dengan dua pointer -->
-                <div class="slide-control">
-                    <input id="min-price" type="range" min="0" max="27000" step="500"
-                        value="<?php echo isset($_GET['min_price']) ? $_GET['min_price'] : 0; ?>" />
-                    <input id="max-price" type="range" min="0" max="27000" step="500"
-                        value="<?php echo isset($_GET['max_price']) ? $_GET['max_price'] : 27000; ?>" />
-                </div>
-                <!-- Container untuk tombol dan teks harga -->
-                <div class="filter-container">
-                    <button class="btn-filter" id="filter-btn">FILTER</button>
-                    <div class="price--" id="price-value">Price: Rp0 - Rp27.000</div>
-                </div>
-            </div>
         </ul>
 
         <!-- PRODUK -->
@@ -97,18 +83,6 @@
                     if (isset($_GET['type']) && !empty($_GET['type'])) {
                         $type = $_GET['type'];
                         $sql .= " AND type = '$type'";
-                    }
-
-                    // Filter berdasarkan harga minimum
-                    if (isset($_GET['min_price']) && is_numeric($_GET['min_price'])) {
-                        $min_price = $_GET['min_price'];
-                        $sql .= " AND price >= $min_price";
-                    }
-
-                    // Filter berdasarkan harga maksimum
-                    if (isset($_GET['max_price']) && is_numeric($_GET['max_price'])) {
-                        $max_price = $_GET['max_price'];
-                        $sql .= " AND price <= $max_price";
                     }
 
                     $result = $conn->query($sql);
@@ -134,7 +108,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                                     fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                                     <path
-                                                        d="M11.742 10.344a6.5 6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                                                 </svg>
                                             </a>
                                             <div class="btn btn-outline-warning" id="openModal"> <svg
