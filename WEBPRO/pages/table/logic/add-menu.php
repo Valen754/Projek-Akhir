@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   VALUES ('$nama', '$db_path', '$type', '$price', '$quantity', '$deskripsi', '$status')";
 
         if (mysqli_query($conn, $query)) {
-            header("Location: ../menu.php");
+            header("Location: ../menu.php?msg=added");
             exit;
         } else {
             echo "Gagal menyimpan data: " . mysqli_error($conn);

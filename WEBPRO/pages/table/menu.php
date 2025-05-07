@@ -47,12 +47,33 @@
     </div>
 </div>
 
-<?php if (isset($_GET['msg']) && $_GET['msg'] === 'updated') : ?>
+<?php 
+    //notifikasi berhasil edit menu
+    if (isset($_GET['msg']) && $_GET['msg'] === 'updated') : ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        Data berhasil diperbarui!
+        menu berhasil diperbarui!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
+
+<?php 
+    //notifikasi berhasil hapus menu
+    if (isset($_GET['msg']) && $_GET['msg'] === 'deleted') : ?>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        menu berhasil dihapus!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
+<?php 
+    //notifikasi berhasil tambah menu
+    if (isset($_GET['msg']) && $_GET['msg'] === 'added') : ?>
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        menu berhasil ditambah!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
 
 
 
@@ -88,7 +109,7 @@
             <td><span class="badge bg-<?= $statusBadge ?>"><?= $row['status'] ?></span></td>
             <td>
                 <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $row['id'] ?>">Edit</a>
-                <a href="delete-menu.php?id=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus?')">Delete</a>
+                <a href="logic/delete-menu.php?id=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus?')">Delete</a>
             </td>
         </tr>
 
