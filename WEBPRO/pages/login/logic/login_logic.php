@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Arahkan berdasarkan role
             if ($dataUser['role'] == 'admin') {
-                header("Location: ../../home/home.php"); // Folder admin
+                header("Location: ../../admin/menu.php"); // Folder admin
             } elseif ($dataUser['role'] == 'kasir') {
                 header("Location: ../../kasir/kasir.php"); // Folder kasir
             } else {

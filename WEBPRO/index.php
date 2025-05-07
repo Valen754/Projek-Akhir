@@ -9,7 +9,7 @@ if (!isset($_SESSION['role'])) {
 
 // Daftar halaman yang diizinkan untuk setiap role
 $role_pages = [
-    'admin' => ['about', 'mahasiswa', 'addmahasiswa', 'editmahasiswa', 'login', 'home', 'menu','admin'], // Admin boleh mengakses semua halaman
+    'admin' => ['about', 'mahasiswa', 'addmahasiswa', 'editmahasiswa', 'login', 'home','admin'], // Admin boleh mengakses semua halaman
     'kasir' => ['kasir'], // Kasir hanya boleh mengakses halaman kasir
     'member' => ['home', 'menu', 'keranjang', 'detail'], // Member hanya boleh mengakses halaman tertentu
 ];
