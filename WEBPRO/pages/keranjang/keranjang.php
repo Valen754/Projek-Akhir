@@ -12,7 +12,7 @@
 <body>
     <!--BAGIAN NAVBAR-->
     <?php
-        include '../views/header.php';
+    include '../../views/header.php';
     ?>
 
     <!-- BREADCRUMB -->
@@ -322,11 +322,9 @@
         </div>
     </div>
 
-
-    <!-- Notification -->
     <div id="notification" class="notification" style="display: none;"></div>
 
-    <script src="../../js/keranjang.js"></script>
+    <script src="keranjang.js"></script>
 </body>
 
 </html>
