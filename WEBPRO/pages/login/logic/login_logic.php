@@ -22,13 +22,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $dataUser['username'];
             $_SESSION['role'] = $dataUser['role'];
 
-            header("Location: ../../home/home.php");
+            // Arahkan berdasarkan role
+            if ($dataUser['role'] == 'admin') {
+                header("Location: ../../home/home.php"); // Folder admin
+            } elseif ($dataUser['role'] == 'kasir') {
+                header("Location: ../../kasir/kasir.php"); // Folder kasir
+            } else {
+                header("Location: ../../home/home.php"); // Default untuk member
+            }
             exit();
         } else {
-            echo "<p>'Password salah!'</p>";
+            echo "Password salah!";
         }
     } else {
-        echo "<script>alert('Username tidak ditemukan!'); window.location.href = '../login.php';</script>";
+        echo "Username tidak ditemukan!";
     }
 
     $stmt->close();
