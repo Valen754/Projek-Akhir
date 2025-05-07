@@ -31,28 +31,27 @@ if ($countResult->num_rows > 0) {
 
 <body>
     <div class="container" role="main">
-        <aside class="sidebar" aria-label="Sidebar navigation">
-            <button aria-label="Hot Dishes"><i class="fas fa-utensils"></i></button>
-            <button aria-label="Home"><i class="fas fa-home"></i></button>
-            <button aria-label="Settings"><i class="fas fa-cog"></i></button>
-            <button aria-label="Clock"><i class="fas fa-clock"></i></button>
-            <button aria-label="Mail"><i class="fas fa-envelope"></i></button>
-            <button aria-label="Notification"><i class="fas fa-bell"></i></button>
-            <button aria-label="User"><i class="fas fa-user"></i></button>
-        </aside>
+        <?php include '../../views/kasir/sidebar.php'; ?>
         <main>
             <header>
                 <h1>Tapal Kuda</h1>
                 <p>Tuesday, 29 April 2025</p>
             </header>
             <nav class="tabs" aria-label="Dish categories">
-                <a href="kasir.php" class="<?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>">All</a>
-                <a href="kasir.php?type=kopi" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'kopi') ? 'active' : ''; ?>">Coffe</a>
-                <a href="kasir.php?type=minuman" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>">Non Coffe</a>
-                <a href="kasir.php?type=makanan_berat" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>">Foods</a>
-                <a href="kasir.php?type=cemilan" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>">Snacks</a>
+                <a href="kasir.php"
+                    class="<?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>">All</a>
+                <a href="kasir.php?type=kopi"
+                    class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'kopi') ? 'active' : ''; ?>">Coffe</a>
+                <a href="kasir.php?type=minuman"
+                    class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>">Non
+                    Coffe</a>
+                <a href="kasir.php?type=makanan_berat"
+                    class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>">Foods</a>
+                <a href="kasir.php?type=cemilan"
+                    class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>">Snacks</a>
                 <div class="search-container">
-                    <input type="search" placeholder="Search for food, coffee, etc.." aria-label="Search for food, coffee, etc." />
+                    <input type="search" placeholder="Search for food, coffee, etc.."
+                        aria-label="Search for food, coffee, etc." />
                     <i class="fas fa-search icon-search" aria-hidden="true"></i>
                 </div>
             </nav>
@@ -100,7 +99,8 @@ if ($countResult->num_rows > 0) {
             </header>
             <ul class="order-list">
                 <li>
-                    <img src="https://storage.googleapis.com/a1aa/image/8294678e-e685-4081-dce2-181e85ee96b9.jpg" alt="Cappuccino" width="40" height="40" />
+                    <img src="https://storage.googleapis.com/a1aa/image/8294678e-e685-4081-dce2-181e85ee96b9.jpg"
+                        alt="Cappuccino" width="40" height="40" />
                     <div class="order-info">
                         <p class="name">Cappuccino</p>
                         <p class="price">Rp. 15.000</p>
@@ -108,7 +108,8 @@ if ($countResult->num_rows > 0) {
                     </div>
                     <div class="order-qty-delete">
                         <span class="qty">1</span>
-                        <button aria-label="Delete Cappuccino order" type="button"><i class="fas fa-trash-alt"></i></button>
+                        <button aria-label="Delete Cappuccino order" type="button"><i
+                                class="fas fa-trash-alt"></i></button>
                     </div>
                 </li>
             </ul>

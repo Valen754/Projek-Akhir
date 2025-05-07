@@ -387,3 +387,109 @@
       gap: 16px;
     }
   }
+
+  /* Kasir CSS */
+
+  
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background-color: #1c2431;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  min-height: 100vh;
+}
+main {
+  background-color: white;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(28, 36, 49, 0.5);
+}
+.profile-section {
+  background-color: #f5f6f6;
+  padding: 40px 0 30px;
+  text-align: center;
+  position: relative;
+}
+.profile-photo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.profile-label {
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: #000;
+}
+.edit-button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #000;
+}
+.info-list {
+  border-top: 1px solid #d1d5db;
+}
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #d1d5db;
+  cursor: pointer;
+}
+.info-text {
+  display: flex;
+  flex-direction: column;
+}
+.info-label {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #000;
+  margin: 0 0 6px 0;
+}
+.info-value {
+  font-weight: 400;
+  font-size: 14px;
+  color: #111827;
+  margin: 0;
+}
+.chevron {
+  border: solid #6b7280;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 5px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  margin-left: 12px;
+}
+@media (max-width: 480px) {
+  main {
+    max-width: 100%;
+    border-radius: 0;
+  }
+  .profile-photo {
+    width: 140px;
+    height: 140px;
+  }
+  .profile-section {
+    padding: 32px 0 24px;
+  }
+  .info-item {
+    padding: 16px 20px;
+  }
+}

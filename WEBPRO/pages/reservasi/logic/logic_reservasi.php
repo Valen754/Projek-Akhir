@@ -20,7 +20,7 @@ if (isset($_POST['submit_reservation']) && $user_id) {
 
     try {
         $stmt = $conn->prepare("
-            INSERT INTO reservations 
+            INSERT INTO reservasi 
                 (user_id, kode_reservasi, tanggal_reservasi, jumlah_orang, email, no_telp, message, status, created_at, updated_at) 
             VALUES 
                 (?, ?, ?, ?, ?, ?, ?, 'pending', NOW(), NOW())
