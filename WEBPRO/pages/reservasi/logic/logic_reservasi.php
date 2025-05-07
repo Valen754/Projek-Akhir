@@ -1,6 +1,5 @@
 <?php
-include '../../../koneksi.php'; // Pastikan path ini sesuai
-session_start();
+include '../../koneksi.php'; // Pastikan path ini sesuai
 
 $user_id = $_SESSION['user_id'] ?? null;
 
