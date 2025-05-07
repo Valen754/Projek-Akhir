@@ -11,7 +11,7 @@ if (!isset($_SESSION['role'])) {
 $role_pages = [
     'admin' => ['about', 'mahasiswa', 'addmahasiswa', 'editmahasiswa', 'login', 'home', 'menu','admin'], // Admin boleh mengakses semua halaman
     'kasir' => ['kasir'], // Kasir hanya boleh mengakses halaman kasir
-    'member' => ['home', 'menu', 'keranjang', 'detail'], // Member hanya boleh mengakses halaman tertentu
+    'member' => ['home', 'menu', 'keranjang', 'detail', 'reservasi'], // Member hanya boleh mengakses halaman tertentu
 ];
 
 // Ambil role pengguna dari session

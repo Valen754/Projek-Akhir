@@ -205,6 +205,7 @@ session_start();
                 <!-- Tautan untuk Member -->
                 <a href="../home/home.php">Home</a>
                 <a href="../menu/menu.php">Menu</a>
+                <a href="../reservasi/reservasi.php">Reservasi</a>
             <?php endif; ?>
         <?php endif; ?>
         <div class="navbar-icons">
