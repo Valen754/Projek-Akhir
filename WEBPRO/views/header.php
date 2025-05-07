@@ -185,7 +185,7 @@ session_start();
     /* END BADGE */
 </style>
 <header class="header">
-    <a href="#home" class="logo">
+    <a href="../home/home.php" class="logo">
         Tapal<span>Kuda</span>
     </a>
     <nav class="navbar">

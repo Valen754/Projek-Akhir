@@ -1,3 +1,4 @@
 <?php
-include("pages/registrasi/registrasi.php");
+header("Location: pages/home/home.php");
+exit();
 ?>
