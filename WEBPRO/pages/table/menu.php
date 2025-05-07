@@ -22,8 +22,20 @@
     </style>
 </head>
 <body class="sb-nav-fixed">
-        <?php include '../../views/admin/header.php'; ?>
-        <?php include '../../views/admin/sidebar.php'; ?>
+        <?php 
+        //bagian header
+        include '../../views/admin/header.php';
+
+        //bagian sidebar
+        include '../../views/admin/sidebar.php';
+
+        //Koneksi ke database
+        include '../../koneksi.php';
+        
+        //query sqk dasar
+        $sql = "SELECT * FROM menu";
+
+        ?>
 
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -38,231 +50,40 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>ID Menu</th>
                                         <th>Nama Menu</th>
+                                        <th>Foto</th>
                                         <th>Harga</th>
                                         <th>Stok</th>
+                                        <th>kategori</th>
+                                        <th>Deskripsi</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>MNU001</td>
-                                        <td>Kopi Tubruk Robusta</td>
-                                        <td>Rp 12.000</td>
-                                        <td>20</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>MNU002</td>
-                                        <td>Kopi Tubruk Arabika</td>
-                                        <td>Rp 14.000</td>
-                                        <td>12</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>MNU003</td>
-                                        <td>Roti Bakar</td>
-                                        <td>Rp 13.000</td>
-                                        <td>10</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>MNU004</td>
-                                        <td>Teh Manis</td>
-                                        <td>Rp 7.000</td>
-                                        <td>13</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>MNU005</td>
-                                        <td>Lemon Tea</td>
-                                        <td>Rp 10.000</td>
-                                        <td>25</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>MNU006</td>
-                                        <td>Taro</td>
-                                        <td>Rp 17.000</td>
-                                        <td>15</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>MNU007</td>
-                                        <td>Yellow Ginger</td>
-                                        <td>Rp 17.000</td>
-                                        <td>0</td>
-                                        <td><span class="badge bg-danger">Habis</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>MNU008</td>
-                                        <td>Matcha</td>
-                                        <td>Rp 17.000</td>
-                                        <td>20</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>9</td>
-                                        <td>MNU009</td>
-                                        <td>Coklat Latte</td>
-                                        <td>Rp 17.000</td>
-                                        <td>19</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>10</td>
-                                        <td>MNU010</td>
-                                        <td>Wedang</td>
-                                        <td>Rp 5.000</td>
-                                        <td>30</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>11</td>
-                                        <td>MNU011</td>
-                                        <td>Sukomon</td>
-                                        <td>Rp 20.000</td>
-                                        <td>8</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>12</td>
-                                        <td>MNU012</td>
-                                        <td>Cappucino</td>
-                                        <td>Rp 22.000</td>
-                                        <td>20</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>13</td>
-                                        <td>MNU013</td>
-                                        <td>Es Kopi Susu</td>
-                                        <td>Rp 22.000</td>
-                                        <td>20</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>14</td>
-                                        <td>MNU014</td>
-                                        <td>Espresso</td>
-                                        <td>Rp 14.000</td>
-                                        <td>23</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>15</td>
-                                        <td>MNU015</td>
-                                        <td>Latte</td>
-                                        <td>Rp 25.000</td>
-                                        <td>22</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>16</td>
-                                        <td>MNU016</td>
-                                        <td>Americano</td>
-                                        <td>Rp 19.000</td>
-                                        <td>21</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>17</td>
-                                        <td>MNU017</td>
-                                        <td>Vietnam Drip</td>
-                                        <td>Rp 19.000</td>
-                                        <td>0</td>
-                                        <td><span class="badge bg-danger">Habis</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>18</td>
-                                        <td>MNU018</td>
-                                        <td>Chciken Teriyaki</td>
-                                        <td>Rp 20.000</td>
-                                        <td>30</td>
-                                        <td><span class="badge bg-primary">Tersedia</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $no = 1;
+                                    $query = mysqli_query($conn, "SELECT * FROM menu");
+                                    while ($row = mysqli_fetch_assoc($query)) {
+                                        $statusBadge = ($row['status'] === 'Tersedia') ? 'primary' : 'danger';
+                                        echo "<tr>
+                                                <td>{$no}</td>
+                                                <td>{$row['nama']}</td>
+                                                <td><img src='../../asset/{$row['url_foto']}' width='60' alt='Foto Menu'></td>
+                                                <td>Rp " . number_format($row['price'], 0, ',', '.') . "</td>
+                                                <td>{$row['quantity']}</td>
+                                                <td>{$row['type']}</td>
+                                                <td>{$row['deskripsi']}</td>
+                                                <td>{$row['status']}</td>
+                                                <td><span class='badge bg-{$statusBadge}'>{$row['status']}</span></td>
+                                                <td>";
+                                                    echo "<a href='#' class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#editModal" . $row['id'] . "'>Edit</a>";
+                                                    echo "<a href='delete-menu.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Yakin ingin hapus?\")'>Delete</a>
+                                                </td>";
+                                            echo "</tr>";
+                                        $no++;
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -274,85 +95,155 @@
         </div>
     </div>
 
-    <!-- Modal Edit -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Data Menu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="editIdMenu" class="form-label">ID Menu</label>
-                            <input type="text" class="form-control" id="editIdMenu">
+    <?php
+if (isset($_GET['edit_id'])) {
+    $id = $_GET['edit_id'];
+    $query = mysqli_query($conn, "SELECT * FROM menu WHERE id = $id");
+    $data = mysqli_fetch_assoc($query);
+    if ($data) {
+?>
+<!-- Modal Edit -->
+<div class="modal fade show" id="editModalPHP" tabindex="-1" aria-labelledby="editModalLabel" aria-modal="true" style="display: block;">
+  <div class="modal-dialog">
+    <form action="edit-menu.php" method="POST" enctype="multipart/form-data" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Menu</h5>
+        <a href="menu.php" class="btn-close"></a>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="id" value="<?= $data['id'] ?>">
+        <input type="hidden" name="url_foto_lama" value="<?= $data['url_foto'] ?>">
+
+        <div class="mb-3">
+          <label class="form-label">Nama</label>
+          <input type="text" name="nama" class="form-control" value="<?= $data['nama'] ?>" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Foto (Kosongkan jika tidak diubah)</label>
+          <input type="file" name="foto" class="form-control">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Jenis</label>
+          <select name="type" class="form-select" required>
+            <?php
+            $types = ['makanan_berat','minuman','cemilan','kopi'];
+            foreach ($types as $type) {
+              echo "<option value='$type' ".($data['type'] == $type ? 'selected' : '').">$type</option>";
+            }
+            ?>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Harga</label>
+          <input type="text" name="price" class="form-control" value="<?= $data['price'] ?>" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Quantity</label>
+          <input type="number" name="quantity" class="form-control" value="<?= $data['quantity'] ?>" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Deskripsi</label>
+          <textarea name="deskripsi" class="form-control"><?= $data['deskripsi'] ?></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select name="status" class="form-select" required>
+            <option value="tersedia" <?= $data['status'] == 'tersedia' ? 'selected' : '' ?>>Tersedia</option>
+            <option value="habis" <?= $data['status'] == 'habis' ? 'selected' : '' ?>>Habis</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <a href="menu.php" class="btn btn-secondary">Batal</a>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Tambahkan sedikit script agar modal ditampilkan langsung -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const modal = document.getElementById('editModalPHP');
+    const modalBootstrap = new bootstrap.Modal(modal);
+    modalBootstrap.show();
+  });
+</script>
+<?php
+    }
+}
+?>
+
+
+                <!-- Modal Tambah Menu -->
+            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <form action="logic/add-menu.php" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Tambah Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <div class="modal-body">
+
                         <div class="mb-3">
-                            <label for="editNamaMenu" class="form-label">Nama Menu</label>
-                            <input type="text" class="form-control" id="editNamaMenu">
+                            <label for="addNama" class="form-label">Nama Menu</label>
+                            <input type="text" class="form-control" id="addNama" name="nama" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="editHarga" class="form-label">Harga</label>
-                            <input type="text" class="form-control" id="editHarga">
+                            <label for="addFoto" class="form-label">Foto</label>
+                            <input type="file" class="form-control" id="addFoto" name="url_foto" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="editQuantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="editQuantity">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editStatus" class="form-label">Status</label>
-                            <select class="form-select" id="editStatus">
-                                <option value="Tersedia">Tersedia</option>
-                                <option value="Habis">Habis</option>
+                            <label for="addType" class="form-label">Tipe</label>
+                            <select class="form-select" id="addType" name="type" required>
+                            <option value="makanan_berat">Makanan Berat</option>
+                            <option value="minuman">Minuman</option>
+                            <option value="cemilan">Cemilan</option>
+                            <option value="kopi">Kopi</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-primary" id="edit">Save changes</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal Add -->
-    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Add Data Menu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
                         <div class="mb-3">
-                            <label for="addIdMenu" class="form-label">ID Menu</label>
-                            <input type="text" class="form-control" id="addIdMenu">
+                            <label for="addPrice" class="form-label">Harga</label>
+                            <input type="number" step="0.01" class="form-control" id="addPrice" name="price" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="addNamaMenu" class="form-label">Nama Menu</label>
-                            <input type="text" class="form-control" id="addNamaMenu">
+                            <label for="addQuantity" class="form-label">Stok</label>
+                            <input type="number" class="form-control" id="addQuantity" name="quantity" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="addHarga" class="form-label">Harga</label>
-                            <input type="text" class="form-control" id="addHarga">
+                            <label for="addDeskripsi" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="addDeskripsi" name="deskripsi" rows="3" required></textarea>
                         </div>
-                        <div class="mb-3">
-                            <label for="addQuantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="addQuantity">
-                        </div>
+
                         <div class="mb-3">
                             <label for="addStatus" class="form-label">Status</label>
-                            <select class="form-select" id="addStatus">
-                                <option value="Tersedia">Tersedia</option>
-                                <option value="Habis">Habis</option>
+                            <select class="form-select" id="addStatus" name="status" required>
+                            <option value="tersedia">Tersedia</option>
+                            <option value="habis">Habis</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-primary" id="simpan">Save changes</button>
+
+                        </div>
+                        <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
                     </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
     <!-- Modal Delete -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
