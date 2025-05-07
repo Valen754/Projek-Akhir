@@ -1,3 +1,15 @@
+<?php
+session_start();
+include '../../koneksi.php';
+
+$user_id = $_SESSION['user_id'];
+$user_query = mysqli_query($conn, "SELECT * FROM users WHERE id = $user_id");
+$user = mysqli_fetch_assoc($user_query);
+$profile_picture = !empty($user['profile_picture']) ? '../../asset/user_picture/' . $user['profile_picture'] : '../../asset/user_picture/default.jpg';
+$username = $user['username'];
+$role = $user['role'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,16 +60,16 @@
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="media/PAS FOTO LAYAR MERAH.jpg" class="user-image rounded-circle shadow" alt="User Image" style="width: 50px; height: 50px;">
+                <img src="<?= $profile_picture ?>" class="user-image rounded-circle shadow" alt="User Image" style="width: 50px; height: 50px;">
                     <span class="d-none d-md-inline">Haykal</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end" style="width: 300px;">
                     <!--begin::User Image-->
                     <li class="user-header text-bg-primary">
                         <center>
-                            <img width="100px" height="100px" src="media/PAS FOTO LAYAR MERAH.jpg" class="rounded-circle shadow" style="margin-top: 20px">
+                        <img width="100px" height="100px" src="<?= $profile_picture ?>" class="rounded-circle shadow" style="margin-top: 20px">
                             <p>
-                                Haykal - Web Developer
+                                <?= $username ?> - <?= $role ?>
                             </p>
                         </center>
                     </li>
@@ -68,7 +80,7 @@
                     <!--end::Menu Body-->
                     <!--begin::Menu Footer-->
                     <li class="user-footer">
-                        <a href="login.html" class="btn btn-default btn-flat float-end" style="margin-right: 10px;">Sign out</a>
+                        <a href="../../pages/logout/logout.php" class="btn btn-default btn-flat float-end" style="margin-right: 10px;">Sign out</a>
                     </li>
                     <!--end::Menu Footer-->
                 </ul>

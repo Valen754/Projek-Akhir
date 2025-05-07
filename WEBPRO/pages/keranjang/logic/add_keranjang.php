@@ -15,5 +15,5 @@ $price = $row['price'] * $quantity;
 // Masukkan ke keranjang
 mysqli_query($conn, "INSERT INTO keranjang (user_id, menu_id, quantity, price, catatan) VALUES ($user_id, $menu_id, $quantity, $price, '$catatan')");
 
-header('Location: keranjang.php');
+header('Location: ../keranjang.php');
 ?>

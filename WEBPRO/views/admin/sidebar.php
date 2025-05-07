@@ -1,12 +1,23 @@
+<?php
+
+include '../../koneksi.php';
+
+$user_id = $_SESSION['user_id'];
+$user_query = mysqli_query($conn, "SELECT * FROM users WHERE id = $user_id");
+$user = mysqli_fetch_assoc($user_query);
+$profile_picture = !empty($user['profile_picture']) ? '../../asset/user_picture/' . $user['profile_picture'] : '../../asset/user_picture/default.jpg';
+$username = $user['username'];
+$role = $user['role'];
+?>
 <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-heading text-center" style="margin-top: 40px;">
-                            <img src="media/PAS FOTO LAYAR MERAH.jpg" alt="Admin Profile" class="rounded-circle mt-2" style="width: 100px; height: 100px;">
+                        <img src="<?= $profile_picture ?>" class="user-image rounded-circle shadow" alt="User Image" style="width: 50px; height: 50px;">
                             <div class="small">Logged in as:</div>
-                            Admin
+                            <?= $username ?> - <?= $role ?>
                         </div>
                         <a class="nav-link" href="index.html" style="margin-top: 40px;">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>

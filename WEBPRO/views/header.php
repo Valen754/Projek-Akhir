@@ -1,4 +1,8 @@
-<!-- BAGIAN NAVBAR -->
+<?php
+session_start();
+?>
+
+
 <style>
     /* NAVBAR */
     .header {
