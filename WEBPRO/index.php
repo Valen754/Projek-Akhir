@@ -28,6 +28,6 @@ if (isset($_GET['page'])) {
         echo "<h2>403 - Anda tidak memiliki izin untuk mengakses halaman ini</h2>";
     }
 } else {
-    include "pages/home.php"; // Halaman default
+    include "pages/home/home.php"; // Halaman default
 }
 ?>
