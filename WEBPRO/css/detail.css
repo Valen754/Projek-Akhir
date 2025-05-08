@@ -282,6 +282,37 @@ body {
     color: #555;
 }
 
+/* Sembunyikan input radio */
+.rating-input input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+
+/* Gaya untuk bintang */
+.rating-input .bintang {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Warna bintang saat dipilih */
+.rating-input input[type="radio"]:checked + label,
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+    color: #ffc107;
+}
+
+/* Warna bintang sebelumnya saat dipilih */
+.rating-input input[type="radio"]:checked ~ label {
+    color: #ffc107;
+}
 
 /* REKOMENDASI */
 .wadah-rekomendasi {
@@ -702,55 +733,7 @@ button {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 10px;
-    /* Jarak antara bintang dan tombol submit */
-    padding: 10px 15px;
-    /* Padding tombol */
-    background-color: #8B4513;
-    /* Warna latar belakang tombol */
-    color: white;
-    /* Warna teks tombol */
-    border: none;
-    /* Menghilangkan border */
-    border-radius: 5px;
-    /* Sudut melengkung */
-    cursor: pointer;
-    /* Menunjukkan bahwa tombol bisa diklik */
 }
-
-.form-komentar {
-    display: flex;
-    /* Menggunakan flexbox untuk menyusun elemen */
-    flex-direction: column;
-    /* Susun elemen secara vertikal */
-    margin: 20px 0;
-    /* Jarak atas dan bawah */
-}
-
-.rating-input {
-    display: flex;
-    /* Menggunakan flexbox untuk menyusun bintang */
-    margin: 10px 0;
-    /* Jarak atas dan bawah */
-}
-
-.bintangf {
-    font-size: 24px;
-    /* Ukuran bintang */
-    color: #ccc;
-    /* Warna bintang tidak terpilih */
-    cursor: pointer;
-    /* Menunjukkan bahwa bintang bisa diklik */
-    margin-right: 5px;
-    /* Jarak antara bintang */
-}
-
-.bintangf.selected,
-.bintangf:hover {
-    color: #FFD700;
-    /* Warna bintang terpilih */
-}
-
 
 .form-komentar .tombol-submit:hover {
     background-color: var(--sc-color);

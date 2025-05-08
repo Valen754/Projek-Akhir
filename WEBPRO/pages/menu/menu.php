@@ -154,7 +154,47 @@
         </div>
     </div>
 
-    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h1 class="modal-title">Order Confirmation</h1>
+                <button class="close-button" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="modal-item">
+                        <img src="Foto/Kopi/Real/KOPI TUBRUK ROBUSTA.jpg" width="100px" alt="Kopi Tubruk Robusta">
+                        <div class="modal-item-details">
+                            <p>Kopi tubruk robusta</p>
+                        </div>
+                        <div class="modal-item-price">
+                            <button type="button" id="decrease" class="btn-adjust">&minus;</button>
+                            <p id="quantity">1</p>
+                            <button type="button" id="increase" class="btn-adjust">&plus;</button>
+                            <p>= Rp
+                            <p id="totalPrice">12,000</p>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-message">
+                        <label for="messageText">message :</label>
+                        <textarea id="messageText" placeholder="Do you have any messages?"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-submit" style="font-family: inherit;">Send</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-primary" id="cartModal" style="font-family: inherit;">Add to
+                    cart</button>
+                <button type="button" class="btn-success" id="bukaModal" style="font-family: inherit;">Make
+                    payment</button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <?php
     include '../../views/footer.php';
