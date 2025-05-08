@@ -17,16 +17,18 @@
 
  /* Main content */
  main {
-   flex: 1;
-   padding: 32px;
-   display: flex;
-   flex-direction: column;
-   gap: 24px;
-   height: 100vh;
-   width: 100%;
-   margin-left: 80px; /* Sesuaikan dengan lebar sidebar */
-   min-height: 100vh;
- }
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100vh;
+  width: calc(100% - 464px); /* Kurangi lebar sidebar dan order panel */
+  margin-left: 80px; /* Sesuaikan dengan lebar sidebar */
+  margin-right: 384px; /* Berikan ruang untuk Order Panel */
+  overflow-y: auto; /* Tambahkan scroll untuk menu */
+  position: relative;
+}
 
  main header {
    margin-bottom: 24px;
@@ -114,11 +116,14 @@
    margin-bottom: 16px;
  }
 
- .dishes-grid {
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-   gap: 24px;
- }
+  .dishes-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Ubah menjadi 6 kolom */
+    gap: 24px;
+    max-height: calc(100vh - 250px); /* Batasi tinggi grid agar tidak melebihi layar */
+    overflow-y: auto; /* Tambahkan scroll jika konten terlalu panjang */
+    padding-right: 16px; /* Tambahkan padding untuk scroll bar */
+  }
 
  .dish-card {
    background-color: #2a3345;
@@ -207,18 +212,21 @@
 
  /* Orders panel */
  aside.orders-panel {
-   background-color: #2a3345;
-   width: 384px;
-   /* Pastikan ini sesuai dengan desain */
-   border-top-right-radius: 12px;
-   border-bottom-right-radius: 12px;
-   padding: 32px;
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   height: 100vh;
-   position: relative;
- }
+  background-color: #2a3345;
+  width: 384px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  position: fixed; /* Tetap di posisi kanan layar */
+  right: 0; /* Letakkan di sisi kanan */
+  top: 0;
+  overflow-y: auto; /* Tambahkan scroll jika konten panel terlalu panjang */
+  z-index: 1000; /* Pastikan berada di atas elemen lain */
+}
 
  aside.orders-panel header h2 {
    color: white;
