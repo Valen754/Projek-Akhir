@@ -22,11 +22,6 @@ if ($countResult->num_rows > 0) {
     <title>Tapal Kuda | Kasir</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link href="../../css/kasir.css" rel="stylesheet">
-    <style>
-        /* Gunakan style yang sudah ada di file Anda */
-        /* Tidak ada perubahan pada desain */
-        <?php include 'style.css'; ?>
-    </style>
 </head>
 
 <body>

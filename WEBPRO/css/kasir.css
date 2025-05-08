@@ -10,38 +10,14 @@
     height: 100%;
     font-family: 'Inter', sans-serif;
     background-color: #1c2431;
+    overflow: hidden; /* Opsional: Mencegah scroll jika tidak diperlukan */
   }
 
 
   .container {
     display: flex;
-    /* Menggunakan flexbox untuk menata elemen dalam satu baris */
     height: 100vh;
-    /* Memastikan tinggi kontainer mengisi seluruh layar */
-  }
-
-  /* Sidebar */
-  .sidebar {
-    background-color: #222b3a;
-    width: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 32px 0;
-    gap: 40px;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    height: 100vh;
-    /* Mengisi seluruh tinggi layar */
-    position: relative;
-  }
-
-  .sidebar button {
-    background: none;
-    border: none;
-    color: #e07b6c;
-    font-size: 20px;
-    cursor: pointer;
+    width: 100%; /* Pastikan elemen mengambil seluruh lebar layar */
   }
 
   /* Main content */
@@ -52,9 +28,8 @@
     flex-direction: column;
     gap: 24px;
     height: 100vh;
-    /* Membuat main mengambil seluruh tinggi layar */
+    width: 100%; /* Tambahkan properti ini untuk memastikan elemen mengambil seluruh lebar */
     min-height: 100vh;
-    /* Pastikan elemen ini minimal mengisi layar */
   }
 
   main header {
@@ -189,7 +164,7 @@
   /* Orders panel */
   aside.orders-panel {
     background-color: #2a3345;
-    width: 384px;
+    width: 384px; /* Pastikan ini sesuai dengan desain */
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     padding: 32px;
@@ -197,7 +172,6 @@
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
-    /* Mengisi seluruh tinggi layar */
     position: relative;
   }
 
@@ -406,7 +380,6 @@ body {
 main {
   background-color: white;
   width: 100%;
-  max-width: 400px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(28, 36, 49, 0.5);
