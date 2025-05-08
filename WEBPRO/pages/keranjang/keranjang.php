@@ -54,7 +54,7 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
                             <td><?= $row['quantity'] ?></td>
                             <td><?= $row['catatan'] ?></td>
                             <td>Rp <?= number_format($row['price'], 0, ',', '.') ?></td>
-                            <td><a href="hapus-item.php?order_id=<?= $row['order_id'] ?>" class="btn btn-danger btn-sm">Hapus</a></td>
+                            <td><a href="logic/hapus-item.php?order_id=<?= $row['order_id'] ?>" class="btn btn-danger btn-sm">Hapus</a></td>
                         </tr>
                     <?php } ?>
                 </tbody>

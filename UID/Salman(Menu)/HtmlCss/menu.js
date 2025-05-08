@@ -1,16 +1,3 @@
-// PINDAH TAB
-const tabs = document.querySelectorAll('.nav-link');
-const panes = document.querySelectorAll('.tab-pane');
-
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        panes.forEach(p => p.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-    });
-});
-
 // MODAL 1
 const modal1 = document.getElementById("modalOverlay");
 const openModal = document.getElementById("openModal");

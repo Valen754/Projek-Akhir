@@ -154,6 +154,7 @@
         </div>
     </div>
 
+    
     <!-- FOOTER -->
     <?php
     include '../../views/footer.php';
