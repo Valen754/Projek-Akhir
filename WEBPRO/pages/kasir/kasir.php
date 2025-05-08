@@ -1,5 +1,6 @@
 <?php
 include '../../koneksi.php'; // Koneksi ke database
+include '../../views/kasir/sidebar.php'; // Header file
 
 // Query untuk menghitung jumlah menu berdasarkan kategori
 $countQuery = "SELECT type, COUNT(*) as total FROM menu GROUP BY type";
@@ -26,7 +27,7 @@ if ($countResult->num_rows > 0) {
 
 <body>
     <div class="container" role="main">
-        <?php include '../../views/kasir/sidebar.php'; ?>
+
         <main>
             <header>
                 <h1>Tapal Kuda</h1>

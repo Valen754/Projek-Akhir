@@ -77,6 +77,41 @@ function showNotification(message) {
     }, 3000);
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalMenuId = document.getElementById('modalMenuId');
+    const modalQuantity = document.getElementById('modalQuantity');
+    const quantityElement = document.getElementById('quantity');
+    let quantity = 1;
+
+    // Tombol untuk membuka modal
+    document.querySelectorAll('#openModal').forEach(button => {
+        button.addEventListener('click', function () {
+            const menuId = this.getAttribute('data-menu-id');
+            modalMenuId.value = menuId; // Isi menu_id ke input hidden
+            quantity = 1; // Reset quantity
+            quantityElement.textContent = quantity;
+            modalQuantity.value = quantity;
+            modalOverlay.style.display = 'block'; // Tampilkan modal
+        });
+    });
+
+    // Tombol untuk menambah jumlah
+    document.getElementById('increase').addEventListener('click', function () {
+        quantity++;
+        quantityElement.textContent = quantity;
+        modalQuantity.value = quantity;
+    });
+
+    // Tombol untuk mengurangi jumlah
+    document.getElementById('decrease').addEventListener('click', function () {
+        if (quantity > 1) {
+            quantity--;
+            quantityElement.textContent = quantity;
+            modalQuantity.value = quantity;
+        }
+    });
+});
 
 // MODAL 2
 const modal2 = document.getElementById('modalBayar');
