@@ -23,7 +23,7 @@ $role = $user['role'];
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#tablesCollapse" aria-expanded="false" aria-controls="tablesCollapse">
+                        <!-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#tablesCollapse" aria-expanded="false" aria-controls="tablesCollapse">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Tables
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -40,7 +40,7 @@ $role = $user['role'];
                         <a class="nav-link" href="charts.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Charts
-                        </a>
+                        </a> -->
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">

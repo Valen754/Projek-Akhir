@@ -146,10 +146,10 @@ if ($countResult->num_rows > 0) {
                 <a href="kasir.php?type=minuman" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>">Non Coffe</a>
                 <a href="kasir.php?type=makanan_berat" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>">Foods</a>
                 <a href="kasir.php?type=cemilan" class="<?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>">Snacks</a>
-                <div class="search-container">
+                <!-- <div class="search-container">
                     <input type="search" placeholder="Search for food, coffee, etc.." aria-label="Search for food, coffee, etc." />
                     <i class="fas fa-search icon-search"></i>
-                </div>
+                </div> -->
             </nav>
             <section class="choose-dishes">
                 <h2>Choose Dishes</h2>
@@ -171,8 +171,8 @@ if ($countResult->num_rows > 0) {
                                 <p class="available"><?php echo $row['quantity']; ?> available</p>
                                 <button class="add-to-order" 
                                         data-id="<?php echo $row['id']; ?>" 
-                                        data-name="<?php echo $row['nama']; ?>" 
-                                        data-price="<?php echo $row['price']; ?>">Add to Order</button>
+                                        data-name="<?php echo $row['nama']; ?>"></button>
+                                        
                             </article>
                             <?php
                         }
@@ -185,7 +185,7 @@ if ($countResult->num_rows > 0) {
         </main>
 
         <!-- Order Panel -->
-        <aside class="orders-panel">
+        <!-- <aside class="orders-panel">
             <header>
                 <h2>Orders <span>#001</span></h2>
                 <nav class="order-types">
@@ -196,7 +196,7 @@ if ($countResult->num_rows > 0) {
             </header>
             <ul class="order-list">
                 <!-- Pesanan akan ditambahkan di sini -->
-            </ul>
+            <!-- </ul>
             <footer>
                 
                 <div class="subtotal">
@@ -205,9 +205,9 @@ if ($countResult->num_rows > 0) {
                 </div>
                 <button>Continue to Payment</button>
             </footer>
-        </aside>
+        </aside>  -->
     </div>
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             const orderList = document.querySelector('.order-list');
             const subtotalElement = document.querySelector('.subtotal span');
@@ -289,7 +289,7 @@ if ($countResult->num_rows > 0) {
                 subtotalElement.textContent = `Rp. ${subtotal.toLocaleString()}`;
             }
         });
-    </script>
+    </script> -->
 </body>
 
 </html>

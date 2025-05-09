@@ -39,7 +39,7 @@
                     </div>
                 </form>
                 <div style="margin-top: 20px;">
-                    <span style="float: left;"><a href="reset-password.html">Forgot Password</a></span>
+                    <!-- <span style="float: left;"><a href="reset-password.html">Forgot Password</a></span> -->
                     <span style="float: right;"><a href="../registrasi/registrasi.php">Register Here</a></span>
                 </div>
 

@@ -27,7 +27,7 @@
                 <p>
                     Nikmati kenikmatan kopi Tapal Kuda yang diambil dari biji kopi asli dan suasana yang asri.
                 </p>
-                <a href="menu.html" class="btn">Order Now</a>
+                <a href="../menu/menu.php" class="btn">Order Now</a>
             </div>
         </div>
     </section>

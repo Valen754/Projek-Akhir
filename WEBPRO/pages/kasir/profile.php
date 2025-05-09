@@ -1,11 +1,33 @@
 <?php
 include '../../koneksi.php'; // Koneksi ke database
+session_start();
 
-// Query untuk mendapatkan informasi pengguna
-$user_id = 1; // Ganti dengan ID pengguna yang sesuai
-$sql = "SELECT * FROM users WHERE id = $user_id";
-$result = $conn->query($sql);
+// Pastikan pengguna sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../login/login.php"); // Arahkan ke halaman login jika belum login
+    exit();
+}
+
+// Pastikan hanya pengguna dengan role 'kasir' yang dapat mengakses halaman ini
+if ($_SESSION['role'] !== 'kasir') {
+    header("Location: ../../login/login.php"); // Arahkan ke halaman login jika role tidak sesuai
+    exit();
+}
+
+// Query untuk mendapatkan informasi pengguna berdasarkan session
+$user_id = $_SESSION['user_id']; // Ambil user_id dari session
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $user = $result->fetch_assoc();
+
+// Jika data pengguna tidak ditemukan, arahkan ke halaman login
+if (!$user) {
+    header("Location: ../../login/login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -139,17 +161,17 @@ $user = $result->fetch_assoc();
                     <div class="info-item">
                         <span class="info-label">Email</span>
                         <span class="info-value"><?php echo $user['email']; ?></span>
-                        <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button>
+                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button> -->
                     </div>
                     <div class="info-item">
                         <span class="info-label">Password</span>
                         <span class="info-value">********</span>
-                        <button class="edit-button"><i class="fas fa-pencil-alt"></i> Change</button>
+                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Change</button> -->
                     </div>
                     <div class="info-item">
                         <span class="info-label">Phone</span>
                         <span class="info-value"><?php echo $user['no_telp']; ?></span>
-                        <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button>
+                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button> -->
                     </div>
                     <div class="info-item">
                         <span class="info-label">Gender</span>
@@ -158,12 +180,12 @@ $user = $result->fetch_assoc();
                     <div class="info-item">
                         <span class="info-label">Address</span>
                         <span class="info-value"><?php echo $user['alamat']; ?></span>
-                        <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button>
+                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button> -->
                     </div>
                 </div>
-                <button class="edit-button">
+                <!-- <button class="edit-button">
                     <i class="fas fa-pencil-alt"></i> Change Profile Picture
-                </button>
+                </button> -->
             </div>
         </main>
     </div>

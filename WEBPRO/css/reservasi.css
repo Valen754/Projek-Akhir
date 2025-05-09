@@ -34,7 +34,7 @@ body {
     margin: 0;
     
     
-    color: #ffffff;
+    color: #000000;
 }
 .container {
     display: flex;
@@ -73,7 +73,7 @@ body {
     margin: 10px;
     padding: 10px;
     border: 1px solid #ddd;
-    color: #ffffff;
+    color: #000000;
     background-color: #f5f0e1;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
@@ -87,7 +87,7 @@ body {
     padding: 10px;
     background-color: #333;
     border: none;
-    color: #ffffff;
+    color: #0a0a0a;
     cursor: pointer;
 }
 .image-section img {

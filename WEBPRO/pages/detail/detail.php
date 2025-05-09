@@ -63,28 +63,28 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
             <div class="kolom-detail">
                 <h2><?= htmlspecialchars($product['nama']) ?></h2>
-                <div class="rating-bin">
+                <!-- <div class="rating-bin">
                     <span class="bintang-bin">&#9733;</span><span class="bintang-bin">&#9733;</span>
                     <span class="bintang-bin">&#9733;</span><span class="bintang-bin">&#9733;</span>
                     <span class="bintang-bin">&#9734;</span>
                     <span class="rating-text">4/5</span>
-                </div>
+                </div> -->
                 <p><?= nl2br(htmlspecialchars($product['deskripsi'])) ?></p>
                 <h3 id="price">Rp <?= number_format($product['price'], 0, ',', '.') ?></h3>
 
-                <div class="quantity-price">
+                <!-- <div class="quantity-price">
                     <div class="quantity-selector">
                         <button id="decrease" class="btn-adjust">&minus;</button>
                         <span id="quantity">1</span>
                         <button id="increase" class="btn-adjust">&plus;</button>
                     </div>
                     <h3 id="price">Rp <?= number_format($product['price'], 0, ',', '.') ?></h3>
-                </div>
+                </div> -->
 
-                <div class="button-group">
+                <!-- <div class="button-group">
                     <button class="tombol-add-to-cart" id="cartModal">Add to Cart</button>
                     <button class="tombol-beli" id="openModal">Buy Now</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

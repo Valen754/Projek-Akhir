@@ -8,7 +8,7 @@
     //Koneksi ke database
     include '../../koneksi.php';
 
-    //query sqk dasar
+    //query sql dasar
     $sql = "SELECT * FROM menu";
 
     ?>
@@ -18,9 +18,9 @@
             <div>
                 <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Data</a>
             </div>
-            <div>
+            <!-- <div>
                 <button class="btn btn-success" id="downloadPdf">Download PDF</button>
-            </div>
+            </div> -->
         </div>
 
         <?php

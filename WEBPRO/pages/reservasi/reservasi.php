@@ -35,13 +35,13 @@
             <?php endif; ?>
 
             <form method="POST" action="">
-                <input name="name" placeholder="Name" type="text" required value="<?php echo $_POST['name'] ?? ''; ?>" />
-                <input name="phone" placeholder="Phone" type="text" required value="<?php echo $_POST['phone'] ?? ''; ?>" />
-                <input name="email" placeholder="Email" type="email" required value="<?php echo $_POST['email'] ?? ''; ?>" />
-                <input name="number_of_people" placeholder="Number Of People" type="number" min="1" required value="<?php echo $_POST['number_of_people'] ?? ''; ?>" />
-                <input name="date" placeholder="Date" type="date" required value="<?php echo $_POST['date'] ?? ''; ?>" />
-                <input name="hour" placeholder="Hour" type="time" required value="<?php echo $_POST['hour'] ?? ''; ?>" />
-                <textarea name="message" placeholder="Write Your Message"><?php echo $_POST['message'] ?? ''; ?></textarea>
+                <input name="name" placeholder="Name" type="text" style="color: black;" required value="<?php echo $_POST['name'] ?? ''; ?>" />
+                <input name="phone" placeholder="Phone" type="text" style="color: black;" required value="<?php echo $_POST['phone'] ?? ''; ?>" />
+                <input name="email" placeholder="Email" type="email" style="color: black;" required value="<?php echo $_POST['email'] ?? ''; ?>" />
+                <input name="number_of_people" placeholder="Number Of People" type="number" style="color: black;" min="1" required value="<?php echo $_POST['number_of_people'] ?? ''; ?>" />
+                <input name="date" placeholder="Date" type="date"  style="color: black;"required value="<?php echo $_POST['date'] ?? ''; ?>" />
+                <input name="hour" placeholder="Hour" type="time" style="color: black;" required value="<?php echo $_POST['hour'] ?? ''; ?>" />
+                <textarea name="message" placeholder="Write Your Message" style="color: black;"><?php echo $_POST['message'] ?? ''; ?></textarea>
                 <button type="submit" name="submit_reservation" class="btn btn-primary mt-3">
                     RESERVE A TABLE
                 </button>

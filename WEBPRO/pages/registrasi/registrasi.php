@@ -59,7 +59,7 @@
                     </div>
                 </form>
                 <div>
-                    <span style="float: left;"><a href="login.html">Already have an account? Login</a></span>
+                    <span style="float: left;"><a href="../login/login.php">Already have an account? Login</a></span>
                 </div>
             </div>
         </div>
