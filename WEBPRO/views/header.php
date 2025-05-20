@@ -226,7 +226,7 @@ session_start();
                     </svg>
                     <div class="dropdown-content">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <a href="#"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
+                            <a href="../profil/profil.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
                             <a href="../logout/logout.php">Logout</a>
                         <?php else: ?>
                             <a href="../login/login.php">Sign In</a>
