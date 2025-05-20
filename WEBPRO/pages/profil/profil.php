@@ -29,7 +29,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             background: #8d6748;
         }
         .profile-kasir-container {
-            max-width: 350px;
+            max-width: 80%;
             margin: 40px auto;
             background: #8d6748;
             border-radius: 16px;
@@ -98,9 +98,6 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             margin-right: 16px;
             color: #6d4c2b;
         }
-        @media (max-width: 400px) {
-            .profile-kasir-container { max-width: 100%; }
-        }
     </style>
 </head>
 <body>
@@ -111,13 +108,13 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
         <div class="profile-kasir-info">
             <span><?php echo htmlspecialchars($user['nama']); ?></span>
             <span class="poin">
-                Poin <?php echo $poin; ?>pts
+                <?php echo $poin; ?>pts
                 <i class='bx bxs-star'></i>
             </span>
         </div>
         <div class="profile-kasir-menu">
             <div class="profile-kasir-menu-list">
-                <a href="../order/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i> Riwayat Pesanan</a>
+                <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i> Riwayat Pesanan</a>
                 <a href="../promo/promo.php" class="profile-kasir-menu-item"><i class='bx bx-percent'></i> Promo & Voucher</a>
                 <a href="../pembayaran/pembayaran.php" class="profile-kasir-menu-item"><i class='bx bx-wallet'></i> Pembayaran</a>
                 <a href="../favorit/favorit.php" class="profile-kasir-menu-item"><i class='bx bx-bookmark'></i> Favorit</a>
