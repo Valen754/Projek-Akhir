@@ -16,6 +16,13 @@ if (empty($order_ids)) {
     exit();
 }
 
+// Cek apakah user_id valid
+$user_check = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id");
+if (mysqli_num_rows($user_check) == 0) {
+    echo "User tidak ditemukan di tabel users.";
+    exit();
+}
+
 // Ambil data menu_id dan price dari keranjang
 $order_ids_str = implode(",", array_map('intval', $order_ids));
 $sql = "SELECT order_id, menu_id, price FROM keranjang WHERE order_id IN ($order_ids_str) AND user_id = $user_id";
