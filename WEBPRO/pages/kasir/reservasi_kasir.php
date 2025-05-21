@@ -1,8 +1,12 @@
 <?php
 include '../../koneksi.php'; // Koneksi ke database
 
-// Query untuk mendapatkan reservasi dengan status 'dikonfirmasi'
-$sql = "SELECT * FROM reservasi WHERE status = 'dikonfirmasi' ORDER BY created_at DESC";
+// Query untuk mendapatkan reservasi yang sudah dikonfirmasi beserta nama user
+$sql = "SELECT reservasi.*, users.nama 
+        FROM reservasi 
+        JOIN users ON reservasi.user_id = users.id 
+        WHERE reservasi.status = 'dikonfirmasi' 
+        ORDER BY reservasi.created_at DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -79,9 +83,9 @@ $result = $conn->query($sql);
                             <?php while ($row = $result->fetch_assoc()): ?>
                                 <div class="reservasi-card">
                                     <h3>Kode Reservasi: <?php echo $row['kode_reservasi']; ?></h3>
-                                    <p><strong>Nama:</strong> <?php echo $row['user_id'] ? "User #" . $row['user_id'] : "Guest"; ?></p>
-                                    <p><strong>Email:</strong> <?php echo $row['email']; ?></p>
-                                    <p><strong>No. Telepon:</strong> <?php echo $row['no_telp']; ?></p>
+                                    <p><strong>Nama:</strong> <?php echo htmlspecialchars($row['nama']); ?></p>
+                                    <p><strong>Email:</strong> <?php echo htmlspecialchars($row['email']); ?></p>
+                                    <p><strong>No. Telepon:</strong> <?php echo htmlspecialchars($row['no_telp']); ?></p>
                                     <p><strong>Jumlah Orang:</strong> <?php echo $row['jumlah_orang']; ?></p>
                                     <p><strong>Tanggal:</strong> <?php echo $row['tanggal_reservasi']; ?></p>
                                     <p><strong>Pesan:</strong> <?php echo $row['message']; ?></p>
