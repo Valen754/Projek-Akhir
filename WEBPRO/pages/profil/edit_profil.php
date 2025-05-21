@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,23 +57,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="../../css/menu.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
+        body {
+            background: #f3e8d9;
+        }
+
         .edit-profile-container {
             max-width: 50%;
             margin: 40px auto;
             background: #fff;
             border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
             padding: 32px 24px;
         }
+
         .edit-profile-container h2 {
             text-align: center;
             margin-bottom: 24px;
             color: #6d4c2b;
         }
+
         .edit-profile-container label {
             font-weight: bold;
             color: #6d4c2b;
         }
+
         .edit-profile-container input,
         .edit-profile-container textarea {
             width: 100%;
@@ -82,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 6px;
             font-size: 1em;
         }
+
         .edit-profile-container button {
             width: 100%;
             padding: 10px;
@@ -94,19 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cursor: pointer;
             transition: background 0.2s;
         }
+
         .edit-profile-container button:hover {
             background: #6d4c2b;
         }
+
         .edit-profile-container .error {
             color: red;
             text-align: center;
             margin-bottom: 12px;
         }
+
         .edit-profile-container .profile-preview {
             display: flex;
             justify-content: center;
             margin-bottom: 16px;
         }
+
         .edit-profile-container .profile-preview img {
             width: 90px;
             height: 90px;
@@ -116,13 +129,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="edit-profile-container">
         <h2>Edit Profil</h2>
-        <?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
+        <?php if (!empty($error))
+            echo "<div class='error'>$error</div>"; ?>
         <form method="POST" enctype="multipart/form-data">
             <div class="profile-preview">
-                <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ? $user['profile_picture'] : 'default-avatar.png'; ?>" alt="Foto Profil">
+                <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ? $user['profile_picture'] : 'default-avatar.png'; ?>"
+                    alt="Foto Profil">
             </div>
             <label for="foto">Foto Profil</label>
             <input type="file" name="foto" id="foto" accept="image/*">
@@ -131,7 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="nama" id="nama" required value="<?php echo htmlspecialchars($user['nama']); ?>">
 
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" required value="<?php echo htmlspecialchars($user['email']); ?>">
+            <input type="email" name="email" id="email" required
+                value="<?php echo htmlspecialchars($user['email']); ?>">
 
             <label for="no_telp">No. Telepon</label>
             <input type="text" name="no_telp" id="no_telp" value="<?php echo htmlspecialchars($user['no_telp']); ?>">
@@ -144,4 +161,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <?php include '../../views/footer.php'; ?>
 </body>
+
 </html>

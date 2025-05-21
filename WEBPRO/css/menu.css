@@ -23,9 +23,8 @@ html {
 }
 
 body {
-    background: #e0d3c2;
+    background: #f3e8d9;
     color: var(--bg-color);
-
 }
 
 /* END HTML */
@@ -320,7 +319,7 @@ body {
     border: 2px solid var(--main-color);
     border-radius: 8px;
     overflow: hidden;
-    background-color: var(--text-color);
+    background-color: #f3e8d9;
 }
 
 .card img {

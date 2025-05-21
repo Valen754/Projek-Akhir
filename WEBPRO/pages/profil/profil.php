@@ -18,6 +18,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +27,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         body {
-            background: #e0d3c2;
+            background: #f3e8d9;
         }
 
         .profile-kasir-container {
@@ -34,15 +35,17 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             margin: 40px auto;
             background: #8d6748;
             border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
             padding: 0;
             overflow: hidden;
         }
+
         .profile-kasir-header {
             background: #a67c52;
             text-align: center;
             padding: 32px 0 16px 0;
         }
+
         .profile-kasir-avatar {
             width: 110px;
             height: 110px;
@@ -52,6 +55,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             border: 4px solid #e0d3c2;
             margin-bottom: 16px;
         }
+
         .profile-kasir-info {
             display: flex;
             justify-content: space-between;
@@ -62,15 +66,18 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             border-top: 2px solid #6d4c2b;
             border-bottom: 2px solid #6d4c2b;
         }
+
         .profile-kasir-info .poin {
             display: flex;
             align-items: center;
             gap: 6px;
         }
+
         .profile-kasir-menu {
             padding: 18px 0;
             background: #8d6748;
         }
+
         .profile-kasir-menu-list {
             display: flex;
             flex-direction: column;
@@ -78,6 +85,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             margin: 0;
             padding: 0 18px;
         }
+
         .profile-kasir-menu-item {
             background: #e0d3c2;
             border-radius: 8px;
@@ -91,9 +99,11 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             border: none;
             outline: none;
         }
+
         .profile-kasir-menu-item:hover {
             background: #d1bfa7;
         }
+
         .profile-kasir-menu-item i {
             font-size: 1.5em;
             margin-right: 16px;
@@ -101,10 +111,12 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
         }
     </style>
 </head>
+
 <body>
     <div class="profile-kasir-container">
         <div class="profile-kasir-header">
-            <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ?? 'default-avatar.png'; ?>" alt="Avatar" class="profile-kasir-avatar">
+            <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ?? 'default-avatar.png'; ?>"
+                alt="Avatar" class="profile-kasir-avatar">
         </div>
         <div class="profile-kasir-info">
             <span><?php echo htmlspecialchars($user['nama']); ?></span>
@@ -115,13 +127,17 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
         </div>
         <div class="profile-kasir-menu">
             <div class="profile-kasir-menu-list">
-                <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i> Riwayat Pesanan</a>
-                <a href="../pembayaran/pembayaran.php" class="profile-kasir-menu-item"><i class='bx bx-wallet'></i> Pembayaran</a>
-                <a href="../favorit/favorit.php" class="profile-kasir-menu-item"><i class='bx bx-bookmark'></i> Favorit</a>
+                <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i>
+                    Riwayat Pesanan</a>
+                <a href="../pembayaran/pembayaran.php" class="profile-kasir-menu-item"><i class='bx bx-wallet'></i>
+                    Pembayaran</a>
+                <a href="../favorit/favorit.php" class="profile-kasir-menu-item"><i class='bx bx-bookmark'></i>
+                    Favorit</a>
                 <a href="edit_profil.php" class="profile-kasir-menu-item"><i class='bx bx-cog'></i> Pengaturan</a>
             </div>
         </div>
     </div>
     <?php include '../../views/footer.php'; ?>
 </body>
+
 </html>
