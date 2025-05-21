@@ -16,19 +16,33 @@ if (empty($order_ids)) {
     exit();
 }
 
-// Ubah array ID menjadi string dipisahkan koma
+// Ambil data menu_id dan price dari keranjang
 $order_ids_str = implode(",", array_map('intval', $order_ids));
-
-// Ambil total harga dari item yang dipilih
-$sql = "SELECT SUM(price) AS total FROM keranjang WHERE order_id IN ($order_ids_str) AND user_id = $user_id";
+$sql = "SELECT order_id, menu_id, price FROM keranjang WHERE order_id IN ($order_ids_str) AND user_id = $user_id";
 $result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-$total_price = $row['total'];
 
-// Simpan ke tabel checkout
-$insert = mysqli_query($conn, "INSERT INTO checkout (user_id, order_ids, total_price) VALUES ($user_id, '$order_ids_str', $total_price)");
+if (!$result || mysqli_num_rows($result) == 0) {
+    echo "Data keranjang tidak ditemukan.";
+    exit();
+}
 
-if ($insert) {
+$total_price = 0;
+$success = true;
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $menu_id = intval($row['menu_id']);
+    $price = floatval($row['price']);
+    $total_price += $price;
+
+    // Insert satu per satu ke tabel checkout
+    $insert = mysqli_query($conn, "INSERT INTO checkout (user_id, menu_id, total_price) VALUES ($user_id, $menu_id, $price)");
+    if (!$insert) {
+        $success = false;
+        break;
+    }
+}
+
+if ($success) {
     // Hapus dari keranjang
     mysqli_query($conn, "DELETE FROM keranjang WHERE order_id IN ($order_ids_str) AND user_id = $user_id");
 
