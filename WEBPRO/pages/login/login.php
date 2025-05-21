@@ -20,11 +20,13 @@
                 <form action="logic/login_logic.php" method="post">
 
                     <div class="inputBx">
+                        <label for="username" style="color:white;display:block;margin-bottom:4px;">Nama</label>
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()"
                             required autofocus>
                         <img src="login-form/images/user.png" alt="">
                     </div>
                     <div class="inputBx">
+                        <label for="password" style="color:white;display:block;margin-bottom:4px;">Password</label>
                         <input type="password" name="password" id="password" placeholder="Password"
                             oninput="validation()" required>
                         <img src="login-form/images/lock.png" alt="">

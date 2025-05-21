@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Register Page</title>
-    <link rel="stylesheet" href="../../css/login.css">
+    <link rel="stylesheet" href="../../css/registrasi.css">
 </head>
 <body>
    <section>
@@ -15,22 +15,27 @@
                 <h2>Create a New Account</h2>
                 <form action="logic/registrasi_logic.php" method="post" enctype="multipart/form-data">
                     <div class="inputBx">
+                        <label for="username" style="color:white;display:block;margin-bottom:4px;">Username</label>
                         <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
                         <img src="login-form/images/user.png" alt="">
                     </div>
                     <div class="inputBx">
+                        <label for="nama" style="color:white;display:block;margin-bottom:4px;">Nama Lengkap</label>
                         <input type="text" name="nama" placeholder="Full Name" id="nama" oninput="validation()" required>
                         <img src="login-form/images/user.png" alt="">
                     </div>
                     <div class="inputBx">
+                        <label for="email" style="color:white;display:block;margin-bottom:4px;">Email</label>
                         <input type="email" name="email" placeholder="Email" id="email" oninput="validation()" required>
                         <img src="login-form/images/email.png" alt="">
                     </div>
                     <div class="inputBx">
+                        <label for="no_telp" style="color:white;display:block;margin-bottom:4px;">No. Telepon</label>
                         <input type="text" name="no_telp" placeholder="Phone Number" id="no_telp" oninput="validation()" required>
                         <img src="login-form/images/phone.png" alt="">
                     </div>
                     <div class="inputBx">
+                        <label for="gender" style="color:white;display:block;margin-bottom:4px;">Gender</label>
                         <select name="gender" id="gender" oninput="validation()" required>
                             <option value="">Select Gender</option>
                             <option value="male">Male</option>
@@ -38,9 +43,11 @@
                         </select>
                     </div>
                     <div class="inputBx">
+                        <label for="alamat" style="color:white;display:block;margin-bottom:4px;">Alamat</label>
                         <textarea name="alamat" placeholder="Address" id="alamat" oninput="validation()" required></textarea>
                     </div>
                     <div class="inputBx">
+                        <label for="password" style="color:white;display:block;margin-bottom:4px;">Password</label>
                         <input type="password" name="password" id="password" placeholder="Password" oninput="validation()" required>
                         <img src="login-form/images/lock.png" alt="">
                         <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: white;">
@@ -48,6 +55,7 @@
                         </button>
                     </div>
                     <div class="inputBx">
+                        <label for="confirmPassword" style="color:white;display:block;margin-bottom:4px;">Konfirmasi Password</label>
                         <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" oninput="validation()" required>
                         <img src="login-form/images/lock.png" alt="">
                         <button type="button" id="toggleConfirmPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: white;">
