@@ -26,8 +26,9 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         body {
-            background: #8d6748;
+            background: #e0d3c2;
         }
+
         .profile-kasir-container {
             max-width: 50%;
             margin: 40px auto;
@@ -115,7 +116,6 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
         <div class="profile-kasir-menu">
             <div class="profile-kasir-menu-list">
                 <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i> Riwayat Pesanan</a>
-                <a href="../promo/promo.php" class="profile-kasir-menu-item"><i class='bx bx-percent'></i> Promo & Voucher</a>
                 <a href="../pembayaran/pembayaran.php" class="profile-kasir-menu-item"><i class='bx bx-wallet'></i> Pembayaran</a>
                 <a href="../favorit/favorit.php" class="profile-kasir-menu-item"><i class='bx bx-bookmark'></i> Favorit</a>
                 <a href="edit_profil.php" class="profile-kasir-menu-item"><i class='bx bx-cog'></i> Pengaturan</a>

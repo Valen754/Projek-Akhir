@@ -14,7 +14,7 @@
     --text-color: white;
     --main-color: #543310;
     --sc-color: #B69574;
-    --buy-color:#28a745;
+    --buy-color: #28a745;
 }
 
 html {
@@ -23,7 +23,7 @@ html {
 }
 
 body {
-    background: var(--text-color);
+    background: #e0d3c2;
     color: var(--bg-color);
 
 }
@@ -262,22 +262,34 @@ body {
 /* ISI KATEGORI MENU */
 .label-new {
     position: absolute;
-    background-color: #ff0000; /* Warna latar belakang */
-    color: var(--text-color); /* Warna teks */
-    padding: 5px 10px; /* Padding */
-    border-radius: 5px; /* Sudut melengkung */
-    font-size: 1.6rem; /* Ukuran font */
-    z-index: 10; /* Pastikan label di atas elemen lain */
+    background-color: #ff0000;
+    /* Warna latar belakang */
+    color: var(--text-color);
+    /* Warna teks */
+    padding: 5px 10px;
+    /* Padding */
+    border-radius: 5px;
+    /* Sudut melengkung */
+    font-size: 1.6rem;
+    /* Ukuran font */
+    z-index: 10;
+    /* Pastikan label di atas elemen lain */
 }
 
 .label-promo {
     position: absolute;
-    background-color: blue; /* Warna latar belakang */
-    color: var(--text-color); /* Warna teks */
-    padding: 5px 10px; /* Padding */
-    border-radius: 5px; /* Sudut melengkung */
-    font-size: 1.6rem; /* Ukuran font */
-    z-index: 10; /* Pastikan label di atas elemen lain */
+    background-color: blue;
+    /* Warna latar belakang */
+    color: var(--text-color);
+    /* Warna teks */
+    padding: 5px 10px;
+    /* Padding */
+    border-radius: 5px;
+    /* Sudut melengkung */
+    font-size: 1.6rem;
+    /* Ukuran font */
+    z-index: 10;
+    /* Pastikan label di atas elemen lain */
 }
 
 .tab-content {
@@ -397,6 +409,7 @@ body {
 .image-wrapper {
     position: relative;
     overflow: hidden;
+    border-radius: 1px 1px 0 0;
 }
 
 .image-wrapper img {
@@ -407,20 +420,41 @@ body {
 
 .btn-overlay {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    left: 50%;
+    bottom: 1%;
+    transform: translateX(-50%);
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Transparansi hitam */
+    gap: 16px;
     opacity: 0;
-    /* Mulai dari tidak terlihat */
-    transition: opacity 0.3s ease;
-    /* Animasi */
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.btn-icon-round {
+    width: 60px;
+    height: 48px;
+    background: transparent;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-icon-round svg,
+.btn-icon-round i {
+    color: #fff;
+    font-size: 2em;
+}
+
+.btn-icon-round:hover {
+    background: #543310;
+    ;
 }
 
 .image-wrapper:hover .btn-overlay {
@@ -440,12 +474,12 @@ body {
     color: var(--bg-color);
 }
 
-.container .card .btn-overlay {
+.card .btn-overlay {
     pointer-events: none;
 }
 
-.container .card .btn-overlay form,
-.container .card .btn-overlay a {
+.card .btn-overlay form,
+.card .btn-overlay a {
     pointer-events: auto;
 }
 
@@ -718,27 +752,36 @@ body {
 /* MODAL 2 */
 /* Overlay */
 .modal2 {
-    display: none; /* Sembunyikan modal secara default */
+    display: none;
+    /* Sembunyikan modal secara default */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Latar belakang semi-transparan */
-    justify-content: center; /* Pusatkan konten secara horizontal */
-    align-items: center; /* Pusatkan konten secara vertikal */
-    z-index: 1000; /* Pastikan modal di atas elemen lain */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Latar belakang semi-transparan */
+    justify-content: center;
+    /* Pusatkan konten secara horizontal */
+    align-items: center;
+    /* Pusatkan konten secara vertikal */
+    z-index: 1000;
+    /* Pastikan modal di atas elemen lain */
 }
 
 /* ISI */
 .modal-dialog2 {
     background-color: var(--bg-color);
     border-radius: 8px;
-    max-width: 500px; /* Lebar maksimum modal */
-    width: 90%; /* Lebar modal */
+    max-width: 500px;
+    /* Lebar maksimum modal */
+    width: 90%;
+    /* Lebar modal */
     padding: 20px;
-    max-height: 80%; /* Batas tinggi modal */
-    overflow-y: auto; /* Izinkan scroll vertikal */
+    max-height: 80%;
+    /* Batas tinggi modal */
+    overflow-y: auto;
+    /* Izinkan scroll vertikal */
 }
 
 .modal-header2 {
@@ -754,7 +797,8 @@ body {
 }
 
 .tutup-btn {
-    font-size: 2rem; /* Ukuran tombol tutup */
+    font-size: 2rem;
+    /* Ukuran tombol tutup */
     color: var(--text-color);
     background: none;
     border: none;
@@ -791,14 +835,16 @@ body {
 }
 
 .payment-summary {
-    display: none; /* Menyembunyikan ringkasan secara default */
+    display: none;
+    /* Menyembunyikan ringkasan secara default */
     font-size: 14px;
     margin-top: 10px;
     color: #555;
 }
 
 .qrbank-summary {
-    display: none; /* Menyembunyikan QR code secara default */
+    display: none;
+    /* Menyembunyikan QR code secara default */
 }
 
 .payment-methods {
@@ -828,16 +874,18 @@ body {
     background-color: var(--sc-color);
 }
 
-.payment-option input[type="radio"]:checked + .payment-btn + .payment-summary {
-    display: block; /* Menampilkan ringkasan saat radio button dipilih */
+.payment-option input[type="radio"]:checked+.payment-btn+.payment-summary {
+    display: block;
+    /* Menampilkan ringkasan saat radio button dipilih */
 }
 
-.payment-option input[type="radio"]:checked + .payment-btn + .payment-summary .payment-method-btn {
+.payment-option input[type="radio"]:checked+.payment-btn+.payment-summary .payment-method-btn {
     color: var(--bg-color);
 }
 
 .payment-option input[type="radio"] {
-    display: none; /* Sembunyikan radio button */
+    display: none;
+    /* Sembunyikan radio button */
 }
 
 .payment-method-btn:hover,
@@ -846,8 +894,8 @@ body {
     color: var(--bg-color);
 }
 
-.payment-option input[type="radio"]:checked + .payment-btn,
-.payment-methods input[type="radio"]:checked + .payment-method-btn {
+.payment-option input[type="radio"]:checked+.payment-btn,
+.payment-methods input[type="radio"]:checked+.payment-method-btn {
     background-color: var(--sc-color);
     color: var(--bg-color);
 }
@@ -889,20 +937,23 @@ body {
 button {
     cursor: pointer;
 }
+
 /* END MODAL2 */
 
 .notification {
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: #28a745; /* Warna hijau */
+    background-color: #28a745;
+    /* Warna hijau */
     color: var(--text-color);
     padding: 10px 20px;
     border-radius: 5px;
     font-size: 2rem;
     z-index: 1000;
     transition: opacity 0.5s ease;
-    opacity: 0; /* Mulai dari tidak terlihat */
+    opacity: 0;
+    /* Mulai dari tidak terlihat */
 }
 
 /* Media Queries untuk Responsif */
@@ -918,7 +969,8 @@ button {
     }
 
     .judul {
-        font-size: 3rem; /* Ukuran judul lebih besar */
+        font-size: 3rem;
+        /* Ukuran judul lebih besar */
     }
 
     .container {
@@ -926,12 +978,14 @@ button {
     }
 
     .col {
-        flex: 1 1 calc(20% - 20px); /* 5 kolom pada desktop */
+        flex: 1 1 calc(20% - 20px);
+        /* 5 kolom pada desktop */
         max-width: calc(20% - 20px);
     }
 
     .card-title {
-        font-size: 1.3rem; /* Ukuran font judul produk */
+        font-size: 1.3rem;
+        /* Ukuran font judul produk */
     }
 }
 
@@ -946,7 +1000,8 @@ button {
     }
 
     .judul {
-        font-size: 2.5rem; /* Ukuran judul lebih kecil */
+        font-size: 2.5rem;
+        /* Ukuran judul lebih kecil */
     }
 
     .container {
@@ -954,12 +1009,14 @@ button {
     }
 
     .col {
-        flex: 1 1 calc(33.33% - 20px); /* 3 kolom pada tablet */
+        flex: 1 1 calc(33.33% - 20px);
+        /* 3 kolom pada tablet */
         max-width: calc(33.33% - 20px);
     }
 
     .card-title {
-        font-size: 1.2rem; /* Ukuran font judul produk */
+        font-size: 1.2rem;
+        /* Ukuran font judul produk */
     }
 }
 
@@ -974,7 +1031,8 @@ button {
     }
 
     .judul {
-        font-size: 2rem; /* Ukuran judul lebih kecil */
+        font-size: 2rem;
+        /* Ukuran judul lebih kecil */
     }
 
     .container {
@@ -982,27 +1040,32 @@ button {
     }
 
     .col {
-        flex: 1 1 calc(50% - 20px); /* 2 kolom pada ponsel besar */
+        flex: 1 1 calc(50% - 20px);
+        /* 2 kolom pada ponsel besar */
         max-width: calc(50% - 20px);
     }
 
     .card-title {
-        font-size: 1.1rem; /* Ukuran font judul produk */
+        font-size: 1.1rem;
+        /* Ukuran font judul produk */
     }
 }
 
 /* Ponsel Kecil (kurang dari 481px) */
 @media (max-width: 480px) {
     .header {
-        padding: 1rem 2%; /* Padding lebih kecil */
+        padding: 1rem 2%;
+        /* Padding lebih kecil */
     }
 
     .navbar a {
-        font-size: 1.2rem; /* Ukuran font navbar lebih kecil */
+        font-size: 1.2rem;
+        /* Ukuran font navbar lebih kecil */
     }
 
     .judul {
-        font-size: 1.5rem; /* Ukuran judul lebih kecil */
+        font-size: 1.5rem;
+        /* Ukuran judul lebih kecil */
     }
 
     .container {
@@ -1010,29 +1073,37 @@ button {
     }
 
     .col {
-        flex: 1 1 100%; /* 1 kolom pada ponsel kecil */
+        flex: 1 1 100%;
+        /* 1 kolom pada ponsel kecil */
         max-width: 100%;
     }
 
     .card-title {
-        font-size: 1rem; /* Ukuran font judul produk lebih kecil */
+        font-size: 1rem;
+        /* Ukuran font judul produk lebih kecil */
     }
 
     .btn {
-        width: 100%; /* Tombol penuh pada ponsel kecil */
-        padding: 10px; /* Padding lebih besar untuk tombol */
-        font-size: 1rem; /* Ukuran font tombol lebih kecil */
+        width: 100%;
+        /* Tombol penuh pada ponsel kecil */
+        padding: 10px;
+        /* Padding lebih besar untuk tombol */
+        font-size: 1rem;
+        /* Ukuran font tombol lebih kecil */
     }
 
     .price-- {
-        font-size: 1rem; /* Ukuran font harga lebih kecil */
+        font-size: 1rem;
+        /* Ukuran font harga lebih kecil */
     }
 
     .pilter {
-        font-size: 1.5rem; /* Ukuran font filter lebih kecil */
+        font-size: 1.5rem;
+        /* Ukuran font filter lebih kecil */
     }
 
     .price-filter {
-        font-size: 1rem; /* Ukuran font filter harga lebih kecil */
+        font-size: 1rem;
+        /* Ukuran font filter harga lebih kecil */
     }
 }

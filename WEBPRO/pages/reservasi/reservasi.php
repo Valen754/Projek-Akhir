@@ -15,7 +15,7 @@
 <body>
     <?php
     include '../../views/header.php';
-    include 'logic/logic_reservasi.php'; // Logic pemrosesan reservasi
+    include 'logic/logic_reservasi.php';
     ?>
 
     <div class="container">

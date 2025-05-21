@@ -56,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="../../css/menu.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { background: #8d6748; }
         .edit-profile-container {
             max-width: 50%;
             margin: 40px auto;

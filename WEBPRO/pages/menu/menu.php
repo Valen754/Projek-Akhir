@@ -7,7 +7,7 @@
     <title>Tapal Kuda | Menu</title>
     <link href="../../css/menu.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <style>
+    <!-- <style>
         .image-wrapper {
             position: relative;
             overflow: hidden;
@@ -64,7 +64,7 @@
         .card .btn-overlay a {
             pointer-events: auto;
         }
-    </style>
+    </style> -->
 </head>
 
 <body>
