@@ -135,7 +135,7 @@
                 <div class="row">
                     <?php
                     // Query dasar
-                    $sql = "SELECT * FROM menu WHERE 1=1";
+                    $sql = "SELECT * FROM menu WHERE quantity > 0";
 
                     // Filter berdasarkan kategori
                     if (isset($_GET['type']) && !empty($_GET['type'])) {
@@ -187,7 +187,9 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="card-title"><?php echo $row['nama']; ?></div>
-                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?>
+                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></div>
+                                        <div class="card-title" style="color:#6d4c2b;">
+                                            Tersedia: <?php echo $row['quantity']; ?>
                                         </div>
                                     </div>
                                 </div>
