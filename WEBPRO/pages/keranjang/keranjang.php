@@ -32,6 +32,15 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
             </ol>
         </nav>
 
+        <?php
+            //notifikasi berhasil edit keranjang
+        if (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Keranjang berhasil diperbarui!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
         <h3 class="mb-4">Shopping Cart</h3>
 
         <form action="logic/proses_checkout.php" method="POST">
@@ -54,8 +63,15 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
                             <td><?= $row['quantity'] ?></td>
                             <td><?= $row['catatan'] ?></td>
                             <td>Rp <?= number_format($row['price'], 0, ',', '.') ?></td>
-                            <td><a href="logic/hapus-item.php?order_id=<?= $row['order_id'] ?>" class="btn btn-danger btn-sm">Hapus</a></td>
+                            <td>
+                            <a href="logic/hapus-item.php?order_id=<?= $row['order_id'] ?>" class="btn btn-danger btn-sm">Hapus</a> ||
+                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#editItemModal<?= $row['order_id'] ?>">Edit</a>
+                            </td>
                         </tr>
+                            </div>
+                        </div>
+                    </div>
                     <?php } ?>
                 </tbody>
             </table>
@@ -65,7 +81,9 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
                 Checkout
             </button>
 
-            <!-- Modal -->
+
+
+            <!-- ADD Modal -->
             <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -85,6 +103,36 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
                 </div>
             </div>
         </form>
+
+                    <!-- Edit Modal -->
+                    <?php mysqli_data_seek($query, 0); while ($row = mysqli_fetch_assoc($query)) { ?>
+                        <div class="modal fade" id="editItemModal<?= $row['order_id'] ?>" tabindex="-1" aria-labelledby="editItemModalLabel<?= $row['order_id'] ?>" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="logic/edit-item.php" method="POST">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color:black;">Edit Item</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" style="color:black;">
+                                            <input type="hidden" name="order_id" value="<?= $row['order_id'] ?>">
+                                            <div class="mb-3">
+                                                <label for="quantity<?= $row['order_id'] ?>">Jumlah</label>
+                                                <input type="number" name="quantity" value="<?= $row['quantity'] ?>" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="catatan<?= $row['order_id'] ?>">Catatan</label>
+                                                <textarea name="catatan" class="form-control"><?= $row['catatan'] ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
     </div>
 
     <script>
