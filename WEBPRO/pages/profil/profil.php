@@ -29,7 +29,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
             background: #8d6748;
         }
         .profile-kasir-container {
-            max-width: 80%;
+            max-width: 50%;
             margin: 40px auto;
             background: #8d6748;
             border-radius: 16px;
@@ -103,7 +103,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
 <body>
     <div class="profile-kasir-container">
         <div class="profile-kasir-header">
-            <img src="../../asset/<?php echo $user['avatar'] ?? 'default-avatar.png'; ?>" alt="Avatar" class="profile-kasir-avatar">
+            <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ?? 'default-avatar.png'; ?>" alt="Avatar" class="profile-kasir-avatar">
         </div>
         <div class="profile-kasir-info">
             <span><?php echo htmlspecialchars($user['nama']); ?></span>

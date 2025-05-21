@@ -440,6 +440,15 @@ body {
     color: var(--bg-color);
 }
 
+.container .card .btn-overlay {
+    pointer-events: none;
+}
+
+.container .card .btn-overlay form,
+.container .card .btn-overlay a {
+    pointer-events: auto;
+}
+
 /* END ISI KATEGORI */
 
 
