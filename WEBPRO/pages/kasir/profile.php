@@ -42,101 +42,146 @@ if (!$user) {
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #1c2431;
-        }
-
-        .container {
-            display: flex;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            min-height: 100vh;
             height: 100vh;
         }
-
+        .container {
+            display: flex;
+            min-height: 100vh;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
         main {
             flex: 1;
-            padding: 20px;
-            background-color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: #1c2431;
+            height: 100vh;
+            padding: 0;
         }
-
         .profile-container {
             width: 100%;
             max-width: 600px;
-            background-color: #fff;
-            border-radius: 8px;
-            background-color: #222b3a;
-            padding: 20px;
+            min-height: 70vh;
+            background: rgba(34, 43, 58, 0.97);
+            border-radius: 24px;
+            box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.25);
+            padding: 40px 36px 36px 36px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-
+        .profile-container:hover {
+            box-shadow: 0 16px 56px 0 rgba(31, 38, 135, 0.35);
+        }
         .profile-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
         }
-
         .profile-photo {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #ddd;
+            border: 5px solid #e07b6c;
+            box-shadow: 0 6px 24px rgba(224, 123, 108, 0.2);
+            margin-bottom: 16px;
+            background: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
+        .profile-photo:hover {
+            transform: scale(1.07);
+            box-shadow: 0 12px 40px rgba(224, 123, 108, 0.3);
+        }
         .profile-header h1 {
-            margin: 10px 0 5px;
-            font-size: 24px;
-            color:#fff;
+            margin: 12px 0 6px;
+            font-size: 32px;
+            color: #fff;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
-
         .profile-header p {
             margin: 0;
-            font-size: 16px;
-            color: #fff;
+            font-size: 17px;
+            color: #e07b6c;
+            font-weight: 500;
+            letter-spacing: 1px;
         }
-
         .profile-info {
-            margin-top: 20px;
+            margin-top: 10px;
         }
-
         .info-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 18px 20px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid #2d3748;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(34, 43, 58, 0.08);
+            transition: background 0.2s;
         }
-
+        .info-item:hover {
+            background: rgba(224, 123, 108, 0.09);
+        }
         .info-item .info-label {
-            font-size: 14px;
-            color: #777;
-        }
-
-        .info-item .info-value {
             font-size: 16px;
-            color: #333;
-            font-weight: bold;
+            color: #e07b6c;
+            font-weight: 500;
         }
-
+        .info-item .info-value {
+            font-size: 18px;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-align: right;
+            flex: 1;
+            margin-left: 24px;
+        }
         .edit-button {
-            background-color: #e07b6c;
+            background: linear-gradient(90deg, #e07b6c 0%, #f7b267 100%);
             color: #fff;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 12px 28px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(224, 123, 108, 0.15);
+            transition: background 0.2s, box-shadow 0.2s;
+            margin-top: 24px;
+            display: inline-block;
+            font-size: 18px;
         }
-
         .edit-button i {
-            margin-right: 5px;
+            margin-right: 9px;
         }
-
         .edit-button:hover {
-            background-color:rgb(224, 103, 84);
+            background: linear-gradient(90deg, #f7b267 0%, #e07b6c 100%);
+            box-shadow: 0 4px 16px rgba(224, 123, 108, 0.25);
+        }
+        @media (max-width: 700px) {
+            .profile-container {
+                max-width: 98vw;
+                padding: 18px 6vw;
+            }
+            .profile-photo {
+                width: 90px;
+                height: 90px;
+            }
+            .profile-header h1 {
+                font-size: 22px;
+            }
+            .info-item .info-label, .info-item .info-value {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -161,17 +206,10 @@ if (!$user) {
                     <div class="info-item">
                         <span class="info-label">Email</span>
                         <span class="info-value"><?php echo $user['email']; ?></span>
-                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button> -->
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Password</span>
-                        <span class="info-value">********</span>
-                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Change</button> -->
                     </div>
                     <div class="info-item">
                         <span class="info-label">Phone</span>
                         <span class="info-value"><?php echo $user['no_telp']; ?></span>
-                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button> -->
                     </div>
                     <div class="info-item">
                         <span class="info-label">Gender</span>
@@ -180,12 +218,11 @@ if (!$user) {
                     <div class="info-item">
                         <span class="info-label">Address</span>
                         <span class="info-value"><?php echo $user['alamat']; ?></span>
-                        <!-- <button class="edit-button"><i class="fas fa-pencil-alt"></i> Edit</button> -->
                     </div>
                 </div>
-                <!-- <button class="edit-button">
-                    <i class="fas fa-pencil-alt"></i> Change Profile Picture
-                </button> -->
+                <a href="edit_kasir.php" class="edit-button" style="margin-top:20px;display:inline-block;">
+                    <i class="fas fa-pencil-alt"></i> Edit Profile
+                </a>
             </div>
         </main>
     </div>
