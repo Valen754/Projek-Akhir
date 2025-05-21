@@ -13,7 +13,7 @@
     <title>Document</title>
     <style>
         body {
-            background-image:url(../../asset/bg/bg.jpg);
+            background-image: url(../../asset/bg/bg.jpg);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    
+
     <?php
     include '../../views/header.php';
     ?>
