@@ -36,9 +36,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 </head>
 
 <body>
-    <?php include '../../views/header.php'; ?>
+    <?php include '../../views/header.php'; // ?>
 
-    <!-- Breadcrumb -->
     <div class="wadah-breadcrumb">
         <nav class="navigasi-breadcrumb" aria-label="breadcrumb">
             <ul class="breadcrumb">
@@ -49,47 +48,24 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         </nav>
     </div>
 
-    <!-- Detail Produk -->
     <div class="wadah-isi">
         <div class="kontainer-produk">
             <div class="kolom-gambar">
                 <img src="../../asset/<?= htmlspecialchars($product['url_foto']) ?>"
                     alt="<?= htmlspecialchars($product['nama']) ?>">
                 <div class="icon-container">
-                    <!-- Ikon Favorit & Share -->
-                    <!-- (Sama seperti kode sebelumnya, tidak diubah) -->
-                </div>
+                    </div>
             </div>
 
             <div class="kolom-detail">
                 <h2><?= htmlspecialchars($product['nama']) ?></h2>
-                <!-- <div class="rating-bin">
-                    <span class="bintang-bin">&#9733;</span><span class="bintang-bin">&#9733;</span>
-                    <span class="bintang-bin">&#9733;</span><span class="bintang-bin">&#9733;</span>
-                    <span class="bintang-bin">&#9734;</span>
-                    <span class="rating-text">4/5</span>
-                </div> -->
                 <p><?= nl2br(htmlspecialchars($product['deskripsi'])) ?></p>
                 <h3 id="price">Rp <?= number_format($product['price'], 0, ',', '.') ?></h3>
 
-                <!-- <div class="quantity-price">
-                    <div class="quantity-selector">
-                        <button id="decrease" class="btn-adjust">&minus;</button>
-                        <span id="quantity">1</span>
-                        <button id="increase" class="btn-adjust">&plus;</button>
-                    </div>
-                    <h3 id="price">Rp <?= number_format($product['price'], 0, ',', '.') ?></h3>
-                </div> -->
-
-                <!-- <div class="button-group">
-                    <button class="tombol-add-to-cart" id="cartModal">Add to Cart</button>
-                    <button class="tombol-beli" id="openModal">Buy Now</button>
-                </div> -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- KOMENTAR -->
     <div class="wadah-komentar">
         <h3>Comments</h3>
         <?php if (isset($_SESSION['user_id'])): ?>
@@ -144,29 +120,34 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         </div>
     </div>
 
-    <!-- REKOMENDASI -->
     <div class="wadah-rekomendasi">
         <h3>Rekomendasi untuk Anda</h3>
         <div class="baris-rekomendasi">
             <?php
-            $recommendations = [
-                "CAPPUCINO.jpg",
-                "ES KOPI SUSU.jpg",
-                "ESPRESSO.jpg",
-                "VIETNAM.jpg"
-            ];
-            foreach ($recommendations as $file):
-                ?>
-                <div class="kolom-rekomendasi">
-                    <a href="#">
-                        <img src="Foto/Kopi/Real/<?= $file ?>" alt="Rekomendasi Produk">
-                    </a>
-                </div>
-            <?php endforeach; ?>
+            // Mengambil 4 rekomendasi acak dari database
+            // Logika baru ditambahkan di sini tanpa mengubah struktur HTML yang sudah ada.
+            $sql_rekomendasi = "SELECT id, nama, url_foto FROM menu ORDER BY RAND() LIMIT 4";
+            $result_rekomendasi = $conn->query($sql_rekomendasi);
+
+            if ($result_rekomendasi->num_rows > 0) {
+                while ($rekomendasi = $result_rekomendasi->fetch_assoc()):
+                    ?>
+                    <div class="kolom-rekomendasi">
+                        <a href="detail.php?id=<?= htmlspecialchars($rekomendasi['id']) ?>">
+                            <img src="../../asset/<?= htmlspecialchars($rekomendasi['url_foto']) ?>"
+                                alt="<?= htmlspecialchars($rekomendasi['nama']) ?>">
+                        </a>
+                    </div>
+                <?php
+                endwhile;
+            } else {
+                echo "<p>Tidak ada rekomendasi.</p>";
+            }
+            ?>
         </div>
     </div>
 
-    <?php include '../../views/footer.php'; ?>
+    <?php include '../../views/footer.php'; // ?>
 </body>
 
 </html>

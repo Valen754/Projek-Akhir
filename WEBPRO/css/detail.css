@@ -282,35 +282,34 @@ body {
     color: #555;
 }
 
-/* Sembunyikan input radio */
+/* Tambahkan ke file detail.css atau di <style> halaman detail.php */
+.rating-input {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
 .rating-input input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
     display: none;
 }
 
-/* Gaya untuk bintang */
-.rating-input .bintang {
+.rating-input label.bintang {
     font-size: 2rem;
     color: #ccc;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.2s;
 }
 
-/* Warna bintang saat dipilih */
-.rating-input input[type="radio"]:checked + label,
-.rating-input label:hover,
-.rating-input label:hover ~ label {
+.rating-input label.bintang:hover,
+.rating-input label.bintang:hover ~ label.bintang {
     color: #ffc107;
 }
 
-/* Warna bintang sebelumnya saat dipilih */
-.rating-input input[type="radio"]:checked ~ label {
+.rating-input input[type="radio"]:checked ~ label.bintang {
+    color: #ffc107;
+}
+
+.rating-input label.bintang.selected {
     color: #ffc107;
 }
 
