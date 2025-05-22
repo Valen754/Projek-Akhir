@@ -79,6 +79,7 @@ session_start();
     }
 
     html {
+        font-size: 80%;
         overflow-x: hidden;
     }
 
