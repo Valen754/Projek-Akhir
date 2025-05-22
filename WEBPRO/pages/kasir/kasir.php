@@ -439,7 +439,7 @@
 <body>
     <div class="container" role="main">
         <?php
-        include '../../views/kasir/sidebar.php';
+            include '../../views/kasir/sidebar.php';
         ?>
         <main>
             <header>
@@ -447,26 +447,20 @@
                 <p>Tuesday, 29 April 2025</p>
             </header>
             <nav class="tabs" aria-label="Dish categories">
-                <a href="kasir.php"
-                    class="tab-link <?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>">
+                <a href="kasir.php" class="tab-link <?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>">
                     Coffe <span>(<?php echo isset($menuCounts['kopi']) ? $menuCounts['kopi'] : 0; ?>)</span>
                 </a>
-                <a href="kasir.php?type=minuman"
-                    class="tab-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>">
+                <a href="kasir.php?type=minuman" class="tab-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>">
                     Non Coffe <span>(<?php echo isset($menuCounts['minuman']) ? $menuCounts['minuman'] : 0; ?>)</span>
                 </a>
-                <a href="kasir.php?type=makanan_berat"
-                    class="tab-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>">
-                    Foods
-                    <span>(<?php echo isset($menuCounts['makanan_berat']) ? $menuCounts['makanan_berat'] : 0; ?>)</span>
+                <a href="kasir.php?type=makanan_berat" class="tab-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>">
+                    Foods <span>(<?php echo isset($menuCounts['makanan_berat']) ? $menuCounts['makanan_berat'] : 0; ?>)</span>
                 </a>
-                <a href="kasir.php?type=cemilan"
-                    class="tab-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>">
+                <a href="kasir.php?type=cemilan" class="tab-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>">
                     Snacks <span>(<?php echo isset($menuCounts['cemilan']) ? $menuCounts['cemilan'] : 0; ?>)</span>
                 </a>
                 <div class="search-container">
-                    <input type="search" placeholder="Search for food, coffe, etc.."
-                        aria-label="Search for food, coffee, etc." />
+                    <input type="search" placeholder="Search for food, coffe, etc.." aria-label="Search for food, coffee, etc." />
                     <i class="fas fa-search icon-search" aria-hidden="true"></i>
                 </div>
             </nav>
@@ -487,20 +481,17 @@
                     <?php
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            ?>
-                            <article class="dish-card" data-id="<?php echo $row['id']; ?>"
-                                data-name="<?php echo htmlspecialchars($row['nama']); ?>"
-                                data-price="<?php echo $row['price']; ?>" data-img="<?php echo $row['url_foto']; ?>">
-                                <img src="../../asset/<?php echo $row['url_foto']; ?>" alt="<?php echo $row['nama']; ?>"
-                                    width="96" height="96" />
-                                <h3><?php echo $row['nama']; ?></h3>
-                                <p class="price">Rp. <?php echo number_format($row['price'], 0, ',', '.'); ?></p>
-                                <p class="available"><?php echo $row['quantity']; ?> available</p>
-                                <button class="add-to-order" type="button" title="Tambah ke pesanan">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </article>
-                            <?php
+                    ?>
+                    <article class="dish-card" data-id="<?php echo $row['id']; ?>" data-name="<?php echo htmlspecialchars($row['nama']); ?>" data-price="<?php echo $row['price']; ?>" data-img="<?php echo $row['url_foto']; ?>">
+                        <img src="../../asset/<?php echo $row['url_foto']; ?>" alt="<?php echo $row['nama']; ?>" width="96" height="96" />
+                        <h3><?php echo $row['nama']; ?></h3>
+                        <p class="price">Rp. <?php echo number_format($row['price'], 0, ',', '.'); ?></p>
+                        <p class="available"><?php echo $row['quantity']; ?> available</p>
+                        <button class="add-to-order" type="button" title="Tambah ke pesanan">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </article>
+                    <?php
                         }
                     } else {
                         echo "<p>Menu tidak tersedia.</p>";
@@ -518,115 +509,15 @@
             <footer>
                 <div class="subtotal">
                     <span>Sub total</span>
-                    <span id="final-subtotal">Rp. 0</span>
+                    <span>Rp. 0</span>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#paymentModal">Continue to Payment</button>
+                <button type="button">Continue to Payment</button>
             </footer>
-
-            <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="paymentModalLabel" style="color: black;">Pilih Metode Pembayaran
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" style="color: black;">
-                            <div class="mb-3">
-                                <label for="customerNameInput" class="form-label">Nama Pelanggan (opsional):</label>
-                                <input type="text" class="form-control" id="customerNameInput"
-                                    placeholder="Masukkan nama pelanggan">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Metode Pembayaran:</label>
-                                <div>
-                                    <input type="radio" id="paymentCash" name="paymentMethod" value="cash" checked>
-                                    <label for="paymentCash">Tunai</label>
-                                </div>
-                                <div>
-                                    <input type="radio" id="paymentCard" name="paymentMethod" value="card">
-                                    <label for="paymentCard">Kartu Debit/Kredit</label>
-                                </div>
-                                <div>
-                                    <input type="radio" id="paymentEwallet" name="paymentMethod" value="e-wallet">
-                                    <label for="paymentEwallet">E-Wallet (QRIS)</label>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="orderNotesInput" class="form-label">Catatan Pesanan (opsional):</label>
-                                <textarea class="form-control" id="orderNotesInput" rows="3"
-                                    placeholder="Tambahkan catatan untuk pesanan ini"></textarea>
-                            </div>
-                            <p>Total yang harus dibayar: <strong id="modal-total-amount">Rp 0</strong></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="button" class="btn btn-success" id="processPaymentBtn">Proses
-                                Pembayaran</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </aside>
     </div>
     <script>
-        // ... (kode JavaScript yang sudah ada)
+        let orders = {};
 
-        // Event listener untuk tombol "Continue to Payment"
-        document.getElementById('processPaymentBtn').addEventListener('click', function () {
-            const customerName = document.getElementById('customerNameInput').value;
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            const orderNotes = document.getElementById('orderNotesInput').value;
-            const totalAmount = parseFloat(document.getElementById('final-subtotal').textContent.replace('Rp. ', '').replace(/\./g, ''));
-
-            // Siapkan data untuk dikirim ke server
-            const orderData = {
-                customer_name: customerName,
-                payment_method: paymentMethod,
-                order_notes: orderNotes,
-                total_amount: totalAmount, // Total keseluruhan dari pesanan
-                items: Object.values(orders) // Mengirim detail item dari objek 'orders'
-            };
-
-            // Kirim data menggunakan Fetch API atau XMLHttpRequest
-            fetch('logic/process_kasir_order.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Pesanan berhasil diproses!');
-                        // Reset order setelah sukses
-                        orders = {};
-                        renderOrders();
-                        // Tutup modal
-                        var paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-                        paymentModal.hide();
-                        // Opsional: Redirect atau perbarui UI lainnya
-                        window.location.reload(); // Reload halaman untuk kesederhanaan
-                    } else {
-                        alert('Gagal memproses pesanan: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat berkomunikasi dengan server.');
-                });
-        });
-
-        // Update total di modal pembayaran saat modal dibuka
-        document.getElementById('paymentModal').addEventListener('show.bs.modal', function () {
-            const currentSubtotalText = document.querySelector('.subtotal span:last-child').textContent;
-            document.getElementById('modal-total-amount').textContent = currentSubtotalText;
-        });
-
-        // Fungsi renderOrders yang sudah ada, sesuaikan untuk mengupdate #final-subtotal
         function renderOrders() {
             const orderList = document.querySelector('.order-list');
             orderList.innerHTML = '';
@@ -635,53 +526,49 @@
                 const item = orders[key];
                 subtotal += item.price * item.qty;
                 orderList.innerHTML += `
-                <li>
-                    <img src="../../asset/${item.img}" alt="${item.name}" width="40" height="40" />
-                    <div class="order-info">
-                        <p class="name">${item.name}</p>
-                        <p class="price">Rp. ${item.price.toLocaleString('id-ID')}</p>
-                        <input type="text" placeholder="Order Note..." aria-label="Order note for ${item.name}" value="${item.item_notes || ''}" onchange="updateItemNote('${key}', this.value)" />
-                    </div>
-                    <div class="order-qty-delete">
-                        <span class="qty">${item.qty}</span>
-                        <button aria-label="Decrease quantity" type="button" onclick="adjustOrderQuantity('${key}', -1)"><i class="fas fa-minus"></i></button>
-                        <button aria-label="Increase quantity" type="button" onclick="adjustOrderQuantity('${key}', 1)"><i class="fas fa-plus"></i></button>
-                        <button aria-label="Delete ${item.name} order" type="button" onclick="removeOrder('${key}')"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </li>
-            `;
+                    <li>
+                        <img src="../../asset/${item.img}" alt="${item.name}" width="40" height="40" />
+                        <div class="order-info">
+                            <p class="name">${item.name}</p>
+                            <p class="price">Rp. ${item.price.toLocaleString('id-ID')}</p>
+                            <input type="text" placeholder="Order Note..." aria-label="Order note for ${item.name}" />
+                        </div>
+                        <div class="order-qty-delete">
+                            <span class="qty">${item.qty}</span>
+                            <button aria-label="Delete ${item.name} order" type="button" onclick="removeOrder('${key}')"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </li>
+                `;
             }
-            // Pastikan ini mengupdate span dengan id 'final-subtotal' di footer
-            document.getElementById('final-subtotal').textContent = 'Rp. ' + subtotal.toLocaleString('id-ID');
+            document.querySelector('.subtotal span:last-child').textContent = 'Rp. ' + subtotal.toLocaleString('id-ID');
         }
 
-        // Fungsi addOrder
         function addOrder(id, name, price, img) {
             if (orders[id]) {
                 orders[id].qty += 1;
             } else {
-                orders[id] = { name, price: Number(price), img, qty: 1, item_notes: '' };
+                orders[id] = { name, price: Number(price), img, qty: 1 };
             }
             renderOrders();
         }
 
-        // Fungsi baru untuk adjust quantity dari panel order
-        function adjustOrderQuantity(id, change) {
-            if (orders[id]) {
-                orders[id].qty += change;
-                if (orders[id].qty <= 0) {
-                    delete orders[id]; // Hapus jika kuantitas jadi 0 atau kurang
-                }
-                renderOrders();
-            }
+        function removeOrder(id) {
+            delete orders[id];
+            renderOrders();
         }
 
-        // Fungsi baru untuk update catatan item
-        function updateItemNote(id, note) {
-            if (orders[id]) {
-                orders[id].item_notes = note;
-            }
-        }
+        // Event listener untuk tombol +
+        document.querySelectorAll('.add-to-order').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.dish-card');
+                const id = card.getAttribute('data-id');
+                const name = card.getAttribute('data-name');
+                const price = card.getAttribute('data-price');
+                const img = card.getAttribute('data-img');
+                addOrder(id, name, price, img);
+            });
+        });
     </script>
 </body>
 
