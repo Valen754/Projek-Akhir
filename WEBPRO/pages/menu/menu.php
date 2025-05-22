@@ -187,7 +187,8 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="card-title"><?php echo $row['nama']; ?></div>
-                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></div>
+                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?>
+                                        </div>
                                         <div class="card-title" style="color:#6d4c2b;">
                                             Tersedia: <?php echo $row['quantity']; ?>
                                         </div>
@@ -251,7 +252,21 @@
     include '../../views/footer.php';
     ?>
 
-    <script src="../../js/menu.js"></script>
+    <script>
+        // Contoh jQuery untuk dropdown sederhana
+        $(document).ready(function () {
+            $('.dropdown-toggle').click(function () {
+                $(this).next('.dropdown-menu').toggle(); // Atau .slideToggle()
+            });
+
+            // Tutup dropdown jika klik di luar
+            $(document).click(function (event) {
+                if (!$(event.target).closest('.dropdown').length) {
+                    $('.dropdown-menu').hide();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

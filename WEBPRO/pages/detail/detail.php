@@ -1,5 +1,5 @@
 <?php
-include '../../koneksi.php';
+include '../../koneksi.php'; //
 
 // Ambil ID produk dari URL
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -88,7 +88,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
         <div class="list-komentar">
             <?php
-            $sql = "SELECT r.comment, r.rating, r.created_at, u.username
+            // Perubahan pada query SQL untuk mengambil profile_picture
+            $sql = "SELECT r.comment, r.rating, r.created_at, u.username, u.profile_picture
                 FROM reviews r
                 JOIN users u ON r.user_id = u.id
                 WHERE r.menu_id = ?
@@ -99,10 +100,14 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $result = $stmt->get_result();
 
             while ($row = $result->fetch_assoc()):
+                // Path foto profil user
+                $profile_pic_path = !empty($row['profile_picture'])
+                    ? '../../asset/user_picture/' . htmlspecialchars($row['profile_picture'])
+                    : '../../asset/user_picture/default-avatar.png';
                 ?>
                 <div class="komentar-item">
                     <div class="komentar-header">
-                        <img src="../../asset/default-avatar.jpg" alt="Foto Profil" class="foto-profil">
+                        <img src="<?= $profile_pic_path ?>" alt="Foto Profil" class="foto-profil">
                         <h4><?= htmlspecialchars($row['username']) ?>
                             <span class="waktu-komentar"><?= date('d M Y', strtotime($row['created_at'])) ?></span>
                         </h4>
@@ -125,7 +130,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         <div class="baris-rekomendasi">
             <?php
             // Mengambil 4 rekomendasi acak dari database
-            // Logika baru ditambahkan di sini tanpa mengubah struktur HTML yang sudah ada.
             $sql_rekomendasi = "SELECT id, nama, url_foto FROM menu ORDER BY RAND() LIMIT 4";
             $result_rekomendasi = $conn->query($sql_rekomendasi);
 

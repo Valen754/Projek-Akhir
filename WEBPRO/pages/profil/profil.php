@@ -133,7 +133,7 @@ $poin = isset($user['poin']) ? $user['poin'] : 0;
                     Pembayaran</a>
                 <a href="../favorit/favorit.php" class="profile-kasir-menu-item"><i class='bx bx-bookmark'></i>
                     Favorit</a>
-                <a href="edit_profil.php" class="profile-kasir-menu-item"><i class='bx bx-cog'></i> Pengaturan</a>
+                <a href="edit_profil.php" class="profile-kasir-menu-item"><i class='bx bx-cog'></i> Edit </a>
             </div>
         </div>
     </div>
