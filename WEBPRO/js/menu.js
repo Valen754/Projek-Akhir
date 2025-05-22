@@ -23,10 +23,10 @@ let quantity = 1;
 const pricePerItem = 12000;
 let itemCount = 0; // Variabel untuk menyimpan jumlah item di cart
 
-// BUKA MODAL
-openModal.addEventListener("click", () => {
-    modal1.style.display = "flex";
-});
+// // BUKA MODAL
+// openModal.addEventListener("click", () => {
+//     modal1.style.display = "flex";
+// });
 
 // CART 
 cart.addEventListener('click', () => {
@@ -84,17 +84,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const quantityElement = document.getElementById('quantity');
     let quantity = 1;
 
-    // Tombol untuk membuka modal
-    document.querySelectorAll('#openModal').forEach(button => {
-        button.addEventListener('click', function () {
-            const menuId = this.getAttribute('data-menu-id');
-            modalMenuId.value = menuId; // Isi menu_id ke input hidden
-            quantity = 1; // Reset quantity
-            quantityElement.textContent = quantity;
-            modalQuantity.value = quantity;
-            modalOverlay.style.display = 'block'; // Tampilkan modal
-        });
-    });
+//     // Tombol untuk membuka modal
+// document.querySelectorAll('.openModal').forEach(button => {
+//         button.addEventListener('click', function() {
+//         const nama = this.dataset.nama;
+//         const harga = this.dataset.harga;
+//         const foto = this.dataset.foto;
+
+//         document.getElementById('modalOverlay').style.display = 'block';
+//         document.querySelector('.modal-item-details p').textContent = nama;
+//         document.querySelector('.modal-item-price #totalPrice').textContent = harga;
+//         document.querySelector('.modal-item img').src = '../../asset/' + foto;
+//     });
+// });
+
 
     // Tombol untuk menambah jumlah
     document.getElementById('increase').addEventListener('click', function () {

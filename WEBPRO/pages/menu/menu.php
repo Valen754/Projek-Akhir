@@ -7,8 +7,8 @@
     <title>Tapal Kuda | Menu</title>
     <link href="../../css/menu.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- <style>
-        .image-wrapper {
+    <style>
+        /* .image-wrapper {
             position: relative;
             overflow: hidden;
             border-radius: 10px 10px 0 0;
@@ -63,8 +63,27 @@
         .card .btn-overlay form,
         .card .btn-overlay a {
             pointer-events: auto;
+        } */
+            
+        .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
         }
-    </style> -->
+
+        .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        max-width: 90%;
+        }
+    </style> 
 </head>
 
 <body>
@@ -129,21 +148,18 @@
             </li>
         </ul>
 
-        <!-- PRODUK -->
-        <div class="tab-content">
-            <div class="tab-pane active" id="semua">
-                <div class="row">
-                    <?php
-                    // Query dasar
-                    $sql = "SELECT * FROM menu WHERE quantity > 0";
+<!-- PRODUK -->
+<div class="tab-content">
+    <div class="tab-pane active" id="semua">
+        <div class="row">
+            <?php
+            $sql = "SELECT * FROM menu WHERE quantity > 0";
+            if (isset($_GET['type']) && !empty($_GET['type'])) {
+                $type = $_GET['type'];
+                $sql .= " AND type = '$type'";
+            }
 
-                    // Filter berdasarkan kategori
-                    if (isset($_GET['type']) && !empty($_GET['type'])) {
-                        $type = $_GET['type'];
-                        $sql .= " AND type = '$type'";
-                    }
-
-                    $result = $conn->query($sql);
+            $result = $conn->query($sql);
 
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
@@ -187,8 +203,7 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="card-title"><?php echo $row['nama']; ?></div>
-                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?>
-                                        </div>
+                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></div>
                                         <div class="card-title" style="color:#6d4c2b;">
                                             Tersedia: <?php echo $row['quantity']; ?>
                                         </div>
@@ -206,46 +221,27 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <!-- <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h1 class="modal-title">Order Confirmation</h1>
-                <button class="close-button" id="closeModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="modal-item">
-                        <img src="Foto/Kopi/Real/KOPI TUBRUK ROBUSTA.jpg" width="100px" alt="Kopi Tubruk Robusta">
-                        <div class="modal-item-details">
-                            <p>Kopi tubruk robusta</p>
-                        </div>
-                        <div class="modal-item-price">
-                            <button type="button" id="decrease" class="btn-adjust">&minus;</button>
-                            <p id="quantity">1</p>
-                            <button type="button" id="increase" class="btn-adjust">&plus;</button>
-                            <p>= Rp
-                            <p id="totalPrice">12,000</p>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="modal-message">
-                        <label for="messageText">message :</label>
-                        <textarea id="messageText" placeholder="Do you have any messages?"></textarea>
-                    </div>
-                    <div class="modal-actions">
-                        <button type="button" class="btn-submit" style="font-family: inherit;">Send</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-primary" id="cartModal" style="font-family: inherit;">Add to
-                    cart</button>
-                <button type="button" class="btn-success" id="bukaModal" style="font-family: inherit;">Make
-                    payment</button>
-            </div>
-        </div>
-    </div> -->
+<div id="modalOverlay" class="modal-overlay" style="display: none;">
+  <div class="modal-content">
+    <span id="closeModal" style="cursor: pointer;">&times;</span>
+    <img id="modalImage" src="" alt="Foto Produk" style="width: 200px;">
+    <h3 id="modalName"></h3>
+    <p>Harga: Rp <span id="modalPrice"></span></p>
+    <p>Stok tersedia: <span id="modalStok"></span></p>
+    <form action="proses/tambah_keranjang.php" method="post">
+      <input type="hidden" name="menu_id" id="modalMenuId">
+      <label for="quantity">Jumlah:</label>
+      <input type="number" name="quantity" id="modalQuantityInput" min="1" value="1">
+      <br>
+      <label for="catatan">Catatan:</label>
+      <input type="text" name="catatan" placeholder="Contoh: tanpa gula">
+      <br>
+      <button type="submit">Masukkan ke Keranjang</button>
+    </form>
+  </div>
+</div>
+
+
 
     <!-- FOOTER -->
     <?php
@@ -268,5 +264,22 @@
         });
     </script>
 </body>
+<script>
+document.querySelectorAll('.openModal').forEach(button => {
+    button.addEventListener('click', function () {
+        document.getElementById('modalOverlay').style.display = 'block';
+        document.getElementById('modalImage').src = this.getAttribute('data-foto');
+        document.getElementById('modalName').textContent = this.getAttribute('data-nama');
+        document.getElementById('modalPrice').textContent = parseInt(this.getAttribute('data-harga')).toLocaleString('id-ID');
+        document.getElementById('modalStok').textContent = this.getAttribute('data-stok');
+        document.getElementById('modalMenuId').value = this.getAttribute('data-id');
+        document.getElementById('modalQuantityInput').value = 1;
+    });
+});
+
+document.getElementById('closeModal').addEventListener('click', () => {
+    document.getElementById('modalOverlay').style.display = 'none';
+});
+</script>
 
 </html>
