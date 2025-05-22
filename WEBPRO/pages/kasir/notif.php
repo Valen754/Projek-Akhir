@@ -2,7 +2,10 @@
 include '../../koneksi.php'; // Koneksi ke database
 
 // Query untuk mendapatkan reservasi dengan status 'pending'
-$sql = "SELECT * FROM reservasi WHERE status = 'pending' ORDER BY created_at DESC";
+$sql = "SELECT * FROM reservasi 
+        JOIN users ON reservasi.user_id = users.id 
+        WHERE status = 'pending' 
+        ORDER BY reservasi.created_at";
 $result = $conn->query($sql);
 ?>
 
@@ -94,7 +97,7 @@ $result = $conn->query($sql);
                             <div class="notification-card">
                                 <div class="notification-info">
                                     <h3>Kode Reservasi: <?php echo $row['kode_reservasi']; ?></h3>
-                                    <p><strong>Nama:</strong> <?php echo $row['email']; ?></p>
+                                    <p><strong>Nama:</strong> <?php echo $row['nama']; ?></p>
                                     <p><strong>Jumlah Orang:</strong> <?php echo $row['jumlah_orang']; ?></p>
                                     <p><strong>Tanggal:</strong> <?php echo $row['tanggal_reservasi']; ?></p>
                                     <p><strong>Pesan:</strong> <?php echo $row['message']; ?></p>
