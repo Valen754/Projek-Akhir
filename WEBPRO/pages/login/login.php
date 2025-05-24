@@ -328,6 +328,11 @@
         </div>
         <div class="login-form-section">
             <h2>Login to your Account</h2>
+            <?php if (isset($_GET['error'])): ?>
+                <div style="color: #fff; background: #e57373; padding: 10px 15px; border-radius: 6px; margin-bottom: 18px; text-align:center;">
+                    <?php echo htmlspecialchars($_GET['error']); ?>
+                </div>
+            <?php endif; ?>
             <form action="logic/login_logic.php" method="post" style="width: 100%;">
                 <div class="form-group">
                     <i class="fas fa-user icon-fix"></i>
