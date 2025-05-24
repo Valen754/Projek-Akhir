@@ -6,19 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../css/home.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <title>Document</title>
-    <style>
-        body {
-            background-image: url(../../asset/bg/bg.jpg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+    <title>Tapal Kuda - Home</title> <style>
+       
+
+        /* --- Perbaikan Masalah --- */
+
+        /* 1. Dropdown Menghilang (Asumsi struktur dropdown di header.php) */
+        /* Anda perlu menyesuaikan selector ini berdasarkan struktur HTML header.php */
+        /* Contoh umum untuk dropdown navbar */
+        .navbar .dropdown-menu { /* Atau selector spesifik dropdown Anda */
+            position: absolute; /* Pastikan posisi absolut */
+            z-index: 1000; /* Z-index tinggi agar di atas elemen lain */
+            /* Pastikan elemen parent dropdown tidak memiliki overflow: hidden */
         }
+        /* Jika dropdown Anda adalah menu di header.php yang muncul saat hover,
+           pastikan area hover cukup besar atau tambahkan sedikit delay pada JS */
+
+        /* 2. Class 'home' Tertindih Navbar */
+        /* Asumsi navbar memiliki tinggi sekitar 70-80px */
+        .home {
+            padding-top: 80px; /* Sesuaikan dengan tinggi navbar Anda yang sebenarnya */
+            /* Jika navbar fixed, margin-top juga bisa bekerja */
+        }
+
+        /* 3. Margin dan Padding Antar Class Terlalu Berdekatan */
+        /* Tambahkan margin-bottom ke setiap section untuk jarak antar bagian */
+        section {
+            margin-bottom: 100px; /* Contoh jarak 80px antar section */
+            /* Anda bisa menyesuaikan nilai ini sesuai kebutuhan */
+        }
+        /* Exceptions: Tidak perlu margin-bottom untuk section terakhir jika sudah ada footer */
+        .footer {
+            margin-top: 0; /* Pastikan footer tidak punya margin-top berlebihan jika section sudah punya margin-bottom */
+        }
+
+        /* --- Perbaikan Link CSS lainnya --- */
+        /* Perbaikan untuk Bootstrap CSS yang hilang atribut 'href' */
+        /* Ini sudah saya perbaiki langsung di link di atas, namun dicatat di sini untuk referensi */
+        /* link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" */
+
+        /* --- Opsional: Perbaikan placeholder image paths --- */
+        /* Jika gambar di gallery dan menu belum muncul, periksa path ini */
+        /* img src="images/gallery2.jpg" menjadi img src="../../asset/gallery/gallery2.jpg" atau sejenisnya */
+        /* src="ss2.jpg" menjadi src="../../asset/gallery/ss2.jpg" */
+
+        /* --- Opsional: Perbaikan data-aos-duration="0" --- */
+        /* Jika Anda ingin animasi fade-up tapi cepat, ubah duration */
+        /* .new-menu-item[data-aos-duration="0"] {
+            transition-duration: 0.3s !important;
+        } */
+
     </style>
 </head>
 
@@ -89,7 +129,6 @@
                 <p>Discover the flavors crafted to perfection, just for you.</p>
             </div>
             <div class="menu-grid">
-                <!-- Coffee -->
                 <div class="menu-item" data-aos="flip-down">
                     <img src="https://placehold.co/300x200" alt="Coffee">
                     <div class="menu-info">
@@ -97,7 +136,6 @@
                         <p>Dari minunan tradisional berbasis espresso sampai berbagai minuman racikan kopi terkini.</p>
                     </div>
                 </div>
-                <!-- Non-Coffee -->
                 <div class="menu-item" data-aos="flip-down">
                     <img src="https://placehold.co/300x200" alt="Non-Coffee">
                     <div class="menu-info">
@@ -106,7 +144,6 @@
                             anak - anak.</p>
                     </div>
                 </div>
-                <!-- Food & Snack -->
                 <div class="menu-item" data-aos="flip-down">
                     <img src="https://placehold.co/300x200" alt="Food & Snack">
                     <div class="menu-info">
@@ -221,7 +258,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2024 TapalKuda. All Rights Reserved.</p>
+            <p>© 2024 TapalKuda. All Rights Reserved.</p>
         </div>
     </footer>
 

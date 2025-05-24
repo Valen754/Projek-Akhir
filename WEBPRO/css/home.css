@@ -1,4 +1,13 @@
 /*HOME*/
+section {
+            margin-bottom: 100px;
+}
+
+   .navbar .dropdown-menu { /* Atau selector spesifik dropdown Anda */
+            position: absolute; /* Pastikan posisi absolut */
+            z-index: 1000; 
+   }
+   
 
 .home {
     display: flex;
@@ -211,16 +220,18 @@
 }
 
 
+
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
+    margin: 0 auto;
 }
 
 .menu-item {
     text-align: center;
     overflow: hidden;
-
+    width: 80%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     background: #fff;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -228,7 +239,7 @@
 
 
 .menu-item img {
-    width: 100%;
+    width: 80%;
     height: auto;
     border-bottom: 3px solid #e6d4b9;
     transition: filter 0.4s ease, transform 0.4s ease;
@@ -238,7 +249,7 @@
 
 
 .menu-info {
-    padding: 15px 10px;
+    padding: 5px 10px;
     font-size: 2rem;
 }
 
