@@ -161,57 +161,65 @@
 
             $result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $modalId = "modal" . $row['id'];
-                    $stok = $row['quantity'];
-            ?>
-                    <div class="col">
-                        <div class="card">
-                            <div class="image-wrapper">
-                                <img src="../../asset/<?php echo $row['url_foto']; ?>" alt="<?php echo $row['nama']; ?>">
-                                <div class="btn-overlay">
-                                    <a class="btn-icon-round" href="../detail/detail.php?id=<?php echo $row['id']; ?>">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                        </svg>
-                                    </a>
-
-                                    <?php if (isset($_SESSION['user_id'])): ?>
-                                        <!-- Tombol Keranjang -->
-                                        <button type="button" class="btn-icon-round" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
-                                                <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
-                                            </svg>
-                                        </button>
-                                    <?php else: ?>
-                                        <a href="../login/login.php" class="btn-icon-round">
-                                            <!-- Keranjang Icon -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
-                                                <path d="..." />
-                                            </svg>
-                                        </a>
-                                    <?php endif; ?>
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            ?>
+                            <div class="col">
+                                <div class="card">
+                                    <div class="image-wrapper">
+                                        <img src="../../asset/<?php echo $row['url_foto']; ?>"
+                                            alt="<?php echo $row['nama']; ?>">
+                                        <div class="btn-overlay">
+                                            <a class="btn-icon-round" href="../detail/detail.php?id=<?php echo $row['id']; ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                    fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                </svg>
+                                            </a>
+                                            <?php if (isset($_SESSION['user_id'])): ?>
+                                                <form method="POST" action="../keranjang/logic/add_keranjang.php"
+                                                    style="display:inline;">
+                                                    <input type="hidden" name="menu_id" value="<?php echo $row['id']; ?>">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <button type="submit" class="btn-icon-round" id="openModal">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                            fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            <?php else: ?>
+                                                <a href="../login/login.php" class="btn-icon-round">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                        fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                                                    </svg>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-title"><?php echo $row['nama']; ?></div>
+                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></div>
+                                        <div class="card-title" style="color:#6d4c2b;">
+                                            Tersedia: <?php echo $row['quantity']; ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="card-title"><?php echo $row['nama']; ?></div>
-                                <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></div>
-                                <div class="card-title" style="color:#6d4c2b;">
-                                    Tersedia: <?php echo $row['quantity']; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            <?php
-                } // end while
-            } else {
-                echo "<p>Menu tidak tersedia.</p>";
-            }
-            ?>
+                            <?php
+                        }
+                    } else {
+                        echo "<p>Menu tidak tersedia.</p>";
+                    }
+                    ?>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
 <div id="modalOverlay" class="modal-overlay" style="display: none;">
   <div class="modal-content">
@@ -240,7 +248,21 @@
     include '../../views/footer.php';
     ?>
 
-    <script src="../../js/menu.js"></script>
+    <script>
+        // Contoh jQuery untuk dropdown sederhana
+        $(document).ready(function () {
+            $('.dropdown-toggle').click(function () {
+                $(this).next('.dropdown-menu').toggle(); // Atau .slideToggle()
+            });
+
+            // Tutup dropdown jika klik di luar
+            $(document).click(function (event) {
+                if (!$(event.target).closest('.dropdown').length) {
+                    $('.dropdown-menu').hide();
+                }
+            });
+        });
+    </script>
 </body>
 <script>
 document.querySelectorAll('.openModal').forEach(button => {
