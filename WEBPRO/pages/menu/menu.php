@@ -7,7 +7,7 @@
     <title>Tapal Kuda | Menu</title>
     <link href="../../css/menu.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
@@ -16,7 +16,7 @@
     <?php
     include '../../views/header.php';
     include '../../koneksi.php'; // Koneksi ke database
-
+    
     // Dapatkan ID user yang login (jika ada)
     $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
@@ -45,7 +45,8 @@
     ?>
 
     <div class="container-banner">
-        <div class="overlay"></div> <div class="judul">Menu</div>
+        <div class="overlay"></div>
+        <div class="judul">Menu</div>
     </div>
 
     <div class="container">
@@ -112,7 +113,7 @@
                                                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                                                 </svg>
                                             </a>
-                                            <?php if ($user_id) : ?>
+                                            <?php if ($user_id): ?>
                                                 <form method="POST" action="../keranjang/logic/add_keranjang.php"
                                                     style="display:inline;">
                                                     <input type="hidden" name="menu_id" value="<?php echo $row['id']; ?>">
@@ -125,18 +126,24 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                                <button type="button" class="btn-icon-round favorite-btn" data-menu-id="<?php echo $row['id']; ?>" title="Favorit">
-                                                    <i class="<?php echo in_array($row['id'], $favorite_menus) ? 'fas fa-heart' : 'far fa-heart'; ?>"></i>
-                                                </button>
-                                            <?php else : ?>
+                                                <a href="../login/login.php" class="btn-icon-round">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                        fill="currentColor" class="bi bi-bookmark-heart" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd"
+                                                            d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z" />
+                                                        <path
+                                                            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                                                    </svg>
+                                                </a>
+                                            <?php else: ?>
                                                 <a href="../login/login.php" class="btn-icon-round">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
                                                         fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
                                                         <path
                                                             d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
-                                                        </svg>
+                                                    </svg>
                                                 </a>
-                                                <a href="../login/login.php" class="btn-icon-round favorite-btn disabled">
+                                                <a href="../login/login.php" class="btn-icon-round favorite-btn">
                                                     <i class="far fa-heart"></i>
                                                 </a>
                                             <?php endif; ?>
@@ -144,7 +151,8 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="card-title"><?php echo htmlspecialchars($row['nama']); ?></div>
-                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></div>
+                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?>
+                                        </div>
                                         <div class="card-title" style="color:#6d4c2b;">
                                             Tersedia: <?php echo htmlspecialchars($row['quantity']); ?>
                                         </div>
@@ -204,7 +212,7 @@
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Logika untuk modal yang sudah ada
             document.querySelectorAll('.openModal').forEach(button => {
                 button.addEventListener('click', function () {
@@ -226,7 +234,7 @@
             const favoriteButtons = document.querySelectorAll('.favorite-btn');
 
             favoriteButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
+                button.addEventListener('click', function (e) {
                     e.preventDefault(); // Mencegah link berpindah halaman
 
                     const menuId = this.dataset.menuId;
@@ -245,26 +253,26 @@
                         },
                         body: 'menu_id=' + menuId
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            if (data.action === 'added') {
-                                icon.classList.remove('far');
-                                icon.classList.add('fas');
-                                // alert(data.message); // Opsional: tampilkan notifikasi
-                            } else if (data.action === 'removed') {
-                                icon.classList.remove('fas');
-                                icon.classList.add('far');
-                                // alert(data.message); // Opsional: tampilkan notifikasi
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                if (data.action === 'added') {
+                                    icon.classList.remove('far');
+                                    icon.classList.add('fas');
+                                    // alert(data.message); // Opsional: tampilkan notifikasi
+                                } else if (data.action === 'removed') {
+                                    icon.classList.remove('fas');
+                                    icon.classList.add('far');
+                                    // alert(data.message); // Opsional: tampilkan notifikasi
+                                }
+                            } else {
+                                alert('Error: ' + data.message);
                             }
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan saat memproses permintaan favorit.');
-                    });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat memproses permintaan favorit.');
+                        });
                 });
             });
         });

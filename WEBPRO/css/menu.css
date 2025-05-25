@@ -1,736 +1,108 @@
-/* HTML */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
+/* ... (CSS Anda yang sudah ada untuk .container-banner, .nav-pills, .tab-content, .card, .btn-overlay, dll. tetap sama) ... */
+
+/* Style untuk Favorite Button di Pojok Kanan Atas Card */
+.favorite-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3; /* Pastikan di atas gambar tapi di bawah modal jika ada */
+}
+
+/* Untuk tombol SVG favorit (user login) */
+button.btn-favorite {
+    background: transparent;
     border: none;
-    scroll-behavior: smooth;
-}
-
-:root {
-    --bg-color: #080808;
-    --text-color: white;
-    --main-color: #543310;
-    --sc-color: #B69574;
-    --buy-color: #28a745;
-}
-
-html {
-    font-size: 80%;
-    overflow-x: hidden;
-}
-
-body {
-    background: #f3e8d9;
-    color: var(--bg-color);
-}
-
-/* BANNER */
-.container-banner {
-    position: relative;
-    background-image: url('Foto/123.png');
-    background-size: cover;
-    background-position: center;
-    height: 150px;
-    display: flex;
+    cursor: pointer;
+    padding: 5px; /* Area klik yang cukup */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 1;
+button.btn-favorite svg {
+    width: 24px; /* Ukuran ikon hati */
+    height: 24px;
+    fill: #ccc; /* Warna default (belum favorit) */
+    transition: fill 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.judul {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    font-size: 3rem;
+button.btn-favorite:hover svg {
+    fill: #ff7f7f; /* Warna hover (merah muda/merah terang) */
+    transform: scale(1.2);
 }
 
-/* KATEGORI MENU */
-.container {
-    margin: 0 auto;
-    padding: 20px;
-    gap: 20px;
-    display: flex;
+button.btn-favorite.active svg {
+    fill: red; /* Warna saat aktif (favorit) */
 }
 
-.kategori {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.nav-pills {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 30%;
-}
-
-.nav-link {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    font-size: 2rem;
-    color: var(--text-color);
-    border: 2px solid transparent;
-    letter-spacing: 0.1rem;
-    transition: 0.3s ease-in-out;
-    cursor: pointer;
-    background: var(--main-color);
-    margin-inline: 0;
-    border-radius: 5px;
-}
-
-.nav-pills .nav-link.active {
-    background-color: var(--main-color);
-    color: var(--text-color);
-    border-radius: 5px;
-}
-
-.nav-pills a {
-    display: flex;
-    justify-content: space-between;
+/* Untuk link favorit Font Awesome (user belum login) */
+a.btn-favorite-link { /* Menggunakan class berbeda untuk link agar tidak konflik */
+    padding: 5px;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
-    color: var(--text-color);
-    font-size: 16px;
-    padding: 8px 12px;
-    background-color: var(--bg-color);
-    border-radius: 5px;
-    transition: background 0.3s;
 }
 
-.nav-pills a:hover {
-    background-color: var(--main-color);
+a.btn-favorite-link i.fas.fa-heart {
+    font-size: 22px; /* Sesuaikan ukuran ikon Font Awesome */
+    color: #ccc;
+    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.nav-pills span {
-    color: var(--text-color);
-    font-weight: bold;
+a.btn-favorite-link:hover i.fas.fa-heart {
+    color: #ff7f7f;
+    transform: scale(1.2);
 }
 
-/* ISI KATEGORI MENU */
-.tab-content {
-    margin-top: 20px;
-    max-width: 80%;
-}
+/* ... (CSS lain seperti modal dan footer tetap sama) ... */
 
-.tab-pane {
-    display: none;
-}
-
-.tab-pane.active {
-    display: block;
-}
-
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.col {
-    flex: 1 1 calc(20% - 20px);
-    max-width: calc(20% - 20px);
-}
-
-.card {
-    border: 2px solid var(--main-color);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f3e8d9;
-}
-
-.card img {
-    width: 100%;
-    height: auto;
-}
-
-.card-body {
-    padding: 10px;
-    text-align: center;
-}
-
-.card-title {
-    margin-bottom: 5px;
-    font-size: 1.6rem;
-}
-
-.image-wrapper {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1px 1px 0 0;
-}
-
-.image-wrapper img {
-    display: block;
-    width: 100%;
-    height: auto;
-}
-
-.btn-overlay {
-    position: absolute;
-    left: 50%;
-    bottom: 1%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 16px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 2;
-}
-
-.btn-icon-round {
-    width: 60px;
+/* Pastikan btn-icon-round di overlay tetap seperti sebelumnya */
+.btn-overlay .btn-icon-round {
+    width: 48px;
     height: 48px;
-    background: transparent;
-    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     outline: none;
     cursor: pointer;
-    transition: background 0.2s;
-    margin: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease, transform 0.2s ease;
+    margin: 0 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.btn-icon-round svg,
-.btn-icon-round i {
+.btn-overlay .btn-icon-round svg,
+.btn-overlay .btn-icon-round i {
     color: #ffffff;
-    font-size: 2em;
+    font-size: 1.6em;
 }
 
-.btn-icon-round:hover {
-    background: #543310;
-}
-
-.btn-icon-round.favorite-btn:hover {
-    background: #543310;
-}
-
-
-
-
-
-.image-wrapper:hover .btn-overlay {
-    opacity: 1;
-}
-
-.card .btn-overlay {
-    pointer-events: none;
-}
-
-.card .btn-overlay form,
-.card .btn-overlay a {
-    pointer-events: auto;
-}
-
- .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            max-width: 90%;
-        }
-
-       
-
-
-
-/* FOOTER */
-.footer {
-    background-color: #111;
-    color: #eee;
-    padding: 3rem 2rem;
-    font-family: Arial, sans-serif;
-    font-size: 1.2rem;
-}
-
-.footer-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: space-between;
-}
-
-.footer-about h2 {
-    font-size: 1.2rem;
-    color: var(--main-color);
-    margin-bottom: 1rem;
-}
-
-.footer-about p {
-    line-height: 1.8;
-    font-size: 1.2rem;
-}
-
-.footer-links ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-links li {
-    margin: 0.5rem 0;
-}
-
-.footer-links a {
-    color: #eee;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.footer-links a:hover {
-    color: var(--main-color);
-}
-
-.footer-contact p {
-    margin: 0.5rem 0;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-}
-
-.footer-contact i {
-    margin-right: 0.5rem;
-    color: var(--main-color);
-}
-
-.footer-social {
-    text-align: center;
-}
-
-.footer-social .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.footer-social a {
-    color: #eee;
-    font-size: 1.2rem;
-    transition: color 0.3s;
-}
-
-.footer-social a:hover {
-    color: var(--main-color);
-}
-
-.footer-bottom {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 1.2rem;
-    color: #aaa;
-    border-top: 1px solid #333;
-    padding-top: 1rem;
-}
-
-/* MODAL 1 */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-/* Isi Modal */
-.modal-container {
-    background: #080808;
-    color: #fff;
-    border-radius: 8px;
-    width: 50%;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    animation: fadeIn 0.3s ease-out;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-title {
-    margin: 0;
-}
-
-.close-button {
-    background: transparent;
-    color: #fff;
-    font-size: 3rem;
-    border: none;
-    cursor: pointer;
-}
-
-.modal-body {
-    margin: 20px 0;
-    font-size: 1.3rem;
-}
-
-.modal-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.modal-item img {
-    margin-right: 15px;
-}
-
-.modal-item-details {
-    flex: 1;
-    font-size: 1.6rem;
-}
-
-.modal-item-price {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 1.6rem;
-}
-
-.btn-adjust {
+.btn-overlay .btn-icon-round:hover {
     background: var(--main-color);
-    color: var(--text-color);
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
+    transform: scale(1.1);
 }
 
-.modal-message textarea {
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    resize: none;
 
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.btn-submit,
-.btn-primary,
-.btn-success {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-submit {
-    background: var(--main-color);
-    color: var(--text-color);
-}
-
-.btn-submit:hover {
-    background-color: var(--sc-color);
-}
-
-.btn-primary {
-    display: inline-block;
-    border-radius: 0.5rem;
-    font-size: 1.3rem;
-    color: var(--text-color);
-    border: 2px transparent;
-    letter-spacing: 0.1rem;
-    transition: 0.3s ease-in-out;
-    cursor: pointer;
-    background: #005ec2;
-    margin-inline: 0;
-    text-align: center;
-}
-
-.btn-primary:hover {
-    transform: scale(1.05);
-    background: #007bff;
-    color: var(--text-color);
-
-}
-
-.btn-success {
-    display: inline-block;
-    border-radius: 0.5rem;
-    font-size: 1.3rem;
-    color: var(--text-color);
-    border: 2px transparent;
-    letter-spacing: 0.1rem;
-    transition: 0.3s ease-in-out;
-    cursor: pointer;
-    background: var(--buy-color);
-    margin-inline: 0;
-    text-align: center;
-}
-
-.btn-success:hover {
-    transform: scale(1.02);
-    background: #33d459;
-    color: var(--text-color);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-/* MODAL 2 */
-/* Overlay */
-.modal2 {
-    display: none;
-    /* Sembunyikan modal secara default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Latar belakang semi-transparan */
-    justify-content: center;
-    /* Pusatkan konten secara horizontal */
-    align-items: center;
-    /* Pusatkan konten secara vertikal */
-    z-index: 1000;
-    /* Pastikan modal di atas elemen lain */
-}
-
-/* ISI */
-.modal-dialog2 {
-    background-color: var(--bg-color);
-    border-radius: 8px;
-    max-width: 500px;
-    /* Lebar maksimum modal */
-    width: 90%;
-    /* Lebar modal */
-    padding: 20px;
-    max-height: 80%;
-    /* Batas tinggi modal */
-    overflow-y: auto;
-    /* Izinkan scroll vertikal */
-}
-
-.modal-header2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-color);
-}
-
-.modal-title2 {
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-.tutup-btn {
-    font-size: 2rem;
-    /* Ukuran tombol tutup */
-    color: var(--text-color);
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.modal-body2 {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.payment-option {
-    margin-bottom: 15px;
-}
-
-.payment-option .span {
-    color: var(--bg-color);
-}
-
-.payment-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    background-color: var(--text-color);
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.payment-btn img {
-    margin-bottom: 5px;
-}
-
-.payment-summary {
-    display: none;
-    /* Menyembunyikan ringkasan secara default */
-    font-size: 14px;
-    margin-top: 10px;
-    color: #555;
-}
-
-.qrbank-summary {
-    display: none;
-    /* Menyembunyikan QR code secara default */
-}
-
-.payment-methods {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.payment-method-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    background-color: var(--text-color);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.payment-method-btn img {
-    width: 30px;
-    height: 30px;
-}
-
-.payment-method-btn:hover {
-    background-color: var(--sc-color);
-}
-
-.payment-option input[type="radio"]:checked+.payment-btn+.payment-summary {
-    display: block;
-    /* Menampilkan ringkasan saat radio button dipilih */
-}
-
-.payment-option input[type="radio"]:checked+.payment-btn+.payment-summary .payment-method-btn {
-    color: var(--bg-color);
-}
-
-.payment-option input[type="radio"] {
-    display: none;
-    /* Sembunyikan radio button */
-}
-
-.payment-method-btn:hover,
-.payment-btn:hover {
-    background-color: var(--sc-color);
-    color: var(--bg-color);
-}
-
-.payment-option input[type="radio"]:checked+.payment-btn,
-.payment-methods input[type="radio"]:checked+.payment-method-btn {
-    background-color: var(--sc-color);
-    color: var(--bg-color);
-}
-
-.modal-footer2 {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.btn2 {
-    display: inline-block;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 1.3rem;
-    color: var(--text-color);
-    border: 2px transparent;
-    letter-spacing: 0.1rem;
-    transition: 0.3s ease-in-out;
-    cursor: pointer;
-    background: var(--buy-color);
-    margin-inline: 0;
-    text-align: center;
-}
-
-.btn2:hover {
-    transform: scale(1.02);
-    background: #33d459;
-    color: var(--text-color);
-}
-
-.qrbank-summary {
-    margin-top: 10px;
-}
-
-.qr-metod {
-    text-align: center;
-}
-
-button {
-    cursor: pointer;
-}
-
-/* Notification */
+/* NOTIFICATION STYLES (pastikan ini ada dan benar) */
 .notification {
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: #28a745;
-    /* Warna hijau */
+    background-color: var(--buy-color); /* Green for success */
     color: var(--text-color);
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 2rem;
-    z-index: 1000;
-    transition: opacity 0.5s ease;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 1.6rem; 
+    z-index: 2000; /* Highest z-index */
+    transition: opacity 0.5s ease, transform 0.5s ease;
     opacity: 0;
-    /* Mulai dari tidak terlihat */
+    transform: translateX(100%); /* Start off-screen to the right */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
-
-/* Media Queries untuk Responsif */
-
-.favorite-btn i {
-    color: #ffffff; /* Warna default (abu-abu) */
-    transition: color 0.3s ease; /* Animasi transisi */
-}
-
-.favorite-btn:hover i {
-    color: #000000; /* Warna merah saat hover */
-    cursor: pointer; /* Tunjukkan bahwa bisa diklik */
-}
-
-.favorite-btn:hover {
-    background-color: #ff0505;
+.notification.show {
+    opacity: 1;
+    transform: translateX(0); /* Slide in from the right */
 }

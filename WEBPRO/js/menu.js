@@ -3,307 +3,288 @@ const tabs = document.querySelectorAll('.nav-link');
 const panes = document.querySelectorAll('.tab-pane');
 
 tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
+    tab.addEventListener('click', (event) => {
+        // Jika link adalah link biasa, bukan tab, biarkan default action
+        if (event.target.getAttribute('href') && !event.target.dataset.tab) {
+            return;
+        }
+        event.preventDefault(); // Hanya untuk tab
+
         tabs.forEach(t => t.classList.remove('active'));
         panes.forEach(p => p.classList.remove('active'));
+
         tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
+        const targetPaneId = tab.dataset.tab;
+        if (targetPaneId) {
+            const targetPane = document.getElementById(targetPaneId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+        }
     });
 });
 
-// MODAL 1
-const modal1 = document.getElementById("modalOverlay");
-const openModal = document.getElementById("openModal");
-const closeModal = document.getElementById("closeModal");
-const cart = document.getElementById("cartModal");
-const quantityElement = document.getElementById("quantity");
-const totalPriceElement = document.getElementById("totalPrice");
-const cartCount = document.getElementById("cart-count"); // Ambil elemen span untuk jumlah cart
-let quantity = 1;
-const pricePerItem = 12000;
-let itemCount = 0; // Variabel untuk menyimpan jumlah item di cart
+// Fungsionalitas tombol favorit
+document.querySelectorAll('.btn-favorite').forEach(button => {
+    button.addEventListener('click', function () {
+        const menuId = this.dataset.menuId;
+        const favoriteButton = this; // SVG element
 
-// // BUKA MODAL
-// openModal.addEventListener("click", () => {
-//     modal1.style.display = "flex";
+        // Jika user tidak login (ditangani di PHP, tapi bisa juga dicek di JS jika perlu)
+        // Untuk contoh ini, asumsikan PHP sudah menghandle link ke login jika tidak ada session
+
+        fetch('logic/toggle_favorite.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `menu_id=${menuId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.action === 'added') {
+                    favoriteButton.classList.add('active');
+                    // CSS akan menangani perubahan warna fill melalui kelas .active
+                } else { // 'removed'
+                    favoriteButton.classList.remove('active');
+                    // CSS akan menangani perubahan warna fill
+                }
+                // Notifikasi bisa ditambahkan di sini jika diinginkan
+                // showNotification(data.message);
+            } else {
+                showNotification('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Terjadi kesalahan saat memperbarui favorit.');
+        });
+    });
+});
+
+
+// MODAL UNTUK ADD TO CART (dan mungkin BUY NOW jika dipisah)
+const modalOverlay = document.getElementById("modalOverlay");
+const closeModalButton = document.getElementById("closeModal");
+const cartButtons = document.querySelectorAll(".add-cart-button"); // Tombol SVG keranjang di card
+const buyNowButtons = document.querySelectorAll(".openModal"); // Jika ada tombol "Buy Now" terpisah
+
+const modalMenuIdInput = document.getElementById('modalMenuId');
+const modalImage = document.getElementById('modalImage');
+const modalName = document.getElementById('modalName');
+const modalPrice = document.getElementById('modalPrice');
+const modalStok = document.getElementById('modalStok');
+const modalQuantityInput = document.getElementById('modalQuantityInput');
+const modalCatatanInput = document.getElementById('modalCatatan');
+
+// Fungsi untuk membuka modal dengan detail produk
+function openProductModal(cardElement) {
+    const form = cardElement.querySelector('.add-to-cart-form'); // Asumsi form ada di dalam card
+    if (!form) {
+        console.error("Form not found in card element:", cardElement);
+        return;
+    }
+
+    modalImage.src = cardElement.querySelector('.image-wrapper img').src;
+    modalName.textContent = cardElement.querySelector('.card-title:nth-of-type(1)').textContent;
+    modalPrice.textContent = cardElement.querySelector('.card-title:nth-of-type(2)').textContent.replace('Rp ', '').replace(/\./g, ''); // Ambil angka saja
+    modalStok.textContent = cardElement.querySelector('.card-title:nth-of-type(3)').textContent.replace('Tersedia: ', '');
+    modalMenuIdInput.value = form.querySelector('input[name="menu_id"]').value;
+    
+    modalQuantityInput.value = 1; // Reset quantity
+    modalQuantityInput.max = modalStok.textContent; // Set max quantity berdasarkan stok
+    modalCatatanInput.value = ''; // Reset catatan
+    modalOverlay.style.display = "flex";
+}
+
+// Event listener untuk tombol "Add to Cart" (SVG Keranjang di card)
+cartButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah submit form jika ada
+        const cardElement = this.closest('.card');
+        openProductModal(cardElement);
+    });
+});
+
+// Event listener untuk tombol "Buy Now" (jika ada dan berbeda)
+// buyNowButtons.forEach(button => {
+//     button.addEventListener('click', function() {
+//         const cardElement = this.closest('.card'); // Sesuaikan jika struktur berbeda
+//         openProductModal(cardElement);
+//         // Mungkin ada logika tambahan untuk "Buy Now"
+//     });
 // });
 
-// CART 
-cart.addEventListener('click', () => {
-    itemCount++; // Tambah jumlah item
-    cartCount.textContent = itemCount; // Update span dengan jumlah item
-    showNotification('Success! Item added to cart!'); // Tampilkan notifikasi
-    modal1.style.display = 'none'; // Menutup modal
-});
+// Event listener untuk tombol close modal
+if (closeModalButton) {
+    closeModalButton.addEventListener("click", () => {
+        modalOverlay.style.display = "none";
+    });
+}
 
-// TOMBOL X
-closeModal.addEventListener("click", () => {
-    modal1.style.display = "none";
-});
-
-// TAMBAH
-document.getElementById("increase").addEventListener("click", () => {
-    quantity++;
-    updatePrice();
-});
-
-// KURANG
-document.getElementById("decrease").addEventListener("click", () => {
-    if (quantity > 1) {
-        quantity--;
-        updatePrice();
+// Event listener untuk menutup modal jika klik di luar area modal
+window.addEventListener('click', (event) => {
+    if (event.target === modalOverlay) {
+        modalOverlay.style.display = "none";
     }
 });
 
-// UPDET TOTAL
-function updatePrice() {
-    quantityElement.textContent = quantity;
-    totalPriceElement.textContent = (quantity * pricePerItem).toLocaleString("id-ID");
-}
+
+// Update total di modal pembayaran saat modal dibuka (jika ada modal pembayaran terpisah)
+// const paymentModal = document.getElementById('modalBayar');
+// if (paymentModal) {
+//     paymentModal.addEventListener('show.bs.modal', function () {
+//         const currentSubtotalText = document.querySelector('#final-subtotal').textContent; // Jika ada subtotal di halaman utama
+//         document.getElementById('modal-total-amount').textContent = currentSubtotalText;
+//         document.getElementById('customerNameInput').value = '';
+//         document.getElementById('paymentCash').checked = true;
+//         document.getElementById('orderNotesInput').value = '';
+//     });
+// }
 
 // Fungsi notifikasi
 function showNotification(message) {
     const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.style.display = 'block';
-    notification.style.opacity = '1'; // Tampilkan notifikasi
+    if (!notification) {
+        // Buat elemen notifikasi jika belum ada
+        const newNotification = document.createElement('div');
+        newNotification.id = 'notification';
+        newNotification.className = 'notification'; // Pastikan kelas ini ada di CSS Anda
+        document.body.appendChild(newNotification);
+        notification = newNotification;
+    }
 
-    // Sembunyikan notifikasi setelah 3 detik
+    notification.textContent = message;
+    notification.classList.add('show'); // Tambah kelas untuk animasi tampil
+
     setTimeout(() => {
-        notification.style.opacity = '0'; // Sembunyikan dengan animasi
-        setTimeout(() => {
-            notification.style.display = 'none'; // Sembunyikan elemen
-        }, 500); // Waktu untuk menyembunyikan elemen setelah animasi
+        notification.classList.remove('show'); // Hapus kelas untuk animasi hilang
     }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalMenuId = document.getElementById('modalMenuId');
-    const modalQuantity = document.getElementById('modalQuantity');
-    const quantityElement = document.getElementById('quantity');
-    let quantity = 1;
+// Penyesuaian kuantitas di modal
+const quantityInputModal = document.getElementById("modalQuantityInput");
+const decreaseBtnModal = document.getElementById("decrease"); // Pastikan ID ini ada di modal Anda
+const increaseBtnModal = document.getElementById("increase"); // Pastikan ID ini ada di modal Anda
 
-//     // Tombol untuk membuka modal
-// document.querySelectorAll('.openModal').forEach(button => {
-//         button.addEventListener('click', function() {
-//         const nama = this.dataset.nama;
-//         const harga = this.dataset.harga;
-//         const foto = this.dataset.foto;
-
-//         document.getElementById('modalOverlay').style.display = 'block';
-//         document.querySelector('.modal-item-details p').textContent = nama;
-//         document.querySelector('.modal-item-price #totalPrice').textContent = harga;
-//         document.querySelector('.modal-item img').src = '../../asset/' + foto;
-//     });
-// });
-
-
-    // Tombol untuk menambah jumlah
-    document.getElementById('increase').addEventListener('click', function () {
-        quantity++;
-        quantityElement.textContent = quantity;
-        modalQuantity.value = quantity;
-    });
-
-    // Tombol untuk mengurangi jumlah
-    document.getElementById('decrease').addEventListener('click', function () {
-        if (quantity > 1) {
-            quantity--;
-            quantityElement.textContent = quantity;
-            modalQuantity.value = quantity;
+if (decreaseBtnModal && increaseBtnModal && quantityInputModal) {
+    decreaseBtnModal.addEventListener("click", () => {
+        let currentVal = parseInt(quantityInputModal.value);
+        if (currentVal > 1) {
+            quantityInputModal.value = currentVal - 1;
         }
     });
-});
 
-// MODAL 2
-const modal2 = document.getElementById('modalBayar');
-const tutupModal = document.getElementById('tutupModal');
-const bukaModal = document.getElementById('bukaModal');
-const tombolBayar = document.getElementById('tombolBayar');
-
-// UNTUK MEMBUKA MODAL
-bukaModal.addEventListener('click', () => {
-    modal2.style.display = 'flex';
-});
-
-// UNTUK MENUTUP MODAL (TOMBOL X)
-tutupModal.addEventListener('click', () => {
-    modal2.style.display = 'none';
-    modal1.style.display = "none";
-});
-
-// UNTUK MENUTUP MODAL KETIKA SUDAH BAYAR
-tombolBayar.addEventListener('click', () => {
-    showNotification('Payment successful!');
-    modal2.style.display = 'none';
-    modal1.style.display = "none";
-});
-
-// Ambil semua opsi bank
-const bankOptions = document.querySelectorAll('input[name="bank-method"]');
-const qrCodes = document.querySelectorAll('.qrbank-summary'); // Ambil semua QR code
-
-// Sembunyikan semua QR code saat modal dibuka
-qrCodes.forEach(qr => qr.style.display = 'none');
-
-// Event listener untuk bank options
-bankOptions.forEach(option => {
-    option.addEventListener('change', () => {
-        // Sembunyikan semua QR code
-        qrCodes.forEach(qr => qr.style.display = 'none');
-
-        // Tampilkan QR code yang sesuai dengan bank yang dipilih
-        const selectedBank = document.querySelector('input[name="bank-method"]:checked');
-        if (selectedBank) {
-            const qrCode = document.getElementById(`qr-code-bank-${selectedBank.value}`);
-            if (qrCode) {
-                qrCode.style.display = 'block'; // Tampilkan QR code yang sesuai
-            }
+    increaseBtnModal.addEventListener("click", () => {
+        let currentVal = parseInt(quantityInputModal.value);
+        let maxStock = parseInt(document.getElementById('modalStok').textContent);
+        if (currentVal < maxStock) {
+            quantityInputModal.value = currentVal + 1;
+        } else {
+            showNotification('Jumlah melebihi stok yang tersedia.');
         }
     });
-});
 
-// Ambil semua opsi e-wallet
-const eWalletOptions = document.querySelectorAll('input[name="ewallet-method"]');
-const qrCode = document.querySelectorAll('.qrbank-summary'); // Ambil semua QR code
-
-// Sembunyikan semua QR code saat modal dibuka
-qrCode.forEach(qr => qr.style.display = 'none');
-
-// Event listener untuk e-wallet options
-eWalletOptions.forEach(option => {
-    option.addEventListener('change', () => {
-        // Sembunyikan semua QR code
-        qrCode.forEach(qr => qr.style.display = 'none');
-
-        // Tampilkan QR code yang sesuai dengan e-wallet yang dipilih
-        const selectedEWallet = document.querySelector('input[name="ewallet-method"]:checked');
-        if (selectedEWallet) {
-            const qrCode = document.getElementById(`qr-code-ewallet-${selectedEWallet.value}`);
-            if (qrCode) {
-                qrCode.style.display = 'block'; // Tampilkan QR code yang sesuai
-            }
+    quantityInputModal.addEventListener('input', function() {
+        let currentVal = parseInt(this.value);
+        let maxStock = parseInt(document.getElementById('modalStok').textContent);
+        if (isNaN(currentVal) || currentVal < 1) {
+            this.value = 1;
+        } else if (currentVal > maxStock) {
+            this.value = maxStock;
+            showNotification('Jumlah melebihi stok yang tersedia.');
         }
     });
-});
-
-function copyToClipboard(elementId) {
-    const inputElement = document.getElementById(elementId);
-    inputElement.select(); // Pilih teks dalam input
-    document.execCommand('copy'); // Salin teks ke clipboard
-    showNotification('The code has been copied! : ' + inputElement.value); // Tampilkan pesan konfirmasi
 }
 
-// FILTER PRICE
-// Ambil elemen dari DOM
+
+// Logika lain seperti filter harga dan tab kategori dari menu.js Anda bisa tetap di sini
+// FILTER PRICE (jika masih relevan dan ada elemennya di menu.php)
 const minPriceInput = document.getElementById('min-price');
 const maxPriceInput = document.getElementById('max-price');
-const priceValue = document.getElementById('price-value');
+const priceValueDisplay = document.getElementById('price-value'); // Ganti nama variabel agar tidak konflik
 const filterButton = document.getElementById('filter-btn');
 
-// Update tampilan harga saat slider berubah
-function updatePriceValue() {
-    const minPrice = minPriceInput.value;
-    const maxPrice = maxPriceInput.value;
-    priceValue.textContent = `Price: Rp${minPrice} - Rp${maxPrice}`;
+function updatePriceValueDisplay() { // Ganti nama fungsi
+    if (minPriceInput && maxPriceInput && priceValueDisplay) {
+        const minPrice = minPriceInput.value;
+        const maxPrice = maxPriceInput.value;
+        priceValueDisplay.textContent = `Price: Rp${minPrice} - Rp${maxPrice}`;
+    }
 }
 
-// Fungsi untuk memfilter produk berdasarkan harga
-function filterProducts() {
-    const minPrice = parseInt(minPriceInput.value);
-    const maxPrice = parseInt(maxPriceInput.value);
+function filterProductsByPrice() { // Ganti nama fungsi
+    if (minPriceInput && maxPriceInput) {
+        const minPrice = parseInt(minPriceInput.value);
+        const maxPrice = parseInt(maxPriceInput.value);
+        const products = document.querySelectorAll('.card');
 
-    // Ambil semua produk (misalnya, dengan class 'product')
-    const products = document.querySelectorAll('.card'); // Ganti dengan selector yang sesuai
+        products.forEach(product => {
+            const priceElement = product.querySelector('.card-title:nth-of-type(2)');
+            if (priceElement) {
+                const productPrice = parseInt(priceElement.textContent.replace('Rp ', '').replace(/\./g, ''));
+                if (productPrice >= minPrice && productPrice <= maxPrice) {
+                    product.closest('.col').style.display = 'flex'; // Tampilkan kolomnya
+                } else {
+                    product.closest('.col').style.display = 'none'; // Sembunyikan kolomnya
+                }
+            }
+        });
+    }
+}
 
-    products.forEach(product => {
-        const productPrice = parseInt(product.querySelector('.card-title:last-child').textContent.replace('Rp ', '').replace('.', '')); // Ambil harga produk
-        if (productPrice >= minPrice && productPrice <= maxPrice) {
-            product.style.display = 'block'; // Tampilkan produk
-        } else {
-            product.style.display = 'none'; // Sembunyikan produk
+function limitSliderValues() {
+    if (minPriceInput && maxPriceInput) {
+        const minPrice = parseInt(minPriceInput.value);
+        const maxPrice = parseInt(maxPriceInput.value);
+        if (minPrice > maxPrice) {
+            maxPriceInput.value = minPrice;
         }
+        if (maxPrice < minPrice) {
+            minPriceInput.value = maxPrice;
+        }
+    }
+}
+if (minPriceInput) {
+    minPriceInput.addEventListener('input', () => {
+        limitSliderValues();
+        updatePriceValueDisplay();
+        updateSliderBackground(); // Panggil fungsi update background
     });
 }
-
-// Fungsi untuk membatasi slider dan menggerakkan slider lainnya
-function limitSliderValues() {
-    const minPrice = parseInt(minPriceInput.value);
-    const maxPrice = parseInt(maxPriceInput.value);
-
-    // Jika minPrice lebih besar dari maxPrice, set maxPrice ke minPrice
-    if (minPrice > maxPrice) {
-        maxPriceInput.value = minPrice; // Set nilai max ke nilai min
-    }
-
-    // Jika maxPrice lebih kecil dari minPrice, set minPrice ke maxPrice
-    if (maxPrice < minPrice) {
-        minPriceInput.value = maxPrice; // Set nilai min ke nilai max
-    }
+if (maxPriceInput) {
+    maxPriceInput.addEventListener('input', () => {
+        limitSliderValues();
+        updatePriceValueDisplay();
+        updateSliderBackground(); // Panggil fungsi update background
+    });
+}
+if (filterButton) {
+    filterButton.addEventListener('click', filterProductsByPrice);
 }
 
-// Event listener untuk slider
-minPriceInput.addEventListener('input', () => {
-    limitSliderValues(); // Batasi nilai slider
-    updatePriceValue(); // Update tampilan harga
-});
-
-maxPriceInput.addEventListener('input', () => {
-    limitSliderValues(); // Batasi nilai slider
-    updatePriceValue(); // Update tampilan harga
-});
-
-// Event listener untuk tombol filter
-filterButton.addEventListener('click', filterProducts);
-
-// Inisialisasi tampilan harga saat halaman dimuat
-updatePriceValue();
-
-// untuk warna
-const miPriceInput = document.getElementById('min-price');
-const maPriceInput = document.getElementById('max-price');
-const pricValue = document.getElementById('price-value');
 
 function updateSliderBackground() {
-    const minValue = parseInt(minPriceInput.value);
-    const maxValue = parseInt(maxPriceInput.value);
-    const minRange = parseInt(minPriceInput.min);
-    const maxRange = parseInt(maxPriceInput.max);
+    if (minPriceInput && maxPriceInput) {
+        const minValue = parseInt(minPriceInput.value);
+        const maxValue = parseInt(maxPriceInput.value);
+        const minRange = parseInt(minPriceInput.min);
+        const maxRange = parseInt(maxPriceInput.max);
 
-    // Hitung persentase untuk latar belakang
-    const minPercent = ((minValue - minRange) / (maxRange - minRange)) * 100;
-    const maxPercent = ((maxValue - minRange) / (maxRange - minRange)) * 100;
+        const minPercent = ((minValue - minRange) / (maxRange - minRange)) * 100;
+        const maxPercent = ((maxValue - minRange) / (maxRange - minRange)) * 100;
 
-    // Mengubah warna latar belakang slider
-    const background = `linear-gradient(to right, #ddd ${minPercent}%, var(--main-color) ${minPercent}%, var(--main-color) ${maxPercent}%, #ddd ${maxPercent}%)`;
+        const background = `linear-gradient(to right, #ddd ${minPercent}%, var(--main-color) ${minPercent}%, var(--main-color) ${maxPercent}%, #ddd ${maxPercent}%)`;
 
-    minPriceInput.style.background = background;
-    maxPriceInput.style.background = background;
+        minPriceInput.style.background = background;
+        // Jika kedua slider adalah elemen yang sama atau Anda ingin keduanya memiliki background yang sama
+        maxPriceInput.style.background = background;
+    }
 }
 
-// Event listener untuk mengupdate saat slider digeser
-miPriceInput.addEventListener('input', updateSliderBackground);
-maPriceInput.addEventListener('input', updateSliderBackground);
-
-// Inisialisasi warna saat halaman dimuat
-updateSliderBackground();
-
-function showNotification(message) {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.style.display = 'block';
-    notification.style.opacity = '1'; // Tampilkan notifikasi
-
-    // Sembunyikan notifikasi setelah 3 detik
-    setTimeout(() => {
-        notification.style.opacity = '0'; // Sembunyikan dengan animasi
-        setTimeout(() => {
-            notification.style.display = 'none'; // Sembunyikan elemen
-        }, 500); // Waktu untuk menyembunyikan elemen setelah animasi
-    }, 3000);
-}
-
-
-
-
+// Panggil saat halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    updatePriceValueDisplay();
+    updateSliderBackground();
+});
