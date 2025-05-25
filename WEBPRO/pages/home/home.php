@@ -217,7 +217,7 @@
         </div>
     </section>
 
-    <footer class="footer">
+    <!-- <footer class="footer">
         <div class="footer-container">
             <div class="footer-about">
                 <h2 class="logo"><span>Tapal</span>Kuda</h2>
@@ -260,8 +260,12 @@
         <div class="footer-bottom">
             <p>© 2024 TapalKuda. All Rights Reserved.</p>
         </div>
-    </footer>
+    </footer> -->
 
+    <?php
+    include '../../views/footer.php';
+    ?>
+    
     <script>
         AOS.init();
     </script>
