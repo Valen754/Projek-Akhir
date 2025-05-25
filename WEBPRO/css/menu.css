@@ -222,6 +222,8 @@ body {
 
 
 
+
+
 .image-wrapper:hover .btn-overlay {
     opacity: 1;
 }
@@ -718,3 +720,17 @@ button {
 }
 
 /* Media Queries untuk Responsif */
+
+.favorite-btn i {
+    color: #ffffff; /* Warna default (abu-abu) */
+    transition: color 0.3s ease; /* Animasi transisi */
+}
+
+.favorite-btn:hover i {
+    color: #000000; /* Warna merah saat hover */
+    cursor: pointer; /* Tunjukkan bahwa bisa diklik */
+}
+
+.favorite-btn:hover {
+    background-color: #ff0505;
+}
