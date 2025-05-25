@@ -1,11 +1,14 @@
 <?php
+session_start();
 include '../../koneksi.php';
-include '../../views/header.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../login/login.php");
     exit();
 }
+
+include '../../views/header.php';
+
 
 $user_id = $_SESSION['user_id'];
 $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN menu ON keranjang.menu_id = menu.id WHERE keranjang.user_id = $user_id");

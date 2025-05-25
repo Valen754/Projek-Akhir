@@ -14,6 +14,7 @@
 
 <body>
     <?php
+    session_start();
     include '../../views/header.php';
     include '../../koneksi.php'; // Koneksi ke database
     
