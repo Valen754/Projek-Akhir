@@ -40,9 +40,10 @@ $role = $user['role'];
                             <a class="nav-link" href="treservasi.php">Reservasi</a>
                         </nav>
                     </div>
-                    <a class="nav-link" href="charts.html">
-                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    <a class="nav-link" href="top_selling_menu.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-pie"></i></div>
                         Charts
+                        
                     </a>
                 </div>
             </div>
