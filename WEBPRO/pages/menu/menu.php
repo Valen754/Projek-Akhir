@@ -45,6 +45,8 @@
     }
     ?>
 
+
+
     <div class="container-banner">
         <div class="overlay"></div>
         <div class="judul">Menu</div>
@@ -127,15 +129,32 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                                <a href="logic/toggle_favorit.php" class="btn-icon-round">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-                                                        fill="currentColor" class="bi bi-bookmark-heart" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd"
-                                                            d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z" />
-                                                        <path
-                                                            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
-                                                    </svg>
-                                                </a>
+                                                <form action="logic/toggle_favorit.php" method="post" style="display:inline;">
+                                                    <input type="hidden" name="menu_id" value="<?php echo $row['id']; ?>">
+                                                    <button type="submit" class="btn-icon-round"
+                                                        style="background:none;border:none;padding:0;"
+                                                        title="<?php echo in_array($row['id'], $favorite_menus) ? 'Hapus dari Favorit' : 'Tambah ke Favorit'; ?>">
+                                                        <?php if (in_array($row['id'], $favorite_menus)): ?>
+                                                            <!-- Sudah favorit: icon penuh dan warna gold -->
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                                fill="#FFD700" class="bi bi-bookmark-heart-fill" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                                                                <path
+                                                                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                                            </svg>
+                                                        <?php else: ?>
+                                                            <!-- Belum favorit: icon outline dan warna default -->
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                                fill="currentColor" class="bi bi-bookmark-heart" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                                                                <path
+                                                                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                                            </svg>
+                                                        <?php endif; ?>
+                                                    </button>
+                                                </form>
                                             <?php else: ?>
                                                 <a href="../login/login.php" class="btn-icon-round">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
@@ -197,12 +216,38 @@
         </div>
     </div>
 
+    <!-- Modal Notifikasi -->
+    <div id="notifModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);">
+        <div style="background:#fff;padding:24px 32px;border-radius:8px;max-width:350px;margin:120px auto 0;box-shadow:0 2px 8px rgba(0,0,0,0.15);text-align:center;position:relative;">
+            <span id="notifModalClose" style="position:absolute;top:8px;right:16px;cursor:pointer;font-size:22px;">&times;</span>
+            <div id="notifModalMsg" style="color:#155724;font-size:16px;"></div>
+        </div>
+    </div>
+    <?php if (isset($_SESSION['favorit_message'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var notifModal = document.getElementById('notifModal');
+        var notifMsg = document.getElementById('notifModalMsg');
+        notifMsg.innerHTML = <?php echo json_encode($_SESSION['favorit_message']); ?>;
+        notifModal.style.display = 'block';
+        document.getElementById('notifModalClose').onclick = function() {
+            notifModal.style.display = 'none';
+        };
+        notifModal.onclick = function(e) {
+            if (e.target === notifModal) notifModal.style.display = 'none';
+        };
+        setTimeout(function() {
+            notifModal.style.display = 'none';
+        }, 2000);
+    });
+    </script>
+    <?php unset($_SESSION['favorit_message']); endif; ?>
+
     <?php
     include '../../views/footer.php';
     ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
         // Contoh jQuery untuk dropdown sederhana
         $(document).ready(function () {
@@ -217,8 +262,6 @@
                 }
             });
         });
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Logika untuk modal yang sudah ada
             document.querySelectorAll('.openModal').forEach(button => {
@@ -266,11 +309,11 @@
                                 if (data.action === 'added') {
                                     icon.classList.remove('far');
                                     icon.classList.add('fas');
-                                    // alert(data.message); // Opsional: tampilkan notifikasi
+                                    alert(data.message); // Opsional: tampilkan notifikasi
                                 } else if (data.action === 'removed') {
                                     icon.classList.remove('fas');
                                     icon.classList.add('far');
-                                    // alert(data.message); // Opsional: tampilkan notifikasi
+                                    alert(data.message); // Opsional: tampilkan notifikasi
                                 }
                             } else {
                                 alert('Error: ' + data.message);
