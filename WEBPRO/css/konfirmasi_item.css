@@ -1,0 +1,192 @@
+/* WEBPRO/css/konfirmasi_item.css */
+body {
+    font-family: sans-serif;
+    /* Sesuaikan dengan font utama Anda */
+    background-color: #f4f4f4;
+    /* Sesuaikan dengan background utama Anda */
+    color: #333;
+    /* Sesuaikan dengan warna teks utama Anda */
+    margin: 0;
+    padding: 0;
+}
+
+/* Pastikan header dan footer dari views/header.php dan views/footer.php sudah di-style dengan baik */
+
+.konfirmasi-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.konfirmasi-container h2 {
+    text-align: center;
+    color: #333;
+    /* Sesuaikan warna header */
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+.item-info {
+    text-align: center;
+    /* Atau display flex untuk layout berbeda */
+    margin-bottom: 20px;
+}
+
+.item-info img {
+    max-width: 200px;
+    /* Ukuran gambar bisa disesuaikan */
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+.item-info p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.item-info p strong {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #444;
+}
+
+.form-group input[type='number'],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.form-group input[type='number']:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    /* Warna highlight saat focus, sesuaikan */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.action-buttons {
+    display: flex;
+    /* Mengatur tombol sejajar */
+    justify-content: space-around;
+    /* Memberi spasi antar tombol */
+    margin-top: 30px;
+}
+
+.action-buttons button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    flex-grow: 1;
+    /* Membuat tombol memiliki lebar yang sama jika diinginkan */
+    margin: 0 5px;
+    /* Sedikit margin antar tombol */
+}
+
+.btn-add-to-cart {
+    background-color: #5cb85c;
+    /* Warna hijau untuk tambah ke keranjang */
+    color: white;
+}
+
+.btn-add-to-cart:hover {
+    background-color: #4cae4c;
+}
+
+.btn-direct-pay {
+    background-color: #007bff;
+    /* Warna biru untuk bayar langsung */
+    color: white;
+}
+
+.btn-direct-pay:hover {
+    background-color: #0056b3;
+}
+
+
+.konfirmasi-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.item-info img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type='number'],
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.action-buttons button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-add-to-cart {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.btn-direct-pay {
+    background-color: #007bff;
+    color: white;
+}
