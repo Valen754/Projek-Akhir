@@ -1,4 +1,5 @@
 <?php
+
 include '../../koneksi.php';
 include '../../views/header.php';
 
@@ -36,7 +37,7 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
         </nav>
 
         <?php
-            //notifikasi berhasil edit keranjang
+        //notifikasi berhasil edit keranjang
         if (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Keranjang berhasil diperbarui!
@@ -61,81 +62,86 @@ $query = mysqli_query($conn, "SELECT keranjang.*, menu.nama FROM keranjang JOIN 
                 <tbody>
                     <?php while ($row = mysqli_fetch_assoc($query)) { ?>
                         <tr>
-                            <td><input type="checkbox" name="checkout_items[]" value="<?= $row['order_id'] ?>" class="item-checkbox" data-price="<?= $row['price'] ?>"></td>
+                            <td><input type="checkbox" name="checkout_items[]" value="<?= $row['order_id'] ?>"
+                                    class="item-checkbox" data-price="<?= $row['price'] ?>"></td>
                             <td><?= $row['nama'] ?></td>
                             <td><?= $row['quantity'] ?></td>
                             <td><?= $row['catatan'] ?></td>
                             <td>Rp <?= number_format($row['price'], 0, ',', '.') ?></td>
                             <td>
-                            <a href="logic/hapus-item.php?order_id=<?= $row['order_id'] ?>" class="btn btn-danger btn-sm">Hapus</a> ||
-                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#editItemModal<?= $row['order_id'] ?>">Edit</a>
+                                <a href="logic/hapus-item.php?order_id=<?= $row['order_id'] ?>"
+                                    class="btn btn-danger btn-sm">Hapus</a> ||
+                                <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#editItemModal<?= $row['order_id'] ?>">Edit</a>
                             </td>
                         </tr>
-                            </div>
-                        </div>
-                    </div>
-                    <?php } ?>
-                </tbody>
-            </table>
+        </div>
+        </div>
+        </div>
+    <?php } ?>
+    </tbody>
+    </table>
 
-            <p>Total: <strong id="totalHarga">Rp 0</strong></p>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkoutModal">
-                Checkout
-            </button>
+    <p>Total: <strong id="totalHarga">Rp 0</strong></p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+        Checkout
+    </button>
 
 
 
-            <!-- ADD Modal -->
-            <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="checkoutLabel" style="color: black;">Konfirmasi Checkout</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" style="color: black;">
-                            Apakah Anda yakin ingin checkout barang yang dipilih?
-                            <p id="modalTotalHarga" class="mt-2" style="color: black;">Total: <strong>Rp 0</strong></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-success">Checkout Sekarang</button>
-                        </div>
-                    </div>
+    <!-- ADD Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkoutLabel" style="color: black;">Konfirmasi Checkout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color: black;">
+                    Apakah Anda yakin ingin checkout barang yang dipilih?
+                    <p id="modalTotalHarga" class="mt-2" style="color: black;">Total: <strong>Rp 0</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Checkout Sekarang</button>
                 </div>
             </div>
-        </form>
+        </div>
+    </div>
+    </form>
 
-                    <!-- Edit Modal -->
-                    <?php mysqli_data_seek($query, 0); while ($row = mysqli_fetch_assoc($query)) { ?>
-                        <div class="modal fade" id="editItemModal<?= $row['order_id'] ?>" tabindex="-1" aria-labelledby="editItemModalLabel<?= $row['order_id'] ?>" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form action="logic/edit-item.php" method="POST">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" style="color:black;">Edit Item</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="color:black;">
-                                            <input type="hidden" name="order_id" value="<?= $row['order_id'] ?>">
-                                            <div class="mb-3">
-                                                <label for="quantity<?= $row['order_id'] ?>">Jumlah</label>
-                                                <input type="number" name="quantity" value="<?= $row['quantity'] ?>" class="form-control" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="catatan<?= $row['order_id'] ?>">Catatan</label>
-                                                <textarea name="catatan" class="form-control"><?= $row['catatan'] ?></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                        </div>
-                                    </form>
-                                </div>
+    <!-- Edit Modal -->
+    <?php mysqli_data_seek($query, 0);
+    while ($row = mysqli_fetch_assoc($query)) { ?>
+        <div class="modal fade" id="editItemModal<?= $row['order_id'] ?>" tabindex="-1"
+            aria-labelledby="editItemModalLabel<?= $row['order_id'] ?>" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="logic/edit-item.php" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" style="color:black;">Edit Item</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="color:black;">
+                            <input type="hidden" name="order_id" value="<?= $row['order_id'] ?>">
+                            <div class="mb-3">
+                                <label for="quantity<?= $row['order_id'] ?>">Jumlah</label>
+                                <input type="number" name="quantity" value="<?= $row['quantity'] ?>" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="catatan<?= $row['order_id'] ?>">Catatan</label>
+                                <textarea name="catatan" class="form-control"><?= $row['catatan'] ?></textarea>
                             </div>
                         </div>
-                    <?php } ?>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
     </div>
 
     <script>
