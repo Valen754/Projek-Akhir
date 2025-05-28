@@ -1,13 +1,13 @@
 <?php
-session_start();
 include '../../koneksi.php';
+include '../../views/header.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../login/login.php");
     exit();
 }
 
-include '../../views/header.php';
+
 
 
 $user_id = $_SESSION['user_id'];
