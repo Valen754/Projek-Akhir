@@ -9,15 +9,13 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
 
 <body>
     <?php
     include '../../views/header.php';
-    include '../../koneksi.php'; // Koneksi ke database
-    
-    // Dapatkan ID user yang login (jika ada)
+    include '../../koneksi.php';
+
     $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
     // Query untuk menghitung jumlah menu berdasarkan kategori
@@ -34,7 +32,7 @@
     // Ambil daftar menu yang difavoritkan oleh user yang sedang login
     $favorite_menus = [];
     if ($user_id) {
-        $query_favorites = "SELECT menu_id FROM favorites WHERE user_id = " . $user_id;
+        $query_favorites = "SELECT menu_id FROM favorit WHERE user_id = $user_id";
         $result_favorites = $conn->query($query_favorites);
         if ($result_favorites) {
             while ($row_fav = $result_favorites->fetch_assoc()) {
@@ -43,8 +41,6 @@
         }
     }
     ?>
-
-
 
     <div class="container-banner">
         <div class="overlay"></div>
@@ -83,6 +79,12 @@
                 <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>"
                     href="menu.php?type=cemilan">
                     Snacks <span>(<?php echo isset($menuCounts['cemilan']) ? $menuCounts['cemilan'] : 0; ?>)</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'favorit') ? 'active' : ''; ?>"
+                    href="menu.php?type=favorit">
+                    Favorit <span>(<?php echo count($favorite_menus); ?>)</span>
                 </a>
             </li>
         </ul>
