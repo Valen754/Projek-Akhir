@@ -34,6 +34,13 @@ $sql = "SELECT
             n.created_at DESC";
 
 $result = mysqli_query($conn, $sql);
+
+// Cek menu dengan stok kurang dari 10
+$menu_low_stock = [];
+$result_menu = mysqli_query($conn, "SELECT nama, quantity FROM menu WHERE quantity < 10");
+while ($row_menu = mysqli_fetch_assoc($result_menu)) {
+    $menu_low_stock[] = $row_menu;
+}
 ?>
 
 <h1 class="mt-4">Notifikasi</h1>
@@ -57,6 +64,18 @@ $result = mysqli_query($conn, $sql);
         </div>
     <?php endif; ?>
 
+    <?php if (!empty($menu_low_stock)): ?>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Perhatian!</strong> Menu berikut stoknya kurang dari 10:<br>
+            <ul style="margin-bottom:0;">
+                <?php foreach ($menu_low_stock as $menu): ?>
+                    <li><?= htmlspecialchars($menu['nama']) ?> (Sisa: <?= $menu['quantity'] ?>)</li>
+                <?php endforeach; ?>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <table id="datatablesSimple">
         <thead>
             <tr>
@@ -74,8 +93,10 @@ $result = mysqli_query($conn, $sql);
         <tbody>
             <?php
             $no = 1;
+            $ada_notifikasi = false;
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
+                    $ada_notifikasi = true;
                     $isReadStatus = $row['is_read'] ? 'Sudah Dibaca' : 'Belum Dibaca';
                     $isReadBadge = $row['is_read'] ? 'secondary' : 'info'; // Warna badge
                     ?>
@@ -111,7 +132,9 @@ $result = mysqli_query($conn, $sql);
                     </tr>
                 <?php
                 }
-            } else {
+            }
+            // Tampilkan pesan hanya jika tidak ada notifikasi sama sekali
+            if (!$ada_notifikasi && empty($menu_low_stock)) {
                 echo "<tr><td colspan='9' class='text-center'>Tidak ada notifikasi.</td></tr>";
             }
             ?>

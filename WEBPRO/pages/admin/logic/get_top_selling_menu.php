@@ -9,6 +9,17 @@ ini_set('display_errors', 1);
 // Jadi perlu naik 3 tingkat direktori: ../../../
 include '../../../koneksi.php';
 
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'hari';
+
+$where = '';
+if ($filter == 'hari') {
+    $where = "AND DATE(o.order_date) = CURDATE()";
+} elseif ($filter == 'bulan') {
+    $where = "AND MONTH(o.order_date) = MONTH(CURDATE()) AND YEAR(o.order_date) = YEAR(CURDATE())";
+} elseif ($filter == 'tahun') {
+    $where = "AND YEAR(o.order_date) = YEAR(CURDATE())";
+} // jika 'semua', $where tetap kosong
+
 // Menentukan header agar browser tahu responsnya adalah JSON
 header('Content-Type: application/json');
 
@@ -30,8 +41,11 @@ $sql = "SELECT
             order_details od
         JOIN
             menu m ON od.menu_id = m.id
+        JOIN
+            orders o ON od.order_id = o.id
+        WHERE 1 $where
         GROUP BY
-            m.nama
+            od.menu_id
         ORDER BY
             total_sold DESC
         LIMIT 7"; // Mengambil hingga 9 menu terlaris

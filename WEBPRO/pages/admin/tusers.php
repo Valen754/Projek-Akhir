@@ -138,7 +138,6 @@ $sql = "SELECT * FROM users";
                                     <div class="mb-3">
                                         <label class="form-label">Role</label>
                                         <select name="role" class="form-select" required>
-                                            <option value="admin" <?= $row['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                                             <option value="kasir" <?= $row['role'] === 'kasir' ? 'selected' : '' ?>>Kasir</option>
                                         </select>
                                     </div>
@@ -209,7 +208,7 @@ $sql = "SELECT * FROM users";
                     <div class="mb-3">
                         <label for="addRole" class="form-label">Role</label>
                         <select class="form-select" id="addRole" name="role" required>
-                            <option value="admin">Admin</option>
+                           
                             <option value="kasir">Kasir</option>
                         </select>
                     </div>

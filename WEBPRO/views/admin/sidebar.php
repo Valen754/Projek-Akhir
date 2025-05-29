@@ -20,7 +20,7 @@ $role = $user['role'];
                         <div class="small">Logged in as:</div>
                         <?= $username ?> - <?= $role ?>
                     </div>
-                    <a class="nav-link" href="index.html" style="margin-top: 40px;">
+                    <a class="nav-link" href="dashboard.php" style="margin-top: 40px;">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
                     </a>
@@ -33,6 +33,7 @@ $role = $user['role'];
                     <div class="collapse" id="tablesCollapse" aria-labelledby="headingOne"
                         data-bs-parent="#sidenavAccordionPages">
                         <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="menu.php">Menu</a>
                             <a class="nav-link" href="tusers.php">Users</a>
                             <a class="nav-link" href="tnotifikasi.php">Notifikasi</a>
                             <a class="nav-link" href="treviews.php">Reviews</a>
@@ -48,7 +49,7 @@ $role = $user['role'];
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                <a class="nav-link" href="login.html">
+                <a class="nav-link" href="../../pages/login/login.php">
                     <div class="sb-nav-link-icon" style="margin-left: 60px;"><i class="fas fa-sign-out-alt"></i> Log-out
                     </div>
                 </a>

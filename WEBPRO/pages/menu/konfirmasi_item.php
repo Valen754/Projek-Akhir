@@ -50,7 +50,7 @@ $base_gambar_url = '../../assets/menu/'; // Pastikan folder ini sesuai
             <img src="<?php echo $base_gambar_url . htmlspecialchars($menu_item['url_foto']); ?>"
                 alt="<?php echo htmlspecialchars($menu_item['nama']); ?>">
             <p><strong>Harga Satuan:</strong> Rp <?php echo number_format($menu_item['price'], 0, ',', '.'); ?></p>
-            <p><?php echo nl2br(htmlspecialchars($menu_item['deskripsi'])); ?></p>
+           
         </div>
 
         <form action="logic/proses_konfirmasi_item.php" method="POST">
@@ -70,13 +70,10 @@ $base_gambar_url = '../../assets/menu/'; // Pastikan folder ini sesuai
             <div class="action-buttons">
                 <button type="submit" name="action" value="tambah_keranjang" class="btn-add-to-cart">Masukkan ke
                     Keranjang</button>
-                <button type="submit" name="action" value="langsung_bayar" class="btn-direct-pay">Langsung
-                    Bayar</button>
+                <button type="submit" name="action" value="langsung_bayar" formaction="checkout_succes.php" class="btn-direct-pay">Langsung Bayar</button>
             </div>
         </form>
     </main>
-
-    <?php include '../../views/footer.php'; ?>
 </body>
 
 </html>

@@ -8,8 +8,22 @@ include '../../views/admin/sidebar.php';
 // Koneksi ke database
 include '../../koneksi.php';
 
+// Ambil filter waktu dari GET
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'semua';
+
+$where = '';
+if ($filter == 'hari') {
+    $where = "WHERE DATE(o.order_date) = CURDATE()";
+} elseif ($filter == 'bulan') {
+    $where = "WHERE MONTH(o.order_date) = MONTH(CURDATE()) AND YEAR(o.order_date) = YEAR(CURDATE())";
+} elseif ($filter == 'tahun') {
+    $where = "WHERE YEAR(o.order_date) = YEAR(CURDATE())";
+} elseif ($filter == 'tanggal' && !empty($_GET['tanggal'])) {
+    $tanggal = $_GET['tanggal'];
+    $where = "WHERE DATE(o.order_date) = '$tanggal'";
+}
+
 // Query SQL untuk mengambil data orders
-// Melakukan JOIN dengan tabel users untuk mendapatkan nama pengguna/kasir
 $sql_orders = "SELECT
                 o.id AS order_id,
                 o.user_id,
@@ -24,6 +38,7 @@ $sql_orders = "SELECT
                 orders o
             JOIN
                 users u ON o.user_id = u.id
+            $where
             ORDER BY
                 o.order_date DESC";
 
@@ -64,6 +79,18 @@ $result_orders = mysqli_query($conn, $sql_orders);
                             <i class="fas fa-table me-1"></i>
                             Data Orders
                         </div>
+                        <form method="get" class="d-flex align-items-center" style="gap:10px;">
+                            <label for="filter_waktu" class="mb-0">Filter Waktu:</label>
+                            <select name="filter" id="filter_waktu" class="form-select" style="width:auto;">
+                                <option value="hari" <?= $filter == 'hari' ? 'selected' : '' ?>>Hari Ini</option>
+                                <option value="bulan" <?= $filter == 'bulan' ? 'selected' : '' ?>>Bulan Ini</option>
+                                <option value="tahun" <?= $filter == 'tahun' ? 'selected' : '' ?>>Tahun Ini</option>
+                                <option value="semua" <?= $filter == 'semua' ? 'selected' : '' ?>>Semua</option>
+                                <option value="tanggal" <?= $filter == 'tanggal' ? 'selected' : '' ?>>Pilih Tanggal</option>
+                            </select>
+                            <input type="date" name="tanggal" id="tanggal" value="<?= isset($_GET['tanggal']) ? $_GET['tanggal'] : '' ?>" <?= $filter == 'tanggal' ? '' : 'style="display:none;"' ?>>
+                            <button type="submit" class="btn btn-primary btn-sm">Terapkan</button>
+                        </form>
                     </div>
 
 <div class="card-body">
@@ -294,10 +321,10 @@ $result_orders = mysqli_query($conn, $sql_orders);
             });
         });
 
-        // Hapus semua logika JavaScript yang terkait dengan modal tambah pesanan
-        // Jika Anda masih memiliki file JS seperti table-menu.js atau datatables-simple-demo.js
-        // yang mungkin mencoba memanggil elemen dari modal "addModal", Anda mungkin perlu
-        // memeriksa dan membersihkannya juga.
+        // Tampilkan input tanggal jika filter "tanggal" dipilih
+        document.getElementById('filter_waktu').addEventListener('change', function() {
+            document.getElementById('tanggal').style.display = (this.value === 'tanggal') ? '' : 'none';
+        });
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
