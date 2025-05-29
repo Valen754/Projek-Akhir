@@ -32,7 +32,7 @@
     // Ambil daftar menu yang difavoritkan oleh user yang sedang login
     $favorite_menus = [];
     if ($user_id) {
-        $query_favorites = "SELECT menu_id FROM favorit WHERE user_id = $user_id";
+        $query_favorites = "SELECT menu_id FROM favorites WHERE user_id = $user_id";
         $result_favorites = $conn->query($query_favorites);
         if ($result_favorites) {
             while ($row_fav = $result_favorites->fetch_assoc()) {
@@ -40,18 +40,6 @@
             }
         }
     }
-
-    // Ambil daftar menu
-    if (isset($_GET['type']) && $_GET['type'] == 'favorit' && $user_id) {
-        $sql = "SELECT * FROM menu WHERE id IN (" . implode(',', $favorite_menus ?: [0]) . ") AND quantity > 0";
-    } else if (isset($_GET['type']) && !empty($_GET['type'])) {
-        $type = $conn->real_escape_string($_GET['type']);
-        $sql = "SELECT * FROM menu WHERE type = '$type' AND quantity > 0";
-    } else {
-        $sql = "SELECT * FROM menu WHERE quantity > 0";
-    }
-
-    $menu_result = $conn->query($sql);
     ?>
 
     <div class="container-banner">
@@ -63,32 +51,39 @@
         <ul class="nav-pills">
             <div class="kategori">PRODUCT CATEGORIES</div>
             <li>
-                <a class="nav-link <?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>" href="menu.php">
+                <a class="nav-link <?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>"
+                    href="menu.php">
                     All <span>(<?php echo array_sum($menuCounts); ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'kopi') ? 'active' : ''; ?>" href="menu.php?type=kopi">
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'kopi') ? 'active' : ''; ?>"
+                    href="menu.php?type=kopi">
                     Coffe <span>(<?php echo isset($menuCounts['kopi']) ? $menuCounts['kopi'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>" href="menu.php?type=minuman">
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>"
+                    href="menu.php?type=minuman">
                     Non Coffe <span>(<?php echo isset($menuCounts['minuman']) ? $menuCounts['minuman'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>" href="menu.php?type=makanan_berat">
-                    Foods <span>(<?php echo isset($menuCounts['makanan_berat']) ? $menuCounts['makanan_berat'] : 0; ?>)</span>
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>"
+                    href="menu.php?type=makanan_berat">
+                    Foods
+                    <span>(<?php echo isset($menuCounts['makanan_berat']) ? $menuCounts['makanan_berat'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>" href="menu.php?type=cemilan">
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>"
+                    href="menu.php?type=cemilan">
                     Snacks <span>(<?php echo isset($menuCounts['cemilan']) ? $menuCounts['cemilan'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'favorit') ? 'active' : ''; ?>" href="menu.php?type=favorit">
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'favorit') ? 'active' : ''; ?>"
+                    href="menu.php?type=favorit">
                     Favorit <span>(<?php echo count($favorite_menus); ?>)</span>
                 </a>
             </li>
@@ -98,34 +93,95 @@
             <div class="tab-pane active" id="semua">
                 <div class="row">
                     <?php
-                    if ($menu_result && $menu_result->num_rows > 0) {
-                        while ($row = $menu_result->fetch_assoc()) {
-                            echo '<div class="col">';
-                            echo '<div class="card">';
-                            echo '<div class="image-wrapper">';
-                            echo '<img src="../../asset/' . htmlspecialchars($row['url_foto']) . '" alt="' . htmlspecialchars($row['nama']) . '">';
-                            echo '</div>';
-                            echo '<div class="card-body">';
-                            echo '<div class="card-title">' . htmlspecialchars($row['nama']) . '</div>';
-                            echo '<div class="card-title">Rp ' . number_format($row['price'], 0, ',', '.') . '</div>';
-                            echo '<div class="card-title" style="color:#6d4c2b;">Tersedia: ' . htmlspecialchars($row['quantity']) . '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
+                    $sql = "SELECT * FROM menu WHERE quantity > 0";
+                    if (isset($_GET['type']) && !empty($_GET['type'])) {
+                        $type = $conn->real_escape_string($_GET['type']); // Sanitasi input
+                        if ($type === 'favorit' && !empty($favorite_menus)) {
+                            $menu_ids = implode(',', $favorite_menus);
+                            $sql = "SELECT * FROM menu WHERE id IN ($menu_ids) AND quantity > 0";
+                        } elseif ($type !== 'favorit') {
+                            $sql .= " AND type = '$type'";
+                        }
+                    }
+
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            ?>
+                            <div class="col">
+                                <div class="card">
+                                    <div class="image-wrapper">
+                                        <img src="../../asset/<?php echo htmlspecialchars($row['url_foto']); ?>"
+                                            alt="<?php echo htmlspecialchars($row['nama']); ?>">
+                                        <div class="btn-overlay">
+                                            <a class="btn-icon-round" href="../detail/detail.php?id=<?php echo $row['id']; ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                    fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                                </svg>
+                                            </a>
+                                            <?php if ($user_id): ?>
+                                                <a href="konfirmasi_item.php?menu_id=<?php echo $row['id']; ?>"
+                                                    style="display:inline;">
+                                                    <input type="hidden" name="menu_id" value="<?php echo $row['id']; ?>">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <button type="submit" class="btn-icon-round" id="openModal">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                            fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                                                        </svg>
+                                                    </button>
+                                                </a>
+                                                <form action="logic/toggle_favorit.php" method="post" style="display:inline;">
+                                                    <input type="hidden" name="menu_id" value="<?php echo $row['id']; ?>">
+                                                    <button type="submit" class="btn-icon-round"
+                                                        style="background:none;border:none;padding:0;"
+                                                        title="<?php echo in_array($row['id'], $favorite_menus) ? 'Hapus dari Favorit' : 'Tambah ke Favorit'; ?>">
+                                                        <?php if (in_array($row['id'], $favorite_menus)): ?>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                                fill="#FFD700" class="bi bi-bookmark-heart-fill" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z" />
+                                                                <path
+                                                                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                                                            </svg>
+                                                        <?php else: ?>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                                fill="currentColor" class="bi bi-bookmark-heart" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z" />
+                                                                <path
+                                                                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                                                            </svg>
+                                                        <?php endif; ?>
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-title"><?php echo htmlspecialchars($row['nama']); ?></div>
+                                        <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?>
+                                        </div>
+                                        <div class="card-title" style="color:#6d4c2b;">
+                                            Tersedia: <?php echo htmlspecialchars($row['quantity']); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
                         }
                     } else {
-                        echo "<p style='margin-top:1rem;'>Menu tidak tersedia.</p>";
+                        echo "<p>Menu tidak tersedia.</p>";
                     }
                     ?>
                 </div>
             </div>
         </div>
     </div>
-
-    <?php include '../../views/footer.php'; ?>
-</body>
-</html>
-
 
     <!-- Modal Notifikasi -->
     <div id="notifModal"
