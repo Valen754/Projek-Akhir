@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$query = "SELECT * FROM pesanan WHERE user_id = $user_id ORDER BY tanggal DESC";
+$query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY order_date DESC";
 $result = $conn->query($query);
 ?>
 
@@ -89,11 +89,11 @@ $result = $conn->query($query);
             <?php while ($row = $result->fetch_assoc()): ?>
                 <div class="riwayat-item">
                     <div class="riwayat-info">
-                        <span>#<?php echo $row['id']; ?> - <?php echo date('d M Y', strtotime($row['tanggal'])); ?></span>
+                        <span>#<?php echo $row['id']; ?> - <?php echo date('d M Y', strtotime($row['order_date'])); ?></span>
                         <span class="riwayat-date"><?php echo htmlspecialchars($row['alamat'] ?? ''); ?></span>
                     </div>
                     <div>
-                        <span class="riwayat-total">Rp <?php echo number_format($row['total_harga'],0,',','.'); ?></span>
+                        <span class="riwayat-total">Rp <?php echo number_format($row['total_amount'],0,',','.'); ?></span>
                         <?php if (isset($row['status'])): ?>
                             <span class="riwayat-status"><?php echo htmlspecialchars($row['status']); ?></span>
                         <?php endif; ?>

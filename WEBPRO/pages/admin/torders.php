@@ -57,9 +57,18 @@ $result_orders = mysqli_query($conn, $sql_orders);
     }
 </style>
 
+<h1 class="mt-4">Table order</h1>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-table me-1"></i>
+                            Data Orders
+                        </div>
+                    </div>
+
 <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4><i class="fas fa-receipt me-1"></i> Data Pesanan</h4>
+        <h4><i class="fas fa-receipt me-1"></i> Data orders</h4>
         <div>
             <a href="logic/download-orders-pdf.php" class="btn btn-success" target="_blank">Download Data Pesanan (PDF)</a>
         </div>

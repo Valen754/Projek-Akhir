@@ -12,6 +12,15 @@ include '../../koneksi.php';
 $sql = "SELECT * FROM users";
 ?>
 
+<h1 class="mt-4">Table User</h1>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-table me-1"></i>
+                            Data User
+                        </div>
+                    </div>
+
 <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
@@ -131,7 +140,6 @@ $sql = "SELECT * FROM users";
                                         <select name="role" class="form-select" required>
                                             <option value="admin" <?= $row['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                                             <option value="kasir" <?= $row['role'] === 'kasir' ? 'selected' : '' ?>>Kasir</option>
-                                            <option value="member" <?= $row['role'] === 'member' ? 'selected' : '' ?>>Member</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
@@ -203,7 +211,6 @@ $sql = "SELECT * FROM users";
                         <select class="form-select" id="addRole" name="role" required>
                             <option value="admin">Admin</option>
                             <option value="kasir">Kasir</option>
-                            <option value="member">Member</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -221,7 +228,7 @@ $sql = "SELECT * FROM users";
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../js/table-menu.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="../../js/datatables-simple-demo.js"></script>
 </body>

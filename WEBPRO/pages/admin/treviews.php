@@ -31,9 +31,18 @@ $sql = "SELECT
 $result = mysqli_query($conn, $sql);
 ?>
 
+<h1 class="mt-4">Review</h1>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-table me-1"></i>
+                            Review
+                        </div>
+                    </div>
+
 <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4><i class="fas fa-star me-1"></i> Data Ulasan</h4>
+        <h4><i class="fas fa-star me-1"></i> Data Review</h4>
     </div>
 
     <?php if (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
