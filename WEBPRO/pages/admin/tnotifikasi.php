@@ -66,7 +66,7 @@ while ($row_menu = mysqli_fetch_assoc($result_menu)) {
 
     <?php if (!empty($menu_low_stock)): ?>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Perhatian!</strong> Menu berikut stoknya kurang dari 10:<br>
+            <strong>Perhatian!</strong> Menu berikut stoknya hampir habis (kurang dari 9):<br>
             <ul style="margin-bottom:0;">
                 <?php foreach ($menu_low_stock as $menu): ?>
                     <li><?= htmlspecialchars($menu['nama']) ?> (Sisa: <?= $menu['quantity'] ?>)</li>

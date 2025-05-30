@@ -10,6 +10,7 @@ ini_set('display_errors', 1);
 include '../../../koneksi.php';
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'hari';
+$tanggal = isset($_GET['tanggal']) ? $_GET['tanggal'] : '';
 
 $where = '';
 if ($filter == 'hari') {
@@ -18,6 +19,8 @@ if ($filter == 'hari') {
     $where = "AND MONTH(o.order_date) = MONTH(CURDATE()) AND YEAR(o.order_date) = YEAR(CURDATE())";
 } elseif ($filter == 'tahun') {
     $where = "AND YEAR(o.order_date) = YEAR(CURDATE())";
+} elseif ($filter == 'tanggal' && !empty($tanggal)) {
+    $where = "AND DATE(o.order_date) = '" . mysqli_real_escape_string($conn, $tanggal) . "'";
 } // jika 'semua', $where tetap kosong
 
 // Menentukan header agar browser tahu responsnya adalah JSON
@@ -83,6 +86,15 @@ if ($result->num_rows > 0) {
             'percentage' => $percentage . '%'
         ];
     }
+} else {
+    // Data dummy jika tidak ada data
+    $data['labels'] = ['Tidak ada data'];
+    $data['data'] = [100];
+    $data['table_data'][] = [
+        'menu_name' => 'Tidak ada data',
+        'sold' => 0,
+        'percentage' => '100%'
+    ];
 }
 
 // Mengembalikan data dalam format JSON
@@ -90,4 +102,5 @@ echo json_encode($data);
 
 // Menutup koneksi database
 $conn->close();
+exit;
 ?>

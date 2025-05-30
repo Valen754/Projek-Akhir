@@ -9,6 +9,20 @@ $total_pendapatan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total_amo
 $total_pesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders"))['total'];
 // Hanya hitung user dengan role 'pelanggan'
 $total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role = 'member'"))['total'];
+
+// Cek menu dengan stok kurang dari 9
+$menu_low_stock = [];
+$result_menu = mysqli_query($conn, "SELECT nama, quantity FROM menu WHERE quantity < 9");
+while ($row_menu = mysqli_fetch_assoc($result_menu)) {
+    $menu_low_stock[] = $row_menu;
+}
+
+// Cek reservasi baru (status pending)
+$reservasi_baru = [];
+$result_reservasi = mysqli_query($conn, "SELECT id, kode_reservasi, email, tanggal_reservasi FROM reservasi WHERE status = 'pending'");
+while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
+    $reservasi_baru[] = $row_reservasi;
+}
 ?>
 
 <main>
@@ -60,6 +74,35 @@ $total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as to
                 </div>
             </div>
         </div>
+
+        <?php if (!empty($menu_low_stock)): ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Perhatian!</strong> Menu berikut stoknya hampir habis (kurang dari 9):<br>
+                <ul style="margin-bottom:0;">
+                    <?php foreach ($menu_low_stock as $menu): ?>
+                        <li><?= htmlspecialchars($menu['nama']) ?> (Sisa: <?= $menu['quantity'] ?>)</li>
+                    <?php endforeach; ?>
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($reservasi_baru)): ?>
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>Reservasi Baru!</strong> Ada member yang melakukan reservasi:<br>
+                <ul style="margin-bottom:0;">
+                    <?php foreach ($reservasi_baru as $res): ?>
+                        <li>
+                            <?= htmlspecialchars($res['email']) ?> (<?= htmlspecialchars($res['kode_reservasi']) ?>) 
+                            pada <?= date('d-m-Y', strtotime($res['tanggal_reservasi'])) ?>
+                            <a href="../../pages/admin/treservasi.php?id=<?= $res['id'] ?>" class="btn btn-sm btn-primary ms-2">Lihat Detail</a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

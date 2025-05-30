@@ -83,7 +83,11 @@ include '../../views/admin/footer.php';
         const filterSelect = document.getElementById('filter_waktu');
         function loadChartData() {
             const filter = filterSelect.value;
-            fetch('logic/get_top_selling_menu.php?filter=' + filter)
+            let url = 'logic/get_top_selling_menu.php?filter=' + filter;
+            if (filter === 'tanggal') {
+                url += '&tanggal=' + tanggalInput.value;
+            }
+            fetch(url)
                 .then(response => {
                     if (!response.ok) {
                         return response.text().then(text => { throw new Error(text); });
