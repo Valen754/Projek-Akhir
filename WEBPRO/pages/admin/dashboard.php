@@ -12,7 +12,7 @@ $total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as to
 
 // Cek menu dengan stok kurang dari 9
 $menu_low_stock = [];
-$result_menu = mysqli_query($conn, "SELECT nama, quantity FROM menu WHERE quantity < 9");
+$result_menu = mysqli_query($conn, "SELECT nama, quantity FROM menu WHERE quantity < 10");
 while ($row_menu = mysqli_fetch_assoc($result_menu)) {
     $menu_low_stock[] = $row_menu;
 }
@@ -77,7 +77,7 @@ while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
 
         <?php if (!empty($menu_low_stock)): ?>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Perhatian!</strong> Menu berikut stoknya hampir habis (kurang dari 9):<br>
+                <strong>Perhatian!</strong> Menu berikut stoknya hampir habis (kurang dari 10):<br>
                 <ul style="margin-bottom:0;">
                     <?php foreach ($menu_low_stock as $menu): ?>
                         <li><?= htmlspecialchars($menu['nama']) ?> (Sisa: <?= $menu['quantity'] ?>)</li>

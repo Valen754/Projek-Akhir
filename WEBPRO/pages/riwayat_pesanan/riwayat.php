@@ -8,8 +8,21 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-// Ambil semua order milik user
-$query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY order_date DESC";
+
+// Filter tanggal
+$tanggal_awal = isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '';
+$tanggal_akhir = isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '';
+
+$where = "user_id = $user_id";
+if ($tanggal_awal && $tanggal_akhir) {
+    $where .= " AND DATE(order_date) BETWEEN '$tanggal_awal' AND '$tanggal_akhir'";
+} elseif ($tanggal_awal) {
+    $where .= " AND DATE(order_date) >= '$tanggal_awal'";
+} elseif ($tanggal_akhir) {
+    $where .= " AND DATE(order_date) <= '$tanggal_akhir'";
+}
+
+$query = "SELECT * FROM orders WHERE $where ORDER BY order_date DESC";
 $result = $conn->query($query);
 ?>
 
@@ -113,6 +126,16 @@ $result = $conn->query($query);
 <body>
     <div class="riwayat-header">
         <i class='bx bx-receipt'></i> Riwayat Pesanan
+    </div>
+    <div style="max-width:700px;margin:24px auto 0 auto;padding:0 10px;">
+        <form method="get" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label>Dari: <input type="date" name="tanggal_awal" value="<?= htmlspecialchars($tanggal_awal) ?>"></label>
+            <label>Sampai: <input type="date" name="tanggal_akhir" value="<?= htmlspecialchars($tanggal_akhir) ?>"></label>
+            <button type="submit" style="background:#a67c52;color:#fff;border:none;padding:6px 18px;border-radius:8px;">Filter</button>
+            <?php if ($tanggal_awal || $tanggal_akhir): ?>
+                <a href="riwayat.php" style="margin-left:8px;color:#a67c52;text-decoration:underline;">Reset</a>
+            <?php endif; ?>
+        </form>
     </div>
     <div class="riwayat-list">
         <?php if ($result && $result->num_rows > 0): ?>
