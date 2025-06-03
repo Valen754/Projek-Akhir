@@ -4,13 +4,13 @@ session_start();
 
 // Pastikan pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../login/login.php"); // Arahkan ke halaman login jika belum login
+    header("Location: ../login/login.php");// Arahkan ke halaman login jika belum login
     exit();
 }
 
 // Pastikan hanya pengguna dengan role 'kasir' yang dapat mengakses halaman ini
 if ($_SESSION['role'] !== 'kasir') {
-    header("Location: ../../login/login.php"); // Arahkan ke halaman login jika role tidak sesuai
+    header("Location: ../login/login.php"); // Arahkan ke halaman login jika role tidak sesuai
     exit();
 }
 
@@ -188,12 +188,13 @@ if (!$user) {
 
 <body>
     <div class="container">
+        <?php $activePage = 'profile'; ?>
         <?php include '../../views/kasir/sidebar.php'; ?>
 
         <main>
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="../../asset/<?php echo $user['profile_picture']; ?>" alt="Profile Photo"
+                    <img src="../../asset/user_picture/<?php echo $user['profile_picture']; ?>" alt="Profile Photo"
                         class="profile-photo">
                     <h1><?php echo $user['nama']; ?></h1>
                     <p><?php echo $user['role']; ?></p>

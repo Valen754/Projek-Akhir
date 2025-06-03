@@ -2,55 +2,58 @@
 session_start();
 include '../../../koneksi.php';
 
-// Ambil data dari form
-$user_id = $_SESSION['user_id']; // pastikan ini sudah di-set saat login kasir
-$customer_name = $_POST['customer_name'] ?? '';
-$payment_method = $_POST['payment_method'] ?? 'cash';
-$voucher = $_POST['voucher_code'] ?? '';
-$cart = $_SESSION['cart'] ?? [];
+$response = ['success' => false, 'message' => 'Terjadi kesalahan'];
 
-if (!$cart || count($cart) == 0) {
-    echo json_encode(['success' => false, 'message' => 'Keranjang kosong!']);
+if (!isset($_SESSION['cart']) || count($_SESSION['cart']) == 0) {
+    $response['message'] = 'Keranjang kosong!';
+    echo json_encode($response);
     exit;
 }
 
-// Kalkulasi subtotal
-$subtotal = 0;
+// Ambil user_id dari session login kasir
+$user_id = $_SESSION['user_id'] ?? null;
+
+$customer_name = $_POST['customer_name'] ?? '';
+$allowed_order_types = ['dine_in', 'take_away'];
+$order_type = $_POST['jenis_order'] ?? 'dine_in';
+
+if (!in_array($order_type, $allowed_order_types)) {
+    $order_type = 'dine_in';
+}
+
+$allowed_payment_methods = ['cash', 'e-wallet', 'qris'];
+$payment_method = $_POST['payment_method'] ?? 'cash';
+if (!in_array($payment_method, $allowed_payment_methods)) {
+    $payment_method = 'cash';
+}
+$notes = $_POST['notes'] ?? '';
+$status = 'completed'; // atau sesuai kebutuhan
+
+$cart = $_SESSION['cart'];
+$total_amount = 0;
 foreach ($cart as $item) {
-    $subtotal += $item['subtotal'];
+    $total_amount += $item['subtotal'];
 }
+$order_date = date('Y-m-d H:i:s');
 
-// [Opsional] Hitung diskon dari kode voucher
-$diskon = 0;
-if ($voucher == "TAPALKUDA10") { // contoh
-    $diskon = 0.10 * $subtotal;
+// Simpan ke tabel pembayaran
+$stmt = $conn->prepare("INSERT INTO pembayaran (user_id, order_date, total_amount, status, customer_name, payment_method, order_type, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("isdsssss", $user_id, $order_date, $total_amount, $status, $customer_name, $payment_method, $order_type, $notes);
+
+if ($stmt->execute()) {
+    $order_id = $stmt->insert_id;
+    // Simpan detail pembayaran
+    $stmt_detail = $conn->prepare("INSERT INTO detail_pembayaran (order_id, menu_id, quantity, price_per_item, subtotal, item_notes) VALUES (?, ?, ?, ?, ?, ?)");
+    foreach ($cart as $item) {
+        $stmt_detail->bind_param("iiidds", $order_id, $item['menu_id'], $item['quantity'], $item['price_per_item'], $item['subtotal'], $item['item_notes']);
+        $stmt_detail->execute();
+    }
+    $stmt_detail->close();
+    unset($_SESSION['cart']); // kosongkan keranjang
+    $response = ['success' => true, 'order_id' => $order_id];
+} else {
+    $response['message'] = 'Gagal menyimpan pembayaran';
 }
-
-// Pajak 10%
-$pajak = 0.10 * ($subtotal - $diskon);
-
-// Hitung total akhir
-$total = $subtotal - $diskon + $pajak;
-
-// Simpan ke `orders`
-mysqli_query($conn, "INSERT INTO orders (user_id, order_date, total_amount, status, customer_name, payment_method) VALUES (
-    '$user_id', NOW(), '$total', 'completed', '".mysqli_real_escape_string($conn, $customer_name)."', '".mysqli_real_escape_string($conn, $payment_method)."'
-)");
-$order_id = mysqli_insert_id($conn);
-
-// Simpan ke order_details
-foreach ($cart as $item) {
-    mysqli_query($conn, "INSERT INTO order_details (order_id, menu_id, quantity, price_per_item, subtotal, item_notes) VALUES (
-        '$order_id',
-        '{$item['menu_id']}',
-        '{$item['quantity']}',
-        '{$item['price_per_item']}',
-        '{$item['subtotal']}',
-        '".mysqli_real_escape_string($conn, $item['item_notes'])."'
-    )");
-}
-
-// Kosongkan keranjang
-unset($_SESSION['cart']);
-
-echo json_encode(['success' => true, 'order_id' => $order_id]);
+$stmt->close();
+echo json_encode($response);
+?>

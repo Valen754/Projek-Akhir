@@ -32,10 +32,14 @@
                 border-top-left-radius: 12px;
                 border-bottom-left-radius: 12px;
                 height: 100vh;
-                position: fixed; /* Fixed position */
-                left: 0; /* Align to left */
-                top: 0; /* Align to top */
-                z-index: 100; /* Higher z-index to be on top */
+                position: fixed;
+                /* Fixed position */
+                left: 0;
+                /* Align to left */
+                top: 0;
+                /* Align to top */
+                z-index: 100;
+                /* Higher z-index to be on top */
             }
 
             .sidebar button {
@@ -55,9 +59,12 @@
                 gap: 24px;
                 height: 100vh;
                 min-height: 100vh;
-                margin-left: 80px; /* Offset for sidebar */
-                margin-right: 384px; /* Offset for order panel */
-                overflow-y: auto; /* Enable scrolling for main content */
+                margin-left: 80px;
+                /* Offset for sidebar */
+                margin-right: 384px;
+                /* Offset for order panel */
+                overflow-y: auto;
+                /* Enable scrolling for main content */
                 position: relative;
             }
 
@@ -237,11 +244,16 @@
                 flex-direction: column;
                 justify-content: space-between;
                 height: 100vh;
-                position: fixed; /* Fixed position */
-                right: 0; /* Align to right */
-                top: 0; /* Align to top */
-                overflow-y: auto; /* Enable scrolling for panel */
-                z-index: 100; /* Higher z-index to be on top */
+                position: fixed;
+                /* Fixed position */
+                right: 0;
+                /* Align to right */
+                top: 0;
+                /* Align to top */
+                overflow-y: auto;
+                /* Enable scrolling for panel */
+                z-index: 100;
+                /* Higher z-index to be on top */
             }
 
             aside.orders-panel header h2 {
@@ -338,7 +350,7 @@
                 align-items: center;
                 gap: 8px;
             }
-            
+
             ul.order-list li .order-qty-delete .qty-controls {
                 display: flex;
                 align-items: center;
@@ -359,6 +371,7 @@
                 font-size: 12px;
                 transition: background-color 0.2s;
             }
+
             ul.order-list li .order-qty-delete .qty-controls button:hover {
                 background-color: #555;
             }
@@ -421,6 +434,16 @@
                 background-color: #d46a5a;
             }
 
+            button.active i {
+                color: white;
+                /* atau warna lain sesuai tema aktif */
+            }
+
+            button.active {
+                background: black;
+                /* contoh warna background aktif */
+            }
+
             /* Responsive */
             @media (max-width: 768px) {
                 .container {
@@ -436,14 +459,17 @@
                     gap: 24px;
                     border-radius: 0;
                     justify-content: center;
-                    position: static; /* Change to static for mobile */
+                    position: static;
+                    /* Change to static for mobile */
                     height: auto;
                 }
 
                 main {
                     padding: 16px;
-                    margin-left: 0; /* Remove offset for mobile */
-                    margin-right: 0; /* Remove offset for mobile */
+                    margin-left: 0;
+                    /* Remove offset for mobile */
+                    margin-right: 0;
+                    /* Remove offset for mobile */
                 }
 
                 aside.orders-panel {
@@ -451,7 +477,8 @@
                     border-radius: 0;
                     padding: 16px;
                     margin-top: 24px;
-                    position: static; /* Change to static for mobile */
+                    position: static;
+                    /* Change to static for mobile */
                     height: auto;
                 }
 

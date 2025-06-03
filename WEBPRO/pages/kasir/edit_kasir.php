@@ -28,9 +28,28 @@ if (isset($_POST['save_profile'])) {
     $no_telp = $_POST['no_telp'];
     $gender = $_POST['gender'];
     $alamat = $_POST['alamat'];
+    $foto = $_FILES['foto'];
 
-    $stmt = $conn->prepare("UPDATE users SET nama=?, email=?, no_telp=?, gender=?, alamat=? WHERE id=?");
-    $stmt->bind_param("sssssi", $nama, $email, $no_telp, $gender, $alamat, $user_id);
+    // Proses upload foto jika ada file baru
+    $foto = $user['foto'];
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+        $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+        if (in_array($ext, $allowed)) {
+            $newName = 'kasir_' . $user_id . '_' . time() . '.' . $ext;
+            $uploadPath = __DIR__ . '/../../asset/user_picture/' . $newName;
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadPath)) {
+                // Hapus foto lama jika ada dan bukan default
+                if (!empty($user['foto']) && file_exists(__DIR__ . '/../../asset/user_picture/' . $user['foto']) && $user['foto'] != 'default.png') {
+                    unlink(__DIR__ . '/../../asset/user_picture/' . $user['foto']);
+                }
+                $foto = $newName;
+            }
+        }
+    }
+
+    $stmt = $conn->prepare("UPDATE users SET nama=?, email=?, no_telp=?, gender=?, alamat=?, profile_picture=? WHERE id=?");
+    $stmt->bind_param("ssssssi", $nama, $email, $no_telp, $gender, $alamat, $foto, $user_id);
     $stmt->execute();
     $stmt->close();
 
@@ -38,6 +57,7 @@ if (isset($_POST['save_profile'])) {
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +80,17 @@ if (isset($_POST['save_profile'])) {
 <body>
     <div class="edit-container">
         <h2>Edit Profile Kasir</h2>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group" style="text-align:center;">
+                <?php if (!empty($user['foto'])): ?>
+                    <img src="../../uploads/<?= htmlspecialchars($user['foto']) ?>" alt="Foto Profil" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin-bottom:10px;">
+                <?php else: ?>
+                    <img src="../../uploads/default.png" alt="Foto Profil" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin-bottom:10px;">
+                <?php endif; ?>
+                <br>
+                <input type="file" name="foto" accept="image/*">
+                <small style="color:#aaa;">(Kosongkan jika tidak ingin mengubah foto)</small>
+            </div>
             <div class="form-group">
                 <label>Nama</label>
                 <input type="text" name="nama" value="<?php echo $user['nama']; ?>" required>
