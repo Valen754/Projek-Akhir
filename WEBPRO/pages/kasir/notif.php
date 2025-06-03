@@ -1,5 +1,18 @@
 <?php
 include '../../koneksi.php'; // Koneksi ke database
+session_start();
+
+// Pastikan pengguna sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/login.php"); // Arahkan ke halaman login jika belum login
+    exit();
+}
+
+// Pastikan hanya pengguna dengan role 'kasir' yang dapat mengakses halaman ini
+if ($_SESSION['role'] !== 'kasir') {
+    header("Location: ../login/login.php"); // Arahkan ke halaman login jika role tidak sesuai
+    exit();
+}
 
 // Query untuk mendapatkan reservasi dengan status 'pending'
 $sql = "SELECT * FROM reservasi 
@@ -82,6 +95,7 @@ $result = $conn->query($sql);
 
 <body>
     <div class="container" role="main">
+        <?php $activePage = 'notifikasi'; ?>
        <?php include '../../views/kasir/sidebar.php'; ?>
         <main>
             <header>

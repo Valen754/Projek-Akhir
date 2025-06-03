@@ -1,55 +1,95 @@
 <?php
+
 include '../../koneksi.php';
+session_start();
+
 $order_id = $_GET['id'] ?? 0;
 
-// Ambil data order & details
-$q = mysqli_query($conn, "SELECT * FROM orders WHERE id = '$order_id'");
-$order = mysqli_fetch_assoc($q);
 
-$q2 = mysqli_query($conn, "SELECT od.*, m.nama, m.url_foto FROM order_details od JOIN menu m ON od.menu_id = m.id WHERE od.order_id = '$order_id'");
-$details = [];
-while ($row = mysqli_fetch_assoc($q2)) $details[] = $row;
+// Ambil data pembayaran
+$stmt = $conn->prepare("SELECT * FROM pembayaran WHERE id = ?");
+$stmt->bind_param("i", $order_id);
+$stmt->execute();
+$pembayaran = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$pembayaran) {
+    echo "<h2>Struk tidak ditemukan.</h2>";
+    exit;
+}
+
+// Ambil detail item
+$stmt = $conn->prepare("SELECT d.*, m.nama FROM detail_pembayaran d JOIN menu m ON d.menu_id = m.id WHERE d.order_id = ?");
+$stmt->bind_param("i", $order_id);
+$stmt->execute();
+$detail = $stmt->get_result();
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Struk Pembayaran</title>
-    <link rel="stylesheet" href="../../css/kasir.css">
     <style>
-        .struk-container { max-width: 400px; margin: 32px auto; background: #fff; color: #222; border-radius: 12px; padding: 32px; }
-        .struk-header { text-align: center; margin-bottom: 24px;}
-        .struk-header h2 { margin: 0; font-size: 20px;}
-        .struk-body { margin-bottom: 24px; }
-        .struk-item { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 4px 0;}
-        .struk-total { font-weight: bold; font-size: 16px; }
-        @media print { body { background: #fff; } .struk-container { box-shadow:none; } button { display:none; } }
+        body { font-family: Arial, sans-serif; background: #f8f8f8; }
+        .struk-container { background: #fff; max-width: 400px; margin: 40px auto; padding: 24px 32px; border-radius: 12px; box-shadow: 0 2px 16px #0002; }
+        h2 { text-align: center; margin-bottom: 16px; }
+        .info { margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th, td { padding: 6px 4px; text-align: left; }
+        th { border-bottom: 1px solid #ccc; }
+        tfoot td { font-weight: bold; }
+        .center { text-align: center; }
+        .btn-cetak { display: block; width: 100%; margin-top: 16px; padding: 10px; background: #e07b6c; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-kembali{width:100%;margin-top:8px;padding:10px 0;border:none;border-radius:10px;background:#222b3a;color:#e07b6c; cursor: pointer;}
     </style>
 </head>
 <body>
-    <div class="struk-container">
-        <div class="struk-header">
-            <h2>TAPAL KUDA CAFE</h2>
-            <div><?= date('d/m/Y H:i', strtotime($order['order_date'])) ?></div>
-            <div>Kasir: <?= htmlspecialchars($order['customer_name'] ?: '-') ?></div>
-            <div>Metode: <?= htmlspecialchars($order['payment_method']) ?></div>
-        </div>
-        <div class="struk-body">
-            <?php foreach($details as $item): ?>
-            <div class="struk-item">
-                <div>
-                    <?= htmlspecialchars($item['nama']) ?> x<?= $item['quantity'] ?>
-                    <?php if ($item['item_notes']) echo "<div><small>Catatan: ".htmlspecialchars($item['item_notes'])."</small></div>"; ?>
-                </div>
-                <div>Rp<?= number_format($item['subtotal'],0,',','.') ?></div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="struk-total">
-            Total: Rp<?= number_format($order['total_amount'],0,',','.') ?>
-        </div>
-        <button onclick="window.print()" style="margin-top:24px;width:100%;padding:10px 0;border-radius:8px;background:#e07b6c;color:#fff;border:none;">Cetak Struk</button>
-        <a href="kasir.php" style="display:block;text-align:center;margin-top:10px;color:#e07b6c;">Kembali ke kasir</a>
+<div class="struk-container">
+    <h2>Struk Pembayaran</h2>
+    <div class="info">
+        <div>No. Order: <b><?= $pembayaran['id'] ?></b></div>
+        <div>Tanggal: <?= date('d M Y H:i', strtotime($pembayaran['order_date'])) ?></div>
+        <div>Customer: <?= htmlspecialchars($pembayaran['customer_name'] ?: '-') ?></div>
+        <div>Jenis Order: <?= $pembayaran['order_type'] == 'dine_in' ? 'Dine In' : 'Take Away' ?></div>
+        <div>Metode: <?= strtoupper($pembayaran['payment_method']) ?></div>
+        <div>Status: <?= ucfirst($pembayaran['status']) ?></div>
     </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Qty</th>
+                <th>Harga</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php while ($row = $detail->fetch_assoc()): ?>
+            <tr>
+                <td><?= htmlspecialchars($row['nama']) ?></td>
+                <td><?= $row['quantity'] ?></td>
+                <td>Rp<?= number_format($row['price_per_item'], 0, ',', '.') ?></td>
+                <td>Rp<?= number_format($row['subtotal'], 0, ',', '.') ?></td>
+            </tr>
+            <?php if (!empty($row['item_notes'])): ?>
+            <tr>
+                <td colspan="4" style="font-size:12px;color:#888;">Catatan: <?= htmlspecialchars($row['item_notes']) ?></td>
+            </tr>
+            <?php endif; ?>
+        <?php endwhile; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Total</td>
+                <td>Rp<?= number_format($pembayaran['total_amount'], 0, ',', '.') ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="center">
+        <button class="btn-cetak" onclick="window.print()">Cetak Struk</button>
+        <button class="btn-kembali" onclick="window.location.href='kasir.php'">Kembali</button>
+    </div>
+</div>
 </body>
 </html>

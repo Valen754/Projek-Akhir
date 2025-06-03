@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Bulan Mei 2025 pada 18.13
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: Jun 03, 2025 at 11:28 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,21 +24,67 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `checkout`
+-- Table structure for table `detail_pembayaran`
 --
 
-CREATE TABLE `checkout` (
-  `checkout_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+CREATE TABLE `detail_pembayaran` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `quantity` int(11) NOT NULL,
+  `price_per_item` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL,
+  `item_notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `detail_pembayaran`
+--
+
+INSERT INTO `detail_pembayaran` (`id`, `order_id`, `menu_id`, `quantity`, `price_per_item`, `subtotal`, `item_notes`) VALUES
+(3, 2, 1, 1, 14000.00, 14000.00, ''),
+(4, 2, 2, 1, 22000.00, 22000.00, ''),
+(5, 3, 13, 1, 8000.00, 8000.00, ''),
+(6, 3, 19, 1, 27000.00, 27000.00, ''),
+(7, 4, 20, 1, 13000.00, 13000.00, ''),
+(8, 10, 12, 1, 17000.00, 17000.00, ''),
+(9, 10, 4, 1, 14000.00, 14000.00, ''),
+(10, 11, 12, 1, 17000.00, 17000.00, ''),
+(11, 11, 6, 1, 21000.00, 21000.00, ''),
+(12, 12, 1, 1, 14000.00, 14000.00, ''),
+(13, 12, 14, 1, 8000.00, 8000.00, ''),
+(14, 13, 6, 1, 21000.00, 21000.00, ''),
+(15, 13, 15, 1, 20000.00, 20000.00, ''),
+(16, 14, 3, 1, 22000.00, 22000.00, ''),
+(17, 14, 11, 1, 17000.00, 17000.00, ''),
+(18, 14, 1, 1, 14000.00, 14000.00, ''),
+(19, 15, 3, 1, 22000.00, 22000.00, ''),
+(20, 16, 2, 1, 22000.00, 22000.00, ''),
+(21, 16, 8, 1, 21000.00, 21000.00, ''),
+(22, 17, 1, 1, 14000.00, 14000.00, ''),
+(23, 17, 7, 1, 25000.00, 25000.00, ''),
+(24, 18, 5, 1, 17000.00, 17000.00, ''),
+(25, 18, 11, 1, 17000.00, 17000.00, ''),
+(26, 19, 7, 1, 25000.00, 25000.00, ''),
+(28, 21, 3, 1, 22000.00, 22000.00, ''),
+(29, 22, 3, 1, 22000.00, 22000.00, ''),
+(30, 23, 4, 1, 14000.00, 14000.00, ''),
+(31, 24, 1, 1, 14000.00, 14000.00, ''),
+(32, 24, 12, 1, 17000.00, 17000.00, ''),
+(33, 25, 3, 1, 22000.00, 22000.00, ''),
+(34, 26, 3, 1, 22000.00, 22000.00, ''),
+(35, 27, 2, 1, 22000.00, 22000.00, ''),
+(36, 28, 3, 1, 22000.00, 22000.00, ''),
+(37, 29, 3, 1, 22000.00, 22000.00, ''),
+(38, 30, 1, 1, 14000.00, 14000.00, ''),
+(39, 31, 2, 1, 22000.00, 22000.00, ''),
+(40, 32, 2, 1, 22000.00, 22000.00, ''),
+(41, 33, 3, 1, 22000.00, 22000.00, '');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `favorites`
+-- Table structure for table `favorites`
 --
 
 CREATE TABLE `favorites` (
@@ -51,22 +97,7 @@ CREATE TABLE `favorites` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `keranjang`
---
-
-CREATE TABLE `keranjang` (
-  `order_id` int(11) NOT NULL,
-  `menu_id` int(11) DEFAULT NULL,
-  `catatan` varchar(255) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `menu`
+-- Table structure for table `menu`
 --
 
 CREATE TABLE `menu` (
@@ -83,7 +114,7 @@ CREATE TABLE `menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `menu`
+-- Dumping data for table `menu`
 --
 
 INSERT INTO `menu` (`id`, `nama`, `url_foto`, `type`, `price`, `quantity`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
@@ -116,7 +147,7 @@ INSERT INTO `menu` (`id`, `nama`, `url_foto`, `type`, `price`, `quantity`, `desk
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `notifikasi`
+-- Table structure for table `notifikasi`
 --
 
 CREATE TABLE `notifikasi` (
@@ -133,60 +164,63 @@ CREATE TABLE `notifikasi` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `orders`
+-- Table structure for table `pembayaran`
 --
 
-CREATE TABLE `orders` (
+CREATE TABLE `pembayaran` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `total_amount` decimal(10,2) NOT NULL,
   `status` enum('completed','pending','cancelled') NOT NULL DEFAULT 'completed',
   `customer_name` varchar(255) DEFAULT NULL,
-  `payment_method` varchar(50) DEFAULT NULL,
+  `payment_method` enum('cash','e-wallet','qris') DEFAULT NULL,
+  `order_type` enum('dine_in','take_away') NOT NULL,
   `notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `orders`
+-- Dumping data for table `pembayaran`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `order_date`, `total_amount`, `status`, `customer_name`, `payment_method`, `notes`) VALUES
-(2, 5, '2025-05-22 13:47:48', 36000.00, 'completed', 'vemas', 'cash', ''),
-(3, 5, '2025-05-22 13:47:56', 35000.00, 'completed', 'vemas', 'cash', ''),
-(4, 9, '2025-05-22 14:17:08', 13000.00, 'completed', '', 'cash', '');
+INSERT INTO `pembayaran` (`id`, `user_id`, `order_date`, `total_amount`, `status`, `customer_name`, `payment_method`, `order_type`, `notes`) VALUES
+(2, 5, '2025-05-22 13:47:48', 36000.00, 'completed', 'vemas', 'cash', '', ''),
+(3, 5, '2025-05-22 13:47:56', 35000.00, 'completed', 'vemas', 'cash', '', ''),
+(4, 9, '2025-05-22 14:17:08', 13000.00, 'completed', '', 'cash', '', ''),
+(5, 9, '2025-06-03 19:48:25', 31000.00, 'completed', '', 'cash', '', ''),
+(6, 9, '2025-06-03 19:49:32', 31000.00, 'completed', '', 'cash', '', ''),
+(7, 9, '2025-06-03 19:51:07', 31000.00, 'completed', '', 'cash', '', ''),
+(8, 9, '2025-06-03 19:51:14', 31000.00, 'completed', '', 'cash', '', ''),
+(9, 9, '2025-06-03 19:52:31', 31000.00, 'completed', '', 'cash', '', ''),
+(10, 9, '2025-06-03 19:59:57', 31000.00, 'completed', '', 'cash', '', ''),
+(11, 9, '2025-06-03 20:00:36', 38000.00, 'completed', '', 'cash', '', ''),
+(12, 9, '2025-06-03 20:15:16', 22000.00, 'completed', '', 'cash', '', ''),
+(13, 9, '2025-06-03 20:20:59', 41000.00, 'completed', '', 'cash', 'dine_in', ''),
+(14, 9, '2025-06-03 20:27:04', 53000.00, 'completed', '', 'cash', 'dine_in', ''),
+(15, 9, '2025-06-03 20:27:27', 22000.00, 'completed', '', 'cash', 'dine_in', ''),
+(16, 9, '2025-06-03 20:36:26', 43000.00, 'completed', 'haykal', 'qris', 'take_away', ''),
+(17, 9, '2025-06-03 22:22:38', 39000.00, 'completed', 'salman', 'e-wallet', 'dine_in', ''),
+(18, 9, '2025-06-03 22:28:08', 34000.00, 'completed', 'haykal', 'e-wallet', 'take_away', ''),
+(19, 9, '2025-06-03 22:29:01', 25000.00, 'completed', 'vemas', 'cash', 'dine_in', ''),
+(20, 9, '2025-06-03 22:32:18', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(21, 9, '2025-06-03 22:32:49', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(22, 9, '2025-06-03 22:34:49', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(23, 9, '2025-06-03 22:35:20', 14000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(24, 9, '2025-06-03 22:42:35', 31000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(25, 9, '2025-06-03 22:43:14', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(26, 9, '2025-06-03 22:46:17', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(27, 9, '2025-06-03 22:47:26', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(28, 9, '2025-06-03 22:47:47', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(29, 9, '2025-06-03 22:48:08', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(30, 9, '2025-06-03 22:49:14', 14000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(31, 9, '2025-06-03 22:49:31', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(32, 9, '2025-06-03 22:50:09', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(33, 9, '2025-06-03 22:54:23', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', '');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `order_details`
---
-
-CREATE TABLE `order_details` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `menu_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `price_per_item` decimal(10,2) NOT NULL,
-  `subtotal` decimal(10,2) NOT NULL,
-  `item_notes` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `order_details`
---
-
-INSERT INTO `order_details` (`id`, `order_id`, `menu_id`, `quantity`, `price_per_item`, `subtotal`, `item_notes`) VALUES
-(3, 2, 1, 1, 14000.00, 14000.00, ''),
-(4, 2, 2, 1, 22000.00, 22000.00, ''),
-(5, 3, 13, 1, 8000.00, 8000.00, ''),
-(6, 3, 19, 1, 27000.00, 27000.00, ''),
-(7, 4, 20, 1, 13000.00, 13000.00, '');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `reservasi`
+-- Table structure for table `reservasi`
 --
 
 CREATE TABLE `reservasi` (
@@ -204,7 +238,7 @@ CREATE TABLE `reservasi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `reservasi`
+-- Dumping data for table `reservasi`
 --
 
 INSERT INTO `reservasi` (`id`, `user_id`, `kode_reservasi`, `tanggal_reservasi`, `jumlah_orang`, `email`, `message`, `no_telp`, `status`, `created_at`, `updated_at`) VALUES
@@ -218,7 +252,7 @@ INSERT INTO `reservasi` (`id`, `user_id`, `kode_reservasi`, `tanggal_reservasi`,
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `reviews`
+-- Table structure for table `reviews`
 --
 
 CREATE TABLE `reviews` (
@@ -231,7 +265,7 @@ CREATE TABLE `reviews` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `reviews`
+-- Dumping data for table `reviews`
 --
 
 INSERT INTO `reviews` (`id`, `user_id`, `menu_id`, `rating`, `comment`, `created_at`) VALUES
@@ -240,7 +274,7 @@ INSERT INTO `reviews` (`id`, `user_id`, `menu_id`, `rating`, `comment`, `created
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -251,7 +285,7 @@ CREATE TABLE `users` (
   `nama` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `no_telp` varchar(20) DEFAULT NULL,
-  `gender` enum('male','female') DEFAULT NULL,
+  `gender` enum('Laki-laki','Perempuan') DEFAULT NULL,
   `alamat` text DEFAULT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -259,30 +293,30 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `role`, `username`, `password`, `nama`, `email`, `no_telp`, `gender`, `alamat`, `profile_picture`, `created_at`, `updated_at`) VALUES
-(5, 'member', 'vemas', 'c345037fb938ae1a5b19630c704a4682', 'vemas aja', 'vemas@gmail.com', '00976', 'male', 'jlmhhj', NULL, '2025-05-06 05:43:30', '2025-05-06 05:43:30'),
-(6, 'member', 'salman', '97502267ac1b12468f69c14dd70196e9', 'Salman Ridhwan', 'salman@gmail.com', '0892', 'male', 'jl. kebon jeruk', 'user_6_1747795998.jpg', '2025-05-07 07:17:05', '2025-05-21 02:53:18'),
-(8, 'admin', 'admin', '0192023a7bbd73250516f069df18b500', 'haykal aja', 'haykal@gmail.com', '00976', 'male', 'jl. aceh', NULL, '2025-05-07 08:44:18', '2025-05-07 08:44:18'),
-(9, 'kasir', 'kasir', 'de28f8f7998f23ab4194b51a6029416f', 'vemas qomarudin lazuardy prasetyo', 'vemas@gmail.com', '0812345678909', '', 'JL. Aljabar', 'user_9_1747811146.jpg', '2025-05-07 08:45:46', '2025-05-21 07:37:48'),
-(10, 'member', 'dwiky', '9182ddda98d655c44ec373fc5444a64e', 'Dwiky mandalika', 'dwiky@gmail.com', '0887654321', 'male', 'JL. Telekomunikasi', NULL, '2025-05-24 14:27:46', '2025-05-24 14:27:46');
+(5, 'member', 'vemas', 'c345037fb938ae1a5b19630c704a4682', 'vemas aja', 'vemas@gmail.com', '00976', '', 'jlmhhj', NULL, '2025-05-06 05:43:30', '2025-05-06 05:43:30'),
+(6, 'member', 'salman', '97502267ac1b12468f69c14dd70196e9', 'Salman Ridhwan', 'salman@gmail.com', '0892', '', 'jl. kebon jeruk', 'user_6_1747795998.jpg', '2025-05-07 07:17:05', '2025-05-21 02:53:18'),
+(8, 'admin', 'admin', '0192023a7bbd73250516f069df18b500', 'haykal aja', 'haykal@gmail.com', '00976', '', 'jl. aceh', NULL, '2025-05-07 08:44:18', '2025-05-07 08:44:18'),
+(9, 'kasir', 'kasir', 'de28f8f7998f23ab4194b51a6029416f', 'vemas qomarudin lazuardy', 'vemas123@gmail.com', '0812345678909', 'Laki-laki', 'JL. Aljabar', 'kasir_9_1748985709.png', '2025-05-07 08:45:46', '2025-06-03 21:21:49'),
+(10, 'member', 'dwiky', '9182ddda98d655c44ec373fc5444a64e', 'Dwiky mandalika', 'dwiky@gmail.com', '0887654321', '', 'JL. Telekomunikasi', NULL, '2025-05-24 14:27:46', '2025-05-24 14:27:46');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `checkout`
+-- Indexes for table `detail_pembayaran`
 --
-ALTER TABLE `checkout`
-  ADD PRIMARY KEY (`checkout_id`),
-  ADD KEY `user_id` (`user_id`),
+ALTER TABLE `detail_pembayaran`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
   ADD KEY `menu_id` (`menu_id`);
 
 --
--- Indeks untuk tabel `favorites`
+-- Indexes for table `favorites`
 --
 ALTER TABLE `favorites`
   ADD PRIMARY KEY (`id`),
@@ -290,20 +324,13 @@ ALTER TABLE `favorites`
   ADD KEY `menu_id` (`menu_id`);
 
 --
--- Indeks untuk tabel `keranjang`
---
-ALTER TABLE `keranjang`
-  ADD PRIMARY KEY (`order_id`),
-  ADD KEY `menu_id` (`menu_id`);
-
---
--- Indeks untuk tabel `menu`
+-- Indexes for table `menu`
 --
 ALTER TABLE `menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `notifikasi`
+-- Indexes for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
   ADD PRIMARY KEY (`id`),
@@ -312,29 +339,21 @@ ALTER TABLE `notifikasi`
   ADD KEY `reservation_id` (`reservation_id`);
 
 --
--- Indeks untuk tabel `orders`
+-- Indexes for table `pembayaran`
 --
-ALTER TABLE `orders`
+ALTER TABLE `pembayaran`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indeks untuk tabel `order_details`
---
-ALTER TABLE `order_details`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `menu_id` (`menu_id`);
-
---
--- Indeks untuk tabel `reservasi`
+-- Indexes for table `reservasi`
 --
 ALTER TABLE `reservasi`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indeks untuk tabel `reviews`
+-- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`),
@@ -342,117 +361,92 @@ ALTER TABLE `reviews`
   ADD KEY `reviews_ibfk_1` (`menu_id`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `checkout`
+-- AUTO_INCREMENT for table `detail_pembayaran`
 --
-ALTER TABLE `checkout`
-  MODIFY `checkout_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+ALTER TABLE `detail_pembayaran`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
--- AUTO_INCREMENT untuk tabel `favorites`
+-- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `keranjang`
---
-ALTER TABLE `keranjang`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
-
---
--- AUTO_INCREMENT untuk tabel `menu`
+-- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT untuk tabel `notifikasi`
+-- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `orders`
+-- AUTO_INCREMENT for table `pembayaran`
 --
-ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `pembayaran`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT untuk tabel `order_details`
---
-ALTER TABLE `order_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT untuk tabel `reservasi`
+-- AUTO_INCREMENT for table `reservasi`
 --
 ALTER TABLE `reservasi`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT untuk tabel `reviews`
+-- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `checkout`
+-- Constraints for table `detail_pembayaran`
 --
-ALTER TABLE `checkout`
-  ADD CONSTRAINT `checkout_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `checkout_ibfk_2` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`);
+ALTER TABLE `detail_pembayaran`
+  ADD CONSTRAINT `detail_pembayaran_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `pembayaran` (`id`),
+  ADD CONSTRAINT `detail_pembayaran_ibfk_2` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `favorites`
+-- Constraints for table `favorites`
 --
 ALTER TABLE `favorites`
   ADD CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `favorites_ibfk_2` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `keranjang`
---
-ALTER TABLE `keranjang`
-  ADD CONSTRAINT `keranjang_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`);
-
---
--- Ketidakleluasaan untuk tabel `notifikasi`
+-- Constraints for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
   ADD CONSTRAINT `notifikasi_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `orders`
+-- Constraints for table `pembayaran`
 --
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
---
--- Ketidakleluasaan untuk tabel `order_details`
---
-ALTER TABLE `order_details`
-  ADD CONSTRAINT `order_details_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-  ADD CONSTRAINT `order_details_ibfk_2` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`);
+ALTER TABLE `pembayaran`
+  ADD CONSTRAINT `pembayaran_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

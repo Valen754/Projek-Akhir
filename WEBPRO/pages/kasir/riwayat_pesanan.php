@@ -2,29 +2,36 @@
 include '../../koneksi.php'; // Sesuaikan path koneksi Anda
 session_start();
 
-// Periksa apakah pengguna sudah login dan memiliki peran 'kasir'
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'kasir') {
-    header("Location: ../../login/login.php");
+// Pastikan pengguna sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/login.php"); // Arahkan ke halaman login jika belum login
+    exit();
+}
+
+// Pastikan hanya pengguna dengan role 'kasir' yang dapat mengakses halaman ini
+if ($_SESSION['role'] !== 'kasir') {
+    header("Location: ../login/login.php"); // Arahkan ke halaman login jika role tidak sesuai
     exit();
 }
 
 // Ambil riwayat pesanan dari tabel 'orders'
 // Kita akan melakukan JOIN ke 'order_details' dan 'menu' nanti di dalam loop
 $sql_orders = "SELECT
-                o.id AS order_id,
-                o.order_date,
-                o.total_amount,
-                o.status,
+                p.id AS order_id,
+                p.order_date,
+                p.total_amount,
+                p.status,
                 u.username AS kasir_username,
-                o.customer_name,
-                o.payment_method,
-                o.notes
+                p.customer_name,
+                p.payment_method,
+                p.order_type,
+                p.notes
             FROM
-                orders o
+                pembayaran p
             JOIN
-                users u ON o.user_id = u.id
+                users u ON p.user_id = u.id
             ORDER BY
-                o.order_date DESC";
+                p.order_date DESC";
 $result_orders = $conn->query($sql_orders);
 
 ?>
@@ -41,8 +48,9 @@ $result_orders = $conn->query($sql_orders);
     <title>Riwayat Pesanan Kasir</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <!-- Tambahkan ini di <head> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/kasir.css" rel="stylesheet">
-    <link href="../../css/admin.css" rel="stylesheet">
     <style>
         main {
             margin: 20px auto;
@@ -66,19 +74,9 @@ $result_orders = $conn->query($sql_orders);
 
         .order-detail-toggle {
             cursor: pointer;
-            color: #007bff;
+            color: white;
         }
 
-        .order-detail-toggle:hover {
-            text-decoration: underline;
-        }
-
-        /* Hapus atau komentari aturan CSS ini dari sini */
-        /* .order-details-row {
-            display: none; 
-            background-color: #e9ecef;
-        } */
-        /* sampai sini */
         .order-details-content {
             padding: 10px 20px;
         }
@@ -101,23 +99,23 @@ $result_orders = $conn->query($sql_orders);
     </style>
 </head>
 
-<body class="sb-nav-fixed">
-    <div class="container" role="main">
-        <?php include '../../views/kasir/sidebar.php'; /*cite: valen754/projek-akhir/Projek-Akhir-c080af7e4fecb96a5f49502d626f1fcf9c276a3c/WEBPRO/views/kasir/sidebar.php*/ ?>
+<body>
+    <div class="container" style="display: flex; min-height: 100vh;">
+        <?php $activePage = 'history'; ?>
+        <?php include '../../views/kasir/sidebar.php'; ?>
 
-        <main>
-            <header>
-                <h1>Riwayat Pesanan</h1>
-                <p>Daftar semua pesanan yang telah diselesaikan oleh kasir.</p>
+        <main style="flex:1; margin: 32px 0 32px 90px;">
+            <header style="margin-bottom: 24px;">
+                <h1 style="margin-bottom: 8px;">Riwayat Pesanan</h1>
+                <p style="color: #666;">Daftar semua pesanan yang telah diselesaikan oleh kasir.</p>
             </header>
 
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    Data Riwayat Pesanan
+            <div class="data-table-container">
+                <div style="font-weight: bold; margin-bottom: 12px;">
+                    <i class="fas fa-table me-1"></i> Data Riwayat Pesanan
                 </div>
-                <div class="card-body">
-                    <table id="datatablesSimple" class="table table-bordered">
+                <div style="overflow-x:auto;">
+                    <table id="datatablesSimple" class="table table-bordered" style="background: #fff;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -137,13 +135,12 @@ $result_orders = $conn->query($sql_orders);
                                 while ($order = $result_orders->fetch_assoc()) {
                                     ?>
                                     <tr>
-                                        <td><?php echo $no++; ?></td>
-                                        <td><?php echo $order['order_id']; ?></td>
-                                        <td><?php echo htmlspecialchars($order['customer_name'] ?? $order['kasir_username']); ?>
-                                        </td>
-                                        <td><?php echo date('d M Y H:i:s', strtotime($order['order_date'])); ?></td>
-                                        <td>Rp <?php echo number_format($order['total_amount'], 0, ',', '.'); ?></td>
-                                        <td><?php echo htmlspecialchars($order['payment_method']); ?></td>
+                                        <td><?= $no++; ?></td>
+                                        <td><?= $order['order_id']; ?></td>
+                                        <td><?= htmlspecialchars($order['customer_name'] ?? $order['kasir_username']); ?></td>
+                                        <td><?= date('d M Y H:i:s', strtotime($order['order_date'])); ?></td>
+                                        <td>Rp <?= number_format($order['total_amount'], 0, ',', '.'); ?></td>
+                                        <td><?= htmlspecialchars($order['payment_method']); ?></td>
                                         <td>
                                             <span class="badge bg-<?php
                                             if ($order['status'] == 'completed')
@@ -153,35 +150,35 @@ $result_orders = $conn->query($sql_orders);
                                             else
                                                 echo 'danger';
                                             ?>">
-                                                <?php echo ucfirst(htmlspecialchars($order['status'])); ?>
+                                                <?= ucfirst(htmlspecialchars($order['status'])); ?>
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="order-detail-toggle btn btn-sm btn-info"
-                                                data-order-id="<?php echo $order['order_id']; ?>">Lihat Detail</button>
+                                            <button class="order-detail-toggle btn btn-sm btn-info" data-order-id="<?= $order['order_id']; ?> style='list-style' ">
+                                                Lihat Detail
+                                            </button>
                                         </td>
                                     </tr>
-                                    <tr class="order-details-row" id="details-<?php echo $order['order_id']; ?>"
+                                    <tr class="order-details-row" id="details-<?= $order['order_id']; ?>"
                                         style="display: none;">
-                                        <td colspan="8" style="background-color: #e9ecef;">
+                                        <td colspan="8" style="background-color: #f6f8fa;">
                                             <div class="order-details-content">
-                                                <h5>Detail Item Pesanan:</h5>
+                                                <h5 style="margin-bottom: 8px;">Detail Item Pesanan:</h5>
                                                 <ul>
                                                     <?php
-                                                    // Ambil detail item untuk pesanan ini
                                                     $sql_order_details = "SELECT
-                                                                        od.quantity,
-                                                                        od.price_per_item,
-                                                                        od.subtotal,
-                                                                        od.item_notes,
-                                                                        m.nama AS menu_nama,
-                                                                        m.url_foto
-                                                                    FROM
-                                                                        order_details od
-                                                                    JOIN
-                                                                        menu m ON od.menu_id = m.id
-                                                                    WHERE
-                                                                        od.order_id = ?";
+                                                        od.quantity,
+                                                        od.price_per_item,
+                                                        od.subtotal,
+                                                        od.item_notes,
+                                                        m.nama AS menu_nama,
+                                                        m.url_foto
+                                                    FROM
+                                                        order_details od
+                                                    JOIN
+                                                        menu m ON od.menu_id = m.id
+                                                    WHERE
+                                                        od.order_id = ?";
                                                     $stmt_order_details = $conn->prepare($sql_order_details);
                                                     $stmt_order_details->bind_param("i", $order['order_id']);
                                                     $stmt_order_details->execute();
@@ -190,19 +187,18 @@ $result_orders = $conn->query($sql_orders);
                                                     if ($result_order_details->num_rows > 0) {
                                                         while ($item_detail = $result_order_details->fetch_assoc()) {
                                                             ?>
-                                                            <li>
-                                                                <img src="../../asset/<?php echo htmlspecialchars($item_detail['url_foto']); ?>"
-                                                                    alt="<?php echo htmlspecialchars($item_detail['menu_nama']); ?>"
-                                                                    width="30" height="30"
+                                                            <li style="margin-bottom: 6px;">
+                                                                <img src="../../asset/<?= htmlspecialchars($item_detail['url_foto']); ?>"
+                                                                    alt="<?= htmlspecialchars($item_detail['menu_nama']); ?>" width="30"
+                                                                    height="30"
                                                                     style="vertical-align: middle; border-radius: 3px; margin-right: 5px;">
-                                                                <?php echo htmlspecialchars($item_detail['menu_nama']); ?>
-                                                                (<?php echo $item_detail['quantity']; ?>x)
-                                                                @ Rp
-                                                                <?php echo number_format($item_detail['price_per_item'], 0, ',', '.'); ?>
-                                                                = Rp <?php echo number_format($item_detail['subtotal'], 0, ',', '.'); ?>
+                                                                <?= htmlspecialchars($item_detail['menu_nama']); ?>
+                                                                (<?= $item_detail['quantity']; ?>x)
+                                                                @ Rp<?= number_format($item_detail['price_per_item'], 0, ',', '.'); ?>
+                                                                = Rp<?= number_format($item_detail['subtotal'], 0, ',', '.'); ?>
                                                                 <?php if (!empty($item_detail['item_notes'])): ?>
                                                                     <br><small>Catatan Item:
-                                                                        <?php echo htmlspecialchars($item_detail['item_notes']); ?></small>
+                                                                        <?= htmlspecialchars($item_detail['item_notes']); ?></small>
                                                                 <?php endif; ?>
                                                             </li>
                                                             <?php
@@ -214,8 +210,8 @@ $result_orders = $conn->query($sql_orders);
                                                     ?>
                                                 </ul>
                                                 <?php if (!empty($order['notes'])): ?>
-                                                    <p><strong>Catatan Pesanan Umum:</strong>
-                                                        <?php echo htmlspecialchars($order['notes']); ?></p>
+                                                    <p style="margin-top: 10px;"><strong>Catatan Pesanan Umum:</strong>
+                                                        <?= htmlspecialchars($order['notes']); ?></p>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
@@ -242,62 +238,44 @@ $result_orders = $conn->query($sql_orders);
     <script src="../../js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
         crossorigin="anonymous"></script>
-    <script src="../../js/datatables-simple-demo.js"></script>
     <script>
-        // Memastikan DataTables diinisialisasi setelah DOM dimuat
         window.addEventListener('DOMContentLoaded', event => {
             const datatablesSimple = document.getElementById('datatablesSimple');
+            let dataTable;
             if (datatablesSimple) {
-                // Inisialisasi DataTables.
-                // Penting: Simple-DataTables akan memindahkan baris <tr>
-                // ke dalam tbody baru yang dibuatnya.
-                const dataTable = new simpleDatatables.DataTable(datatablesSimple);
+                dataTable = new simpleDatatables.DataTable(datatablesSimple);
             }
 
-            // Script untuk menampilkan/menyembunyikan detail pesanan
-            // Perhatikan bahwa event listener ini harus selalu diterapkan ulang
-            // jika baris tabel dimuat ulang oleh DataTables (misalnya, setelah paginasi atau sorting)
             function attachToggleListeners() {
                 document.querySelectorAll('.order-detail-toggle').forEach(button => {
-                    button.removeEventListener('click', toggleDetailRow); // Hapus event listener lama
-                    button.addEventListener('click', toggleDetailRow); // Tambahkan event listener baru
+                    button.removeEventListener('click', toggleDetailRow);
+                    button.addEventListener('click', toggleDetailRow);
                 });
             }
 
             function toggleDetailRow() {
                 const orderId = this.dataset.orderId;
                 const detailRow = document.getElementById(`details-${orderId}`);
-
-                // Toggle tampilan baris
                 if (detailRow.style.display === 'none' || detailRow.style.display === '') {
-                    detailRow.style.display = 'table-row'; // Menampilkan baris
+                    detailRow.style.display = 'table-row';
                     this.textContent = 'Sembunyikan Detail';
                     this.classList.remove('btn-info');
                     this.classList.add('btn-secondary');
                 } else {
-                    detailRow.style.display = 'none'; // Menyembunyikan baris
+                    detailRow.style.display = 'none';
                     this.textContent = 'Lihat Detail';
                     this.classList.remove('btn-secondary');
                     this.classList.add('btn-info');
                 }
             }
 
-            // Panggil fungsi ini saat halaman dimuat
             attachToggleListeners();
 
-            // Penting: Jika Simple-DataTables memuat ulang data atau melakukan paginasi/sorting,
-            // baris-baris <tr> akan dirender ulang. Anda perlu memastikan event listener
-            // dilampirkan kembali ke tombol-tombol baru.
-            // Simple-DataTables memiliki event listener yang bisa digunakan untuk ini.
-            // Contoh (tergantung versi dan bagaimana Anda menginisialisasi DataTables):
-            // if (typeof dataTable !== 'undefined') {
-            //     dataTable.on('datatable.page', attachToggleListeners);
-            //     dataTable.on('datatable.sort', attachToggleListeners);
-            //     dataTable.on('datatable.search', attachToggleListeners);
-            // }
-            // Karena kita menggunakan script datatables-simple-demo.js yang mungkin tidak mengekspos
-            // instance DataTable secara global, cara termudah adalah memastikan listener terpasang
-            // setelah setiap DOM manipulasi besar atau jika Anda menginisialisasi ulang DataTable.
+            if (typeof dataTable !== 'undefined') {
+                dataTable.on('datatable.page', attachToggleListeners);
+                dataTable.on('datatable.sort', attachToggleListeners);
+                dataTable.on('datatable.search', attachToggleListeners);
+            }
         });
     </script>
 </body>
