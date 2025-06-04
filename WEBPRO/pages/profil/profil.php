@@ -172,6 +172,7 @@ $user = $result->fetch_assoc();
             <div class="profile-kasir-menu-list">
                 <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i>Riwayat Pesanan</a>
                 <a href="edit_profil.php" class="profile-kasir-menu-item"><i class='bx bx-cog'></i> Edit </a>
+                
             </div>
         </div>
     </div>
