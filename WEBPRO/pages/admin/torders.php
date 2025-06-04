@@ -106,22 +106,19 @@ $result_orders = mysqli_query($conn, $sql_orders);
             Pesanan berhasil diperbarui!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    <?php endif; ?>
-
-    <?php if (isset($_GET['msg']) && $_GET['msg'] === 'deleted'): ?>
+    <?php endif; ?>    <?php if (isset($_GET['msg']) && $_GET['msg'] === 'deleted'): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Pesanan berhasil dihapus!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
 
-    <?php /* if (isset($_GET['msg']) && $_GET['msg'] === 'added'): ?>
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            Pesanan berhasil ditambah!
+    <?php if (isset($_GET['msg']) && $_GET['msg'] === 'error'): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Error: <?= htmlspecialchars(urldecode($_GET['error'] ?? 'Terjadi kesalahan')) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    <?php endif; */ ?>
-
+    <?php endif; ?>
 
     <table id="datatablesSimple" class="table table-bordered">
         <thead>
@@ -164,124 +161,104 @@ $result_orders = mysqli_query($conn, $sql_orders);
                         <td><?= $order['order_date'] ?></td>
                         <td>Rp <?= number_format($order['total_amount'], 0, ',', '.') ?></td>
                         <td><?= htmlspecialchars($order['payment_method']) ?></td>
-                        <td><span class="badge bg-<?= $statusBadge ?>"><?= htmlspecialchars(ucfirst($order['status'])) ?></span></td>
-                        <td>
+                        <td><span class="badge bg-<?= $statusBadge ?>"><?= htmlspecialchars(ucfirst($order['status'])) ?></span></td>                        <td>
                             <button class="order-detail-toggle btn btn-sm btn-info" data-order-id="<?= $order['order_id'] ?>">Lihat Detail</button>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $order['order_id'] ?>">Edit</a>
-                            <a href="logic/delete-order.php?id=<?= $order['order_id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus pesanan ini?')">Hapus</a>
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $order['order_id'] ?>">Edit</button>
+                            <a href="#" class="btn btn-danger btn-sm" onclick="confirmDelete(<?= $order['order_id'] ?>)">Hapus</a>
                         </td>
                     </tr>
                     <tr class="order-details-row" id="details-<?= $order['order_id'] ?>">
                         <td colspan="10">
                             <div class="order-details-content">
-                                <h5>Detail Item Pesanan:</h5>
-                                <ul>
-                                    <?php
-                                    // Ambil detail item untuk pesanan ini
-                                    $sql_order_details = "SELECT
-                                                            od.quantity,
-                                                            od.price_per_item,
-                                                            od.subtotal,
-                                                            od.item_notes,
-                                                            m.nama AS menu_nama,
-                                                            m.url_foto
-                                                        FROM
-                                                            detail_pembayaran od
-                                                        JOIN
-                                                            menu m ON od.menu_id = m.id
-                                                        WHERE
-                                                            od.order_id = ?";
-                                    $stmt_order_details = $conn->prepare($sql_order_details);
-                                    $stmt_order_details->bind_param("i", $order['order_id']);
-                                    $stmt_order_details->execute();
-                                    $result_order_details = $stmt_order_details->get_result();
-
-                                    if ($result_order_details->num_rows > 0) {
-                                        while ($item_detail = $result_order_details->fetch_assoc()) {
-                                            $image_path = '../../asset/' . htmlspecialchars($item_detail['url_foto']);
-                                            // Periksa apakah file gambar ada
-                                            if (!file_exists($image_path) || empty($item_detail['url_foto'])) {
-                                                $image_path = '../../asset/placeholder.png'; // Ganti dengan path gambar placeholder default Anda
-                                            }
-                                            ?>
-                                            <li>
-                                                <img src="<?= $image_path ?>" alt="<?= htmlspecialchars($item_detail['menu_nama']) ?>" width="30" height="30" style="vertical-align: middle; border-radius: 3px; margin-right: 5px;">
-                                                <?= htmlspecialchars($item_detail['menu_nama']) ?> (<?= $item_detail['quantity'] ?>x) @ Rp<?= number_format($item_detail['price_per_item'], 0, ',', '.') ?> = Rp<?= number_format($item_detail['subtotal'], 0, ',', '.') ?>
-                                                <?php if (!empty($item_detail['item_notes'])): ?>
-                                                    <br><small>Catatan Item: <?= htmlspecialchars($item_detail['item_notes']) ?></small>
-                                                <?php endif; ?>
-                                            </li>
-                                            <?php
-                                        }
-                                    } else {
-                                        echo "<li>Tidak ada detail item untuk pesanan ini.</li>";
-                                    }
-                                    $stmt_order_details->close();
-                                    ?>
-                                </ul>
-                                <?php if (!empty($order['notes'])): ?>
-                                    <p><strong>Catatan Pesanan Umum:</strong> <?= htmlspecialchars($order['notes']) ?></p>
+                                <?php
+                                // Query untuk mengambil detail pesanan
+                                $detail_query = "SELECT 
+                                    dp.*, 
+                                    m.nama as menu_name,
+                                    m.price as menu_price
+                                    FROM detail_pembayaran dp 
+                                    JOIN menu m ON dp.menu_id = m.id 
+                                    WHERE dp.order_id = " . $order['order_id'];
+                                $detail_result = mysqli_query($conn, $detail_query);
+                                ?>
+                                <h5>Detail Pesanan #<?= $order['order_id'] ?></h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Menu</th>
+                                            <th>Jumlah</th>
+                                            <th>Harga Satuan</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while($detail = mysqli_fetch_assoc($detail_result)) { ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($detail['menu_name']) ?></td>
+                                                <td><?= $detail['quantity'] ?></td>
+                                                <td>Rp <?= number_format($detail['menu_price'], 0, ',', '.') ?></td>
+                                                <td>Rp <?= number_format($detail['menu_price'] * $detail['quantity'], 0, ',', '.') ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                        <tr class="table-secondary">
+                                            <td colspan="3" class="text-end"><strong>Total Pembayaran:</strong></td>
+                                            <td><strong>Rp <?= number_format($order['total_amount'], 0, ',', '.') ?></strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <?php if($order['notes']): ?>
+                                    <div class="mt-2">
+                                        <strong>Catatan:</strong> <?= htmlspecialchars($order['notes']) ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </td>
-                    </tr>
-
+                    </tr>                    <!-- Modal Edit -->
                     <div class="modal fade" id="editModal<?= $order['order_id'] ?>" tabindex="-1" aria-labelledby="editModalLabel<?= $order['order_id'] ?>" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form action="logic/edit-order.php" method="POST">
+                            <form action="logic/edit-orders.php" method="POST">
+                                <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editModalLabel<?= $order['order_id'] ?>">Edit Pesanan #<?= $order['order_id'] ?></h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
-                                        <div class="mb-3">
-                                            <label class="form-label">Kasir/Pengguna (ID)</label>
-                                            <input type="text" class="form-control" value="<?= htmlspecialchars($order['kasir_username']) ?>" readonly>
-                                            <input type="hidden" name="user_id" value="<?= $order['user_id'] ?>">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Nama Pelanggan</label>
-                                            <input type="text" name="customer_name" class="form-control" value="<?= htmlspecialchars($order['customer_name']) ?>">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Tanggal Pesanan</label>
-                                            <input type="datetime-local" name="order_date" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($order['order_date'])) ?>">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Total Harga</label>
-                                            <input type="text" name="total_amount" class="form-control" value="<?= htmlspecialchars($order['total_amount']) ?>" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Metode Pembayaran</label>
-                                            <select name="payment_method" class="form-select">
-                                                <option value="cash" <?= $order['payment_method'] === 'cash' ? 'selected' : '' ?>>Cash</option>
-                                                <option value="card" <?= $order['payment_method'] === 'card' ? 'selected' : '' ?>>Card</option>
-                                                <option value="e-wallet" <?= $order['payment_method'] === 'e-wallet' ? 'selected' : '' ?>>E-Wallet</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Status</label>
-                                            <select name="status" class="form-select" required>
-                                                <option value="completed" <?= $order['status'] === 'completed' ? 'selected' : '' ?>>Completed</option>
-                                                <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
-                                                <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Catatan Pesanan Umum</label>
-                                            <textarea name="notes" class="form-control" rows="3"><?= htmlspecialchars($order['notes'] ?: '') ?></textarea>
-                                        </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="customer_name" class="form-label">Nama Pelanggan</label>
+                                        <input type="text" class="form-control" id="customer_name" name="customer_name" value="<?= htmlspecialchars($order['customer_name']) ?>">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="payment_method" class="form-label">Metode Pembayaran</label>
+                                        <select class="form-select" id="payment_method" name="payment_method">
+                                            <option value="cash" <?= $order['payment_method'] == 'cash' ? 'selected' : '' ?>>Cash</option>
+                                            <option value="qris" <?= $order['payment_method'] == 'qris' ? 'selected' : '' ?>>QRIS</option>
+                                            <option value="debit" <?= $order['payment_method'] == 'debit' ? 'selected' : '' ?>>Debit</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" id="status" name="status">
+                                            <option value="pending" <?= $order['status'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                            <option value="completed" <?= $order['status'] == 'completed' ? 'selected' : '' ?>>Completed</option>
+                                            <option value="cancelled" <?= $order['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                        </select>
+                                    </div>                                    <div class="mb-3">
+                                        <label for="notes<?= $order['order_id'] ?>" class="form-label">Catatan</label>
+                                        <textarea class="form-control" id="notes<?= $order['order_id'] ?>" name="notes" rows="3"><?= htmlspecialchars($order['notes']) ?></textarea>
+                                    </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 <?php
@@ -297,6 +274,25 @@ $result_orders = mysqli_query($conn, $sql_orders);
 </main>
 <?php include '../../views/admin/footer.php'; ?>
 </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin menghapus pesanan ini?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <a href="#" class="btn btn-danger" id="deleteConfirmBtn">Hapus</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -326,6 +322,14 @@ $result_orders = mysqli_query($conn, $sql_orders);
             document.getElementById('tanggal').style.display = (this.value === 'tanggal') ? '' : 'none';
         });
     });
+
+    function confirmDelete(orderId) {
+        // Set the correct delete URL
+        document.getElementById('deleteConfirmBtn').href = 'logic/delete-orders.php?id=' + orderId;
+        // Show the modal
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        deleteModal.show();
+    }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="js/scripts.js"></script>
