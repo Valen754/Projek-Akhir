@@ -16,21 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Get the user's current password from database
     $query = "SELECT password FROM users WHERE id = ?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $user = mysqli_fetch_assoc($result);
-
-    // Verify current password
-    if (password_verify($current_password, $user['password'])) {
+    $user = mysqli_fetch_assoc($result);    // Verify current password using MD5
+    if (md5($current_password) === $user['password']) {
         // Check if new password matches confirmation
         if ($new_password === $confirm_password) {
             if (strlen($new_password) >= 6) {
-                // Hash new password and update
-                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                $hashed_password = md5($new_password);
                 $update_query = "UPDATE users SET password = ? WHERE id = ?";
                 $update_stmt = mysqli_prepare($conn, $update_query);
                 mysqli_stmt_bind_param($update_stmt, "si", $hashed_password, $user_id);
@@ -60,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password | Tapal Kuda</title>
+    <link href="../../css/menu.css" rel="stylesheet">
     <style>
         .reset-password-container {
             max-width: 500px;
