@@ -20,7 +20,7 @@ if (isset($_GET['id'])) {
     $conn->close();
 
     // Redirect kembali ke halaman tabel review setelah proses selesai
-    header("Location: ../../pages/admin/treviews.php"); // Sesuaikan dengan halaman tabel review Anda
+    header("Location: ../../admin/treviews.php"); // Sesuaikan dengan halaman tabel review Anda
     exit();
 } else {
     // Jika id_review tidak ditemukan di URL
