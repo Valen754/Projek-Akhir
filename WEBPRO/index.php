@@ -74,7 +74,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
         // Untuk role lain, cek akses
         switch($user_role) {
             case 'admin':
-                header("Location: pages/admin/menu.php");
+                header("Location: pages/admin/dashboard.php");
                 break;
             case 'kasir':
                 header("Location: pages/kasir/kasir.php");
