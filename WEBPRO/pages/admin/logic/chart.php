@@ -4,7 +4,7 @@ include '../../../koneksi.php';
 
 // Query: Ambil nama menu dan total terjual (dari order_details)
 $sql = "SELECT m.nama, SUM(od.quantity) as total_terjual
-        FROM order_details od
+        FROM detail_pembayaran od
         JOIN menu m ON od.menu_id = m.id
         GROUP BY od.menu_id
         ORDER BY total_terjual DESC
