@@ -144,7 +144,7 @@ $result = $conn->query($query);
                 <?php
                 $order_id = $order['id'];
                 $q_detail = "SELECT od.*, m.nama, m.url_foto 
-                             FROM order_details od
+                             FROM detail_pembayaran od
                              JOIN menu m ON od.menu_id = m.id
                              WHERE od.order_id = $order_id";
                 $res_detail = $conn->query($q_detail);

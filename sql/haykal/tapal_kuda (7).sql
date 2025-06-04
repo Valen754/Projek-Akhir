@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 03, 2025 at 11:28 PM
+-- Generation Time: Jun 04, 2025 at 04:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -79,7 +79,14 @@ INSERT INTO `detail_pembayaran` (`id`, `order_id`, `menu_id`, `quantity`, `price
 (38, 30, 1, 1, 14000.00, 14000.00, ''),
 (39, 31, 2, 1, 22000.00, 22000.00, ''),
 (40, 32, 2, 1, 22000.00, 22000.00, ''),
-(41, 33, 3, 1, 22000.00, 22000.00, '');
+(41, 33, 3, 1, 22000.00, 22000.00, ''),
+(42, 34, 2, 1, 22000.00, 22000.00, ''),
+(43, 35, 1, 1, 14000.00, 14000.00, ''),
+(44, 36, 6, 1, 21000.00, 21000.00, ''),
+(45, 36, 1, 1, 14000.00, 14000.00, ''),
+(46, 37, 3, 1, 22000.00, 22000.00, ''),
+(47, 37, 4, 1, 14000.00, 14000.00, ''),
+(48, 37, 2, 1, 22000.00, 22000.00, '');
 
 -- --------------------------------------------------------
 
@@ -93,6 +100,16 @@ CREATE TABLE `favorites` (
   `menu_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `favorites`
+--
+
+INSERT INTO `favorites` (`id`, `user_id`, `menu_id`, `created_at`) VALUES
+(4, 5, 3, '2025-06-04 00:00:18'),
+(7, 5, 1, '2025-06-04 03:27:42'),
+(8, 5, 4, '2025-06-04 03:57:59'),
+(9, 5, 6, '2025-06-04 04:22:31');
 
 -- --------------------------------------------------------
 
@@ -119,9 +136,9 @@ CREATE TABLE `menu` (
 
 INSERT INTO `menu` (`id`, `nama`, `url_foto`, `type`, `price`, `quantity`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Kopi Tubruk Arabika', 'arabika.jpg', 'kopi', 14000.00, 1000, 'Nikmati kenikmatan sejati dari secangkir Kopi Tubruk Arabika, dibuat dari 100% biji arabika pilihan yang disangrai sempurna. Diseduh dengan cara tradisional khas Indonesia, kopi ini menawarkan rasa yang kaya, pekat, dan berkarakter, dengan aroma yang membangkitkan semangat sejak tegukan pertama.', 'tersedia', '2025-05-06 04:52:58', '2025-05-24 11:20:27'),
-(2, 'Cappucino', 'cappucino.jpg', 'kopi', 22000.00, 999, 'Butuh pelukan hangat dalam bentuk kopi? Coba Cappuccino kami perpaduan sempurna antara espresso arabika berkualitas, susu steamed yang creamy, dan buih halus di atasnya. Setiap cangkir dibuat dengan cinta dan keseimbangan rasa yang bikin nagih!', 'tersedia', '2025-05-06 04:52:58', '2025-05-22 06:47:48'),
-(3, 'ES Kopi Susu', 'kosu.jpg', 'kopi', 22000.00, 1000, 'Minuman favorit semua kalangan! Es Kopi Susu kami adalah kombinasi sempurna antara espresso arabika yang bold, susu segar yang lembut, dan sentuhan manis yang pas disajikan dingin untuk kesegaran maksimal.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:13'),
-(4, 'Espresso', 'espresso.jpg', 'kopi', 14000.00, 1000, 'Espresso kami dibuat dari biji arabika pilihan yang disangrai dengan sempurna untuk menghasilkan rasa kuat, pekat, dan aromatik. Cocok untuk kamu yang butuh dorongan energi tanpa basa-basi—langsung to the point!', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:16'),
+(2, 'Cappucino', 'cappucino.jpg', 'kopi', 22000.00, 998, 'Butuh pelukan hangat dalam bentuk kopi? Coba Cappuccino kami perpaduan sempurna antara espresso arabika berkualitas, susu steamed yang creamy, dan buih halus di atasnya. Setiap cangkir dibuat dengan cinta dan keseimbangan rasa yang bikin nagih!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 14:49:39'),
+(3, 'ES Kopi Susu', 'kosu.jpg', 'kopi', 22000.00, 999, 'Minuman favorit semua kalangan! Es Kopi Susu kami adalah kombinasi sempurna antara espresso arabika yang bold, susu segar yang lembut, dan sentuhan manis yang pas disajikan dingin untuk kesegaran maksimal.', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 14:49:39'),
+(4, 'Espresso', 'espresso.jpg', 'kopi', 14000.00, 999, 'Espresso kami dibuat dari biji arabika pilihan yang disangrai dengan sempurna untuk menghasilkan rasa kuat, pekat, dan aromatik. Cocok untuk kamu yang butuh dorongan energi tanpa basa-basi—langsung to the point!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 14:49:39'),
 (5, 'Espresso Double', 'espresso1.jpg', 'kopi', 17000.00, 1000, 'Siap hadapi hari yang panjang? Espresso Double kami adalah jawaban untuk kamu yang butuh ekstra tenaga dan ekstra rasa. Dua shot espresso dari biji arabika premium, disajikan pekat dan panas, dengan cita rasa tajam dan aroma yang membangkitkan semangat.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:19'),
 (6, 'Japanase Flavour', 'JAPAN.jpg', 'kopi', 21000.00, 1000, 'Rasakan kelembutan dan keunikan rasa Jepang lewat varian Japanese Flavour kami. Mulai dari Matcha yang earthy, Hojicha yang smoky, hingga Yuzu yang segar setiap rasa dipilih dengan cermat untuk menghadirkan pengalaman yang menenangkan dan autentik.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:22'),
 (7, 'Latte', 'Latte.jpg', 'kopi', 25000.00, 1000, 'Butuh momen tenang di tengah hari yang sibuk? Latte kami hadir dengan perpaduan sempurna antara espresso arabika yang halus dan susu steamed yang creamy. Rasanya ringan, aromanya menenangkan, dan cocok dinikmati kapan saja—pagi, siang, atau sore.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:24'),
@@ -215,7 +232,11 @@ INSERT INTO `pembayaran` (`id`, `user_id`, `order_date`, `total_amount`, `status
 (30, 9, '2025-06-03 22:49:14', 14000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
 (31, 9, '2025-06-03 22:49:31', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
 (32, 9, '2025-06-03 22:50:09', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
-(33, 9, '2025-06-03 22:54:23', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', '');
+(33, 9, '2025-06-03 22:54:23', 22000.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(34, 9, '2025-06-04 00:41:29', 22000.00, 'completed', 'vemas', 'e-wallet', 'dine_in', ''),
+(35, 9, '2025-06-04 00:43:51', 14000.00, 'completed', 'vemas', 'qris', 'dine_in', ''),
+(36, 9, '2025-06-04 15:25:34', 35000.00, 'completed', 'diki', 'e-wallet', 'take_away', ''),
+(37, 5, '2025-06-04 21:49:39', 63800.00, 'completed', 'haykal', 'cash', 'dine_in', '');
 
 -- --------------------------------------------------------
 
@@ -246,8 +267,8 @@ INSERT INTO `reservasi` (`id`, `user_id`, `kode_reservasi`, `tanggal_reservasi`,
 (2, 6, 'RSV20250521054555141', '2025-05-21 10:42:00', 24, 'salmanisal24@gmail.com', 'test', '076789', 'dikonfirmasi', '2025-05-21 03:45:55', '2025-05-21 04:30:30'),
 (3, 5, 'RSV20250521063607727', '2025-05-22 13:35:00', 6, 'stwncssk@gmail.com', 'masak yang enak', '0987654345', 'dibatalkan', '2025-05-21 04:36:07', '2025-05-21 04:45:16'),
 (4, 5, 'RSV20250521065534445', '2025-05-22 13:55:00', 2, 'vemas@gmail.com', 'qpq', '00976', 'dikonfirmasi', '2025-05-21 04:55:34', '2025-05-21 07:04:45'),
-(5, 5, 'RSV20250521083747657', '2025-05-22 15:37:00', 6, 'vemas@gmail.com', 'iya', '00976', 'dikonfirmasi', '2025-05-21 06:37:47', '2025-05-21 06:53:08'),
-(6, 5, 'RSV20250524151316244', '2025-05-29 03:56:00', 2, 'vemas@gmail.com', 'wleeee', '00976', 'pending', '2025-05-24 13:13:16', '2025-05-24 13:13:16');
+(5, 5, 'RSV20250521083747657', '2025-05-22 15:37:00', 6, 'vemas@gmail.com', 'iya', '00976', 'dikonfirmasi', '2025-05-21 06:37:47', '2025-06-03 23:29:26'),
+(6, 5, 'RSV20250524151316244', '2025-05-29 03:56:00', 2, 'vemas@gmail.com', 'wleeee', '00976', 'dikonfirmasi', '2025-05-24 13:13:16', '2025-06-03 23:29:39');
 
 -- --------------------------------------------------------
 
@@ -364,7 +385,9 @@ ALTER TABLE `reviews`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -374,13 +397,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `detail_pembayaran`
 --
 ALTER TABLE `detail_pembayaran`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `menu`
@@ -398,7 +421,7 @@ ALTER TABLE `notifikasi`
 -- AUTO_INCREMENT for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `reservasi`
