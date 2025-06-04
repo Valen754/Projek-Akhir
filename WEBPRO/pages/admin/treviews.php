@@ -45,12 +45,7 @@ $result = mysqli_query($conn, $sql);
         <h4><i class="fas fa-star me-1"></i> Data Review</h4>
     </div>
 
-    <?php if (isset($_GET['msg']) && $_GET['msg'] === 'updated'): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Ulasan berhasil diperbarui!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
+   
 
     <?php if (isset($_GET['msg']) && $_GET['msg'] === 'deleted'): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -85,7 +80,7 @@ $result = mysqli_query($conn, $sql);
                         <td><?= htmlspecialchars($row['comment']) ?></td>
                         <td><?= $row['created_at'] ?></td>
                         <td>
-                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $row['id'] ?>">Edit</a>
+                            
                             <a href="logic/delete-review.php?id=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus ulasan ini?')">Hapus</a>
                         </td>
                     </tr>
