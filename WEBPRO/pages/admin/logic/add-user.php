@@ -8,7 +8,7 @@ $no_telp = $_POST['no_telp'];
 $gender = $_POST['gender'];
 $alamat = $_POST['alamat'];
 $role = $_POST['role'];
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$password = md5($_POST['password']);
 
 // Handle upload foto profil
 $profile_picture = '';
