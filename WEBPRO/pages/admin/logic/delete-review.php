@@ -1,12 +1,12 @@
 <?php
 session_start(); // Pastikan sesi sudah dimulai
-include '../../koneksi.php'; // Sertakan file koneksi database
+include '../../../koneksi.php'; 
 
-if (isset($_GET['id_review'])) {
-    $id_review = $_GET['id_review'];
+if (isset($_GET['id'])) {
+    $id_review = $_GET['id'];
 
     // Siapkan statement SQL untuk menghapus review berdasarkan id
-    $sql = "DELETE FROM reviews WHERE id_review = ?";
+    $sql = "DELETE FROM reviews WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id_review); // "i" karena id_review kemungkinan integer
 
@@ -20,7 +20,7 @@ if (isset($_GET['id_review'])) {
     $conn->close();
 
     // Redirect kembali ke halaman tabel review setelah proses selesai
-    header("Location: ../../index.php?page=treviews"); // Sesuaikan dengan halaman tabel review Anda
+    header("Location: ../../pages/admin/treviews.php"); // Sesuaikan dengan halaman tabel review Anda
     exit();
 } else {
     // Jika id_review tidak ditemukan di URL
