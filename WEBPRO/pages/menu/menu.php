@@ -16,104 +16,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        #checkoutModal {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(30, 36, 50, 0.85);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #checkoutModal.active {
-            display: flex;
-        }
-
-        #checkoutForm {
-            background: #222b3a;
-            padding: 32px;
-            border-radius: 12px;
-            max-width: 340px;
-            width: 100%;
-            margin: auto;
-            box-shadow: 0 2px 24px #0006;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        #checkoutForm h2 {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        #checkoutForm label {
-            font-size: 15px;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        #checkoutForm input[type="text"],
-        #checkoutForm select {
-            width: 100%;
-            margin-bottom: 8px;
-            padding: 8px;
-            border-radius: 8px;
-            border: none;
-            font-size: 15px;
-            box-sizing: border-box;
-        }
-
-        #checkoutForm .radio-group {
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        #checkoutForm input[type="radio"] {
-            margin-right: 6px;
-        }
-
-        .btn-bayar {
-            width: 100%;
-            background: #e07b6c;
-            padding: 12px 0;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            color: #fff;
-            font-size: 16px;
-            margin-top: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-bayar:hover {
-            background: #d45a4c;
-        }
-
-        .btn-batal {
-            width: 100%;
-            margin-top: 8px;
-            padding: 10px 0;
-            border: none;
-            border-radius: 10px;
-            background: #222b3a;
-            color: #e07b6c;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-batal:hover {
-            background: #333d50;
-        }
+        /* Checkout styles moved to checkout.php */
 
         .add-to-cart-btn {
             cursor: pointer !important;
@@ -255,6 +158,28 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
         .cart-item .item-actions button:hover {
             background-color: #e67e22;
+        }
+
+        #qrisImageContainer {
+            display: none;
+            text-align: center;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        #qrisImageContainer img {
+            max-width: 200px;
+            margin: 10px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #qrisImageContainer .qris-text {
+            color: #fff;
+            margin-top: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -430,7 +355,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
     <!-- Tombol Buka Keranjang -->
     <button id="openCartBtn"
         style="position:fixed;bottom:32px;right:32px;z-index:999;background:#6d4c2b;color:#fff;padding:12px 20px;border:none;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-size:18px;">
-        <i class="fas fa-shopping-cart"></i> <span id="cartCount">0</span>
+        <i class="fas fa-shopping-cart"></i> <span id="cartCount" style="color: white;">0</span>
     </button>
 
     <!-- Modal Keranjang -->
@@ -595,21 +520,41 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                         });
                 });
             });
-        });
+        }); document.addEventListener('DOMContentLoaded', function () {
+            // Initialize cart functionality
+            const loadCart = function () {
+                try {
+                    const cart = localStorage.getItem('cart');
+                    return cart ? JSON.parse(cart) : [];
+                } catch (e) {
+                    console.error('Error loading cart:', e);
+                    return [];
+                }
+            };
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- KERANJANG ---
-            function loadCart() {
-                return JSON.parse(localStorage.getItem('cart') || '[]');
-            }
-            function saveCart(cart) {
-                localStorage.setItem('cart', JSON.stringify(cart));
-            }
-            function updateCartCount() {
-                const cart = loadCart();
-                document.getElementById('cartCount').textContent = cart.reduce((a, b) => a + b.qty, 0);
-            }
-            function updateCartTotal() {
+            const saveCart = function (cart) {
+                try {
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                } catch (e) {
+                    console.error('Error saving cart:', e);
+                    alert('Gagal menyimpan keranjang. Mohon coba lagi.');
+                }
+            };
+
+            const updateCartCount = function () {
+                try {
+                    const cart = loadCart();
+                    const count = cart.reduce((a, b) => a + (b.qty || 0), 0);
+                    const cartCount = document.getElementById('cartCount');
+                    if (cartCount) {
+                        cartCount.textContent = count;
+                    }
+                } catch (e) {
+                    console.error('Error updating cart count:', e);
+                }
+            };
+
+            const updateCartTotal = function () {
                 const cart = loadCart();
                 let subtotal = 0;
                 document.querySelectorAll('.cart-check').forEach((cb, idx) => {
@@ -619,217 +564,242 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                 });
                 const tax = Math.round(subtotal * 0.10);
                 const total = subtotal + tax;
-                document.getElementById('cartSubtotal').textContent = 'Subtotal: Rp ' + subtotal.toLocaleString('id-ID');
-                document.getElementById('cartTax').textContent = 'Pajak (10%): Rp ' + tax.toLocaleString('id-ID');
-                document.getElementById('cartTotal').textContent = 'Total: Rp ' + total.toLocaleString('id-ID');
-            }
-            function renderCart() {
-                const cart = loadCart();
-                const cartItemsDiv = document.getElementById('cartItems');
-                if (cart.length === 0) {
-                    cartItemsDiv.innerHTML = '<p style="text-align:center;font-size:18px;color:#888;">Keranjang kosong.</p>';
-                    document.getElementById('cartTotal').textContent = '';
-                    document.getElementById('checkoutBtn').style.display = 'none';
-                    return;
+
+                const cartSubtotal = document.getElementById('cartSubtotal');
+                const cartTax = document.getElementById('cartTax');
+                const cartTotal = document.getElementById('cartTotal');
+
+                if (cartSubtotal && cartTax && cartTotal) {
+                    cartSubtotal.textContent = 'Subtotal: Rp ' + subtotal.toLocaleString('id-ID');
+                    cartTax.textContent = 'Pajak (10%): Rp ' + tax.toLocaleString('id-ID');
+                    cartTotal.textContent = 'Total: Rp ' + total.toLocaleString('id-ID');
                 }
-                let html = '';
-                let total = 0;
-                cart.forEach((item, idx) => {
-                    html += `
-        <div class="cart-item">
-            <input type="checkbox" class="cart-check" data-idx="${idx}" checked style="width:20px;height:20px;">
-            <img src="../../asset/${item.foto}" alt="">
-            <div class="item-info">
-                <strong>${item.nama}</strong><br>
-                <span>Rp ${item.harga.toLocaleString('id-ID')} x ${item.qty}</span>
-                ${item.note ? `<div class="item-note">Catatan: ${item.note}</div>` : ''}
-            </div>
-            <div class="item-actions">
-                <button onclick="removeCartItem(${idx})">Hapus</button>
-            </div>
-        </div>
-        `;
-                });
-                cartItemsDiv.innerHTML = html;
-                updateCartTotal();
-                document.getElementById('checkoutBtn').style.display = '';
-            }
-            window.removeCartItem = function (idx) {
-                let cart = loadCart();
-                cart.splice(idx, 1);
-                saveCart(cart);
-                renderCart();
-                updateCartCount();
             };
 
+            const renderCart = function () {
+                console.log('Rendering cart...'); // Debug log
+                try {
+                    const cart = loadCart();
+                    console.log('Cart contents:', cart); // Debug log
 
-            document.body.addEventListener('click', function (e) {
-                if (e.target.closest('.add-to-cart-btn')) {
-                    const btn = e.target.closest('.add-to-cart-btn');
-                    // Ambil data menu
-                    document.getElementById('cartInputId').value = btn.dataset.id;
-                    document.getElementById('cartInputNama').value = btn.dataset.nama;
-                    document.getElementById('cartInputHarga').value = btn.dataset.harga;
-                    document.getElementById('cartInputFoto').value = btn.dataset.foto;
-                    document.getElementById('cartInputStok').value = btn.dataset.stok;
-                    document.getElementById('cartInputQty').value = 1;
-                    document.getElementById('cartInputQty').max = btn.dataset.stok;
-                    document.getElementById('cartInputStokInfo').textContent = `(Stok: ${btn.dataset.stok})`;
-                    document.getElementById('cartInputNote').value = '';
-                    document.getElementById('cartInputModal').style.display = 'block';
-                }
-            });
-            // Event untuk update total saat checkbox dicentang/di-uncheck
-            document.getElementById('cartItems').addEventListener('change', function (e) {
-                if (e.target.classList.contains('cart-check')) {
-                    updateCartTotal();
-                }
-            });
+                    const cartItemsDiv = document.getElementById('cartItems');
+                    const cartSubtotal = document.getElementById('cartSubtotal');
+                    const cartTax = document.getElementById('cartTax');
+                    const cartTotal = document.getElementById('cartTotal');
+                    const checkoutBtn = document.getElementById('checkoutBtn');
 
-            // Event untuk tombol Checkout Pilihan
-            document.getElementById('checkoutBtn').onclick = function () {
-                const cart = loadCart();
-                const checkedIdx = [];
-                document.querySelectorAll('.cart-check').forEach((cb, idx) => {
-                    if (cb.checked) checkedIdx.push(idx);
-                });
-                if (checkedIdx.length === 0) {
-                    alert('Pilih minimal satu item untuk checkout!');
-                    return;
-                }
-                // Simpan data item terpilih ke localStorage/sessionStorage jika perlu
-                const selectedItems = checkedIdx.map(idx => cart[idx]);
-                sessionStorage.setItem('checkout_items', JSON.stringify(selectedItems));
-                // Tutup modal keranjang
-                document.getElementById('cartModal').style.display = 'none';
-                // Tampilkan modal checkout
-                openCheckoutModal();
-            };
-
-
-
-            // Tutup modal input keranjang
-            document.getElementById('closeCartInputModal').onclick = function () {
-                document.getElementById('cartInputModal').style.display = 'none';
-            };
-            document.getElementById('cartInputModal').onclick = function (e) {
-                if (e.target === this) this.style.display = 'none';
-            };
-
-            // Proses submit form tambah ke keranjang
-            document.getElementById('cartInputForm').onsubmit = function (e) {
-                e.preventDefault();
-                const id = document.getElementById('cartInputId').value;
-                const nama = document.getElementById('cartInputNama').value;
-                const harga = parseInt(document.getElementById('cartInputHarga').value);
-                const foto = document.getElementById('cartInputFoto').value;
-                const stok = parseInt(document.getElementById('cartInputStok').value);
-                const qty = parseInt(document.getElementById('cartInputQty').value);
-                const note = document.getElementById('cartInputNote').value;
-
-                if (qty < 1 || qty > stok) {
-                    alert('Jumlah tidak valid!');
-                    return;
-                }
-
-                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                let found = cart.find(item => item.id == id && (item.note || '') === note);
-                if (found) {
-                    if (found.qty + qty <= stok) {
-                        found.qty += qty;
-                    } else {
-                        alert('Stok tidak mencukupi!');
+                    if (!cartItemsDiv || !cartTotal || !checkoutBtn) {
+                        console.error('Cart elements not found');
                         return;
                     }
-                } else {
-                    cart.push({ id, nama, harga, foto, qty, stok, note });
+
+                    if (cart.length === 0) {
+                        cartItemsDiv.innerHTML = '<p style="text-align:center;font-size:18px;color:#888;">Keranjang kosong.</p>';
+                        cartSubtotal.textContent = '';
+                        cartTax.textContent = '';
+                        cartTotal.textContent = '';
+                        checkoutBtn.style.display = 'none';
+                        return;
+                    }
+
+                    let html = '';
+                    cart.forEach((item, idx) => {
+                        html += `
+                            <div class="cart-item">
+                                <input type="checkbox" class="cart-check" data-idx="${idx}" checked style="width:20px;height:20px;">
+                                <img src="../../asset/${item.foto}" alt="${item.nama}">
+                                <div class="item-info">
+                                    <strong>${item.nama}</strong><br>
+                                    <span>Rp ${item.harga.toLocaleString('id-ID')} x ${item.qty}</span>
+                                    ${item.note ? `<div class="item-note">Catatan: ${item.note}</div>` : ''}
+                                </div>
+                                <div class="item-actions">
+                                    <button type="button" onclick="removeCartItem(${idx})">Hapus</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    cartItemsDiv.innerHTML = html;
+                    updateCartTotal();
+                    document.getElementById('checkoutBtn').style.display = '';
+                } catch (e) {
+                    console.error('Error rendering cart:', e);
                 }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                document.getElementById('cartInputModal').style.display = 'none';
-                if (typeof updateCartCount === 'function') updateCartCount();
-                alert('Ditambahkan ke keranjang!');
             };
 
+            // Add to cart button click handlers
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const { id, nama, harga, foto, stok } = this.dataset;
 
-            document.getElementById('openCartBtn').onclick = function () {
-                renderCart();
-                document.getElementById('cartModal').style.display = 'block';
-            };
-            document.getElementById('closeCartModal').onclick = function () {
-                document.getElementById('cartModal').style.display = 'none';
-            };
-            document.getElementById('clearCartBtn').onclick = function () {
-                localStorage.removeItem('cart');
-                renderCart();
-                updateCartCount();
-            };
-            document.getElementById('cartModal').onclick = function (e) {
-                if (e.target === this) this.style.display = 'none';
-            };
+                    // Update modal inputs
+                    document.getElementById('cartInputId').value = id;
+                    document.getElementById('cartInputNama').value = nama;
+                    document.getElementById('cartInputHarga').value = harga;
+                    document.getElementById('cartInputFoto').value = foto;
+                    document.getElementById('cartInputStok').value = stok;
+                    document.getElementById('cartInputQty').value = "1";
+                    document.getElementById('cartInputQty').max = stok;
+                    document.getElementById('cartInputStokInfo').textContent = `(Stok: ${stok})`;
+                    document.getElementById('cartInputNote').value = '';
+
+                    // Show modal
+                    document.getElementById('cartInputModal').style.display = 'block';
+                });
+            });
+
+            // Cart form submission
+            const cartForm = document.getElementById('cartInputForm');
+            if (cartForm) {
+                cartForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    try {
+                        const id = document.getElementById('cartInputId').value;
+                        const nama = document.getElementById('cartInputNama').value;
+                        const harga = parseInt(document.getElementById('cartInputHarga').value);
+                        const foto = document.getElementById('cartInputFoto').value;
+                        const stok = parseInt(document.getElementById('cartInputStok').value);
+                        const qty = parseInt(document.getElementById('cartInputQty').value);
+                        const note = document.getElementById('cartInputNote').value;
+
+                        if (!id || !nama || !harga || !foto || !stok) {
+                            throw new Error('Data menu tidak lengkap');
+                        }
+
+                        if (qty < 1 || qty > stok) {
+                            alert('Jumlah tidak valid!');
+                            return;
+                        }
+
+                        const cart = loadCart();
+                        let found = cart.find(item => item.id === id && (item.note || '') === note);
+
+                        if (found) {
+                            if (found.qty + qty <= stok) {
+                                found.qty += qty;
+                            } else {
+                                alert('Stok tidak mencukupi!');
+                                return;
+                            }
+                        } else {
+                            cart.push({ id, nama, harga, foto, qty, stok, note });
+                        }
+
+                        saveCart(cart);
+                        document.getElementById('cartInputModal').style.display = 'none';
+                        updateCartCount();
+                        alert('Ditambahkan ke keranjang!');
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        alert('Gagal menambahkan ke keranjang. Mohon coba lagi.');
+                    }
+                });
+            }
+
+            // Initialize cart button handlers
+            const openCartBtn = document.getElementById('openCartBtn');
+            const cartModal = document.getElementById('cartModal');
+            const closeCartModal = document.getElementById('closeCartModal');
+            const clearCartBtn = document.getElementById('clearCartBtn');
+            const cartItems = document.getElementById('cartItems');
+
+            if (openCartBtn) {
+                openCartBtn.addEventListener('click', function () {
+                    renderCart();
+                    cartModal.style.display = 'block';
+                });
+            }
+
+            if (closeCartModal) {
+                closeCartModal.addEventListener('click', function () {
+                    cartModal.style.display = 'none';
+                });
+            }
+
+            if (clearCartBtn) {
+                clearCartBtn.addEventListener('click', function () {
+                    if (confirm('Apakah Anda yakin ingin mengosongkan keranjang?')) {
+                        localStorage.removeItem('cart');
+                        renderCart();
+                        updateCartCount();
+                    }
+                });
+            }
+
+            if (cartModal) {
+                cartModal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            }
+
+            if (cartItems) {
+                cartItems.addEventListener('change', function (e) {
+                    if (e.target.classList.contains('cart-check')) {
+                        updateCartTotal();
+                    }
+                });
+            }
+
+            // Handle checkout button
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function () {
+                    const cart = loadCart();
+                    const checkedIdx = [];
+                    document.querySelectorAll('.cart-check').forEach((cb, idx) => {
+                        if (cb.checked) checkedIdx.push(idx);
+                    });
+
+                    if (checkedIdx.length === 0) {
+                        alert('Pilih minimal satu item untuk checkout!');
+                        return;
+                    }
+
+                    const selectedItems = checkedIdx.map(idx => {
+                        const item = cart[idx];
+                        if (item.qty > item.stok) {
+                            alert(`Stok untuk ${item.nama} tidak mencukupi. Tersedia: ${item.stok}`);
+                            return null;
+                        }
+                        return {
+                            id: item.id,
+                            name: item.nama,
+                            price: item.harga,
+                            quantity: item.qty,
+                            note: item.note || '',
+                            foto: item.foto
+                        };
+                    });
+
+                    if (selectedItems.includes(null)) {
+                        return;
+                    }
+
+                    sessionStorage.setItem('checkout_items', JSON.stringify(selectedItems));
+                    window.location.href = 'checkout.php';
+                });
+            }
+
+            // Initialize cart count on page load
             updateCartCount();
-        });
 
-        function openCheckoutModal() {
-            document.getElementById('checkoutModal').classList.add('active');
-            document.getElementById('checkoutForm').reset();
-
-            // Tampilkan preview item yang akan di-checkout
-            const previewDiv = document.getElementById('checkoutPreview');
-            if (previewDiv) {
-                const items = JSON.parse(sessionStorage.getItem('checkout_items') || '[]');
-                if (items.length === 0) {
-                    previewDiv.innerHTML = '<p style="color:#fff;">Tidak ada item yang dipilih.</p>';
-                } else {
-                    previewDiv.innerHTML = items.map(item =>
-                        `<div style="color:#fff;">${item.nama || item.name} x ${item.qty || item.quantity} - Rp ${(item.harga || item.price).toLocaleString('id-ID')}</div>`
-                    ).join('');
+            // Make removeCartItem function global
+            window.removeCartItem = function (idx) {
+                try {
+                    let cart = loadCart();
+                    cart.splice(idx, 1);
+                    saveCart(cart);
+                    renderCart();
+                    updateCartCount();
+                } catch (error) {
+                    console.error('Error removing item:', error);
+                    alert('Gagal menghapus item dari keranjang. Mohon coba lagi.');
                 }
-            }
-        }
-        function closeCheckoutModal() {
-            document.getElementById('checkoutModal').classList.remove('active');
-        }
-        document.getElementById('checkoutModal').addEventListener('click', function (e) {
-            if (e.target === this) closeCheckoutModal();
+            };
         });
-        document.getElementById('checkoutForm').onsubmit = function (e) {
-            const jsonItems = sessionStorage.getItem('checkout_items');
-
-            if (!jsonItems) {
-                alert('Tidak ada item yang dipilih untuk checkout!');
-                e.preventDefault();
-                return false;
-            }
-
-            let arrItems;
-            try {
-                arrItems = JSON.parse(jsonItems);
-            } catch (err) {
-                console.error('Terjadi error JSON.parse:', err);
-                alert('Terjadi kesalahan pada data keranjang.');
-                e.preventDefault();
-                return false;
-            }
-
-            if (!Array.isArray(arrItems) || arrItems.length === 0) {
-                alert('Tidak ada item yang dipilih untuk checkout!');
-                e.preventDefault();
-                return false;
-            }
-
-            // Jika valid, masukkan JSON ke hidden input:
-            let input = document.getElementById('checkoutItemsInput');
-            if (!input) {
-                input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'items';
-                input.id = 'checkoutItemsInput';
-                this.appendChild(input);
-            }
-            input.value = jsonItems;
-            return true;
-            // Setelah ini, form akan mengirim data item ke logic/checkout.php
-        };
     </script>
 
     <!-- Modal Tambah ke Keranjang -->
@@ -859,34 +829,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                     style="background:#6d4c2b;color:#fff;padding:8px 18px;border:none;border-radius:4px;cursor:pointer;">Tambah</button>
             </form>
         </div>
-    </div>
-
-    <!-- Modal Checkout -->
-    <div id="checkoutModal">
-        <form id="checkoutForm" action="logic/checkout.php" method="post">
-            <h2>Pembayaran</h2>
-                <div id="checkoutPreview"></div>
-            <label>Nama Customer:<br>
-                <input type="text" name="customer_name" required>
-            </label>
-            <label class="radio-group">
-                <input type="radio" name="jenis_order" value="dine_in" checked>
-                Dine In
-                <input type="radio" name="jenis_order" value="take_away">
-                Take Away
-            </label>
-            <label>Metode Pembayaran:<br>
-                <select name="payment_method" required>
-                    <option value="cash">Cash</option>
-                    <option value="e-wallet">E-Wallet</option>
-                    <option value="qris">QRIS</option>
-                </select>
-            </label>
-            <input type="hidden" name="items" id="checkoutItemsInput">
-            <button type="submit" class="btn-bayar">Bayar & Cetak Struk</button>
-            <button type="button" class="btn-batal" onclick="closeCheckoutModal()">Batal</button>
-        </form>
-    </div>
+    </div> <!-- End of page -->
 
 
 </body>
