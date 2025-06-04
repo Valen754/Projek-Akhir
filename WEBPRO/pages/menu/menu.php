@@ -772,6 +772,19 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
         function openCheckoutModal() {
             document.getElementById('checkoutModal').classList.add('active');
             document.getElementById('checkoutForm').reset();
+
+            // Tampilkan preview item yang akan di-checkout
+            const previewDiv = document.getElementById('checkoutPreview');
+            if (previewDiv) {
+                const items = JSON.parse(sessionStorage.getItem('checkout_items') || '[]');
+                if (items.length === 0) {
+                    previewDiv.innerHTML = '<p style="color:#fff;">Tidak ada item yang dipilih.</p>';
+                } else {
+                    previewDiv.innerHTML = items.map(item =>
+                        `<div style="color:#fff;">${item.nama || item.name} x ${item.qty || item.quantity} - Rp ${(item.harga || item.price).toLocaleString('id-ID')}</div>`
+                    ).join('');
+                }
+            }
         }
         function closeCheckoutModal() {
             document.getElementById('checkoutModal').classList.remove('active');
@@ -852,6 +865,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
     <div id="checkoutModal">
         <form id="checkoutForm" action="logic/checkout.php" method="post">
             <h2>Pembayaran</h2>
+                <div id="checkoutPreview"></div>
             <label>Nama Customer:<br>
                 <input type="text" name="customer_name" required>
             </label>
@@ -873,6 +887,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
             <button type="button" class="btn-batal" onclick="closeCheckoutModal()">Batal</button>
         </form>
     </div>
+
 
 </body>
 

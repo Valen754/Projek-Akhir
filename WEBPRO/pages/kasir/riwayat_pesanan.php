@@ -154,7 +154,8 @@ $result_orders = $conn->query($sql_orders);
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="order-detail-toggle btn btn-sm btn-info" data-order-id="<?= $order['order_id']; ?> style='list-style' ">
+                                            <button class="order-detail-toggle btn btn-sm btn-info"
+                                                data-order-id="<?= $order['order_id']; ?>">
                                                 Lihat Detail
                                             </button>
                                         </td>
@@ -167,18 +168,18 @@ $result_orders = $conn->query($sql_orders);
                                                 <ul>
                                                     <?php
                                                     $sql_order_details = "SELECT
-                                                        od.quantity,
-                                                        od.price_per_item,
-                                                        od.subtotal,
-                                                        od.item_notes,
+                                                        dp.quantity,
+                                                        dp.price_per_item,
+                                                        dp.subtotal,
+                                                        dp.item_notes,
                                                         m.nama AS menu_nama,
                                                         m.url_foto
                                                     FROM
-                                                        order_details od
+                                                        detail_pembayaran dp
                                                     JOIN
-                                                        menu m ON od.menu_id = m.id
+                                                        menu m ON dp.menu_id = m.id
                                                     WHERE
-                                                        od.order_id = ?";
+                                                        dp.order_id = ?";
                                                     $stmt_order_details = $conn->prepare($sql_order_details);
                                                     $stmt_order_details->bind_param("i", $order['order_id']);
                                                     $stmt_order_details->execute();
@@ -235,7 +236,6 @@ $result_orders = $conn->query($sql_orders);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-    <script src="../../js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
         crossorigin="anonymous"></script>
     <script>
@@ -256,6 +256,11 @@ $result_orders = $conn->query($sql_orders);
             function toggleDetailRow() {
                 const orderId = this.dataset.orderId;
                 const detailRow = document.getElementById(`details-${orderId}`);
+                if (!detailRow) {
+                    // Bisa tampilkan alert atau abaikan saja
+                    console.warn('Detail row tidak ditemukan untuk orderId:', orderId);
+                    return;
+                }
                 if (detailRow.style.display === 'none' || detailRow.style.display === '') {
                     detailRow.style.display = 'table-row';
                     this.textContent = 'Sembunyikan Detail';
