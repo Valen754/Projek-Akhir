@@ -35,7 +35,7 @@ $sql_orders = "SELECT
                 o.payment_method,
                 o.notes
             FROM
-                orders o
+                pembayaran o
             JOIN
                 users u ON o.user_id = u.id
             $where
@@ -188,7 +188,7 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                                             m.nama AS menu_nama,
                                                             m.url_foto
                                                         FROM
-                                                            order_details od
+                                                            detail_pembayaran od
                                                         JOIN
                                                             menu m ON od.menu_id = m.id
                                                         WHERE

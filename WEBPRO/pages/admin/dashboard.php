@@ -4,9 +4,9 @@ include '../../views/admin/header.php';
 include '../../views/admin/sidebar.php';
 include '../../koneksi.php';
 
-// Hitung total pendapatan
-$total_pendapatan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total_amount) as total FROM orders"))['total'];
-$total_pesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders"))['total'];
+// Hitung total pendapatan HANYA yang status 'Completed'
+$total_pendapatan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total_amount) as total FROM pembayaran WHERE status = 'Completed'"))['total'];
+$total_pesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM pembayaran"))['total'];
 // Hanya hitung user dengan role 'pelanggan'
 $total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role = 'member'"))['total'];
 

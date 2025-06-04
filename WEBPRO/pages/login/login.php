@@ -360,7 +360,7 @@
 
                 <div class="links-bottom">
                     <a href="../registrasi/registrasi.php">Register Here</a>
-                    <a href="#">Forgot Password?</a>
+                    <a href="forgot_password.php">Forgot Password?</a>
                 </div>
             </form>
         </div>

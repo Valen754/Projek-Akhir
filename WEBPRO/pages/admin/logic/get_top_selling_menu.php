@@ -41,11 +41,11 @@ $sql = "SELECT
             m.nama AS menu_name,
             SUM(od.quantity) AS total_sold
         FROM
-            order_details od
+            detail_pembayaran od
         JOIN
             menu m ON od.menu_id = m.id
         JOIN
-            orders o ON od.order_id = o.id
+            pembayaran o ON od.order_id = o.id
         WHERE 1 $where
         GROUP BY
             od.menu_id

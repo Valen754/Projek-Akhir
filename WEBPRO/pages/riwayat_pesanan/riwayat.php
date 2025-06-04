@@ -22,7 +22,7 @@ if ($tanggal_awal && $tanggal_akhir) {
     $where .= " AND DATE(order_date) <= '$tanggal_akhir'";
 }
 
-$query = "SELECT * FROM orders WHERE $where ORDER BY order_date DESC";
+$query = "SELECT * FROM pembayaran WHERE $where ORDER BY order_date DESC";
 $result = $conn->query($query);
 ?>
 
@@ -153,7 +153,6 @@ $result = $conn->query($query);
                     <div style="display:flex;align-items:center;">
                         <div class="riwayat-info" style="flex:1;">
                             <span class="riwayat-title">#<?= $order['id']; ?> - <?= date('d M Y H:i', strtotime($order['order_date'])); ?></span>
-                            <span class="riwayat-alamat"><?= htmlspecialchars($order['customer_name'] ?? '') ?></span>
                         </div>
                         <div style="text-align:right;">
                             <span class="riwayat-total">Rp <?= number_format($order['total_amount'],0,',','.'); ?></span><br>
