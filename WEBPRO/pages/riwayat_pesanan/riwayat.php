@@ -22,7 +22,7 @@ if ($tanggal_awal && $tanggal_akhir) {
     $where .= " AND DATE(order_date) <= '$tanggal_akhir'";
 }
 
-$query = "SELECT * FROM orders WHERE $where ORDER BY order_date DESC";
+$query = "SELECT * FROM pembayaran WHERE $where ORDER BY order_date DESC";
 $result = $conn->query($query);
 ?>
 
