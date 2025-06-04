@@ -84,15 +84,15 @@ $result = mysqli_query($conn, $query);
                     <span>Subtotal</span><span id="subtotalHarga">Rp0</span>
                 </div>
                 <div class="discount">
-                    <span>Diskon</span><span>Rp0</span>
+                    <span style="color: white;">Diskon</span><span style="color: white;">Rp0</span>
                 </div>
                 <div class="discount">
-                    <span>Pajak (10%)</span><span id="pajakHarga">Rp0</span>
+                    <span style="color: white;">Pajak (10%)</span><span id="pajakHarga" style="color: white;">Rp0</span>
                 </div>
                 <div class="subtotal">
-                    <span>Total</span><span id="totalHarga">Rp0</span>
+                    <span style="color: white;">Total</span><span id="totalHarga" style="color: white;">Rp0</span>
                 </div>
-                <button id="bayarBtn">Bayar Sekarang</button>
+                <button id="bayarBtn" style="color: white;">Bayar Sekarang</button>
             </footer>
         </aside>
     </div>
@@ -252,7 +252,6 @@ $result = mysqli_query($conn, $query);
 
         // Submit checkout
 document.getElementById("checkoutForm").onsubmit = function (e) {
-    alert('Submit jalan');
     e.preventDefault();
     const formData = new FormData(this);
     fetch('logic/checkout.php', {

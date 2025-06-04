@@ -168,8 +168,6 @@ body {
 
 .image-wrapper {
     position: relative;
-    overflow: hidden;
-    border-radius: 1px 1px 0 0;
 }
 
 .image-wrapper img {
@@ -188,6 +186,7 @@ body {
     opacity: 0;
     transition: opacity 0.3s;
     z-index: 2;
+    pointer-events: auto;
 }
 
 .btn-icon-round {
@@ -734,3 +733,18 @@ button {
 .favorite-btn:hover {
     background-color: #ff0505;
 }
+
+
+
+        .add-to-cart-btn:hover {
+            background: #8d6742 !important;
+            /* Ganti dengan warna hover tombol lihat detail jika berbeda */
+            color: #fff;
+        }
+
+        .btn-overlay form {
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Tambahkan di <style> pada <head> atau file CSS Anda */
