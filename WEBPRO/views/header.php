@@ -189,7 +189,7 @@ include __DIR__ . '/../koneksi.php';
 
 <!-- BAGIAN NAVBAR -->
 <header class="header">
-    <a href="../../home/home.php" class="logo">
+    <a href="../../pages/home/home.php" class="logo">
         Tapal<span>Kuda</span>
     </a>
     <nav class="navbar">
@@ -205,9 +205,9 @@ include __DIR__ . '/../koneksi.php';
                 <a href="../../kasir/kasir.php">Kasir</a>
             <?php elseif ($_SESSION['role'] == 'member'): ?>
                 <!-- Tautan untuk Member -->
-                <a href="../../home/home.php">Home</a>
-                <a href="../../menu/menu.php">Menu</a>
-                <a href="../../reservasi/reservasi.php">Reservasi</a>
+                <a href="../../pages/home/home.php">Home</a>
+                <a href="../../pages/menu/menu.php">Menu</a>
+                <a href="../../pages/reservasi/reservasi.php">Reservasi</a>
             <?php endif; ?>
         <?php endif; ?>
         <div class="navbar-icons">
