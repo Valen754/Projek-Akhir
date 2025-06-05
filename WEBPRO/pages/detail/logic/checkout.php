@@ -77,8 +77,7 @@ try {
 
     foreach ($items as $item) {
         $item_subtotal = $item['price'] * $item['quantity'];
-        // Pastikan ambil catatan dari key 'note' ATAU 'notes' jika ada (untuk kompatibilitas)
-        $item_notes = $item['note'] ?? ($item['notes'] ?? '');
+        $item_notes = $item['notes'] ?? ''; // Use notes field, fallback to empty string
 
         // Insert order item
         $stmt_items->bind_param(
@@ -119,7 +118,7 @@ try {
 
     echo "<script>
         alert('Error: " . addslashes($e->getMessage()) . "');
-        window.location.href = '../menu.php';
+        window.location.href = '../detail.php';
     </script>";
 }
 ?>

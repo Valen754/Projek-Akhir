@@ -15,9 +15,9 @@ if ($_SESSION['role'] !== 'kasir') {
 }
 
 // Query untuk mendapatkan reservasi dengan status 'pending'
-$sql = "SELECT * FROM reservasi 
+$sql = "SELECT reservasi.*, users.nama FROM reservasi 
         JOIN users ON reservasi.user_id = users.id 
-        WHERE status = 'pending' 
+        WHERE reservasi.status = 'pending' 
         ORDER BY reservasi.created_at";
 $result = $conn->query($sql);
 ?>
@@ -96,7 +96,7 @@ $result = $conn->query($sql);
 <body>
     <div class="container" role="main">
         <?php $activePage = 'notifikasi'; ?>
-       <?php include '../../views/kasir/sidebar.php'; ?>
+        <?php include '../../views/kasir/sidebar.php'; ?>
         <main>
             <header>
                 <h1>Notifikasi Reservasi</h1>
@@ -117,9 +117,10 @@ $result = $conn->query($sql);
                                     <p><strong>Pesan:</strong> <?php echo $row['message']; ?></p>
                                 </div>
                                 <div class="actions">
-                                    <form method="POST" action="update_reservasi.php">
+                                    <form class="update-form">
                                         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                        <button type="submit" name="action" value="confirm" class="btn-confirm">Konfirmasi</button>
+                                        <button type="submit" name="action" value="confirm"
+                                            class="btn-confirm">Konfirmasi</button>
                                         <button type="submit" name="action" value="cancel" class="btn-cancel">Batalkan</button>
                                     </form>
                                 </div>
@@ -134,6 +135,53 @@ $result = $conn->query($sql);
             </section>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('.update-form');
+
+            forms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Dapatkan button yang diklik
+                    const clickedButton = e.submitter;
+                    const formData = new FormData();
+
+                    // Tambahkan data dari form
+                    formData.append('id', this.querySelector('input[name="id"]').value);
+                    formData.append('action', clickedButton.value);
+
+                    // Log form data untuk debugging
+                    console.log('Sending data:', {
+                        id: formData.get('id'),
+                        action: formData.get('action')
+                    });
+
+                    fetch('logic/update_reservasi.php', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Server response:', data);
+                            if (data.status === 'success') {
+                                alert(data.message);
+                                window.location.reload();
+                            } else {
+                                throw new Error(data.message || 'Terjadi kesalahan');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Terjadi kesalahan saat memperbarui status: ' + error.message);
+                        });
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

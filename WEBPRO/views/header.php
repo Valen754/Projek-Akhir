@@ -1,6 +1,7 @@
 <?php
 session_start(); 
-include '../../koneksi.php';
+
+include __DIR__ . '/../koneksi.php';
 ?>
 
 
@@ -188,25 +189,25 @@ include '../../koneksi.php';
 
 <!-- BAGIAN NAVBAR -->
 <header class="header">
-    <a href="../home/home.php" class="logo">
+    <a href="../../home/home.php" class="logo">
         Tapal<span>Kuda</span>
     </a>
     <nav class="navbar">
         <?php if (isset($_SESSION['role'])): ?>
             <?php if ($_SESSION['role'] == 'admin'): ?>
                 <!-- Tautan untuk Admin -->
-                <a href="../table/menu.php">Admin</a>
-                <a href="../kasir/kasir.php">Kasir</a>
-                <a href="../home/home.php">Home</a>
-                <a href="../menu/menu.php">Menu</a>
+                <a href="../../table/menu.php">Admin</a>
+                <a href="../../kasir/kasir.php">Kasir</a>
+                <a href="../../home/home.php">Home</a>
+                <a href="../../menu/menu.php">Menu</a>
             <?php elseif ($_SESSION['role'] == 'kasir'): ?>
                 <!-- Tautan untuk Kasir -->
-                <a href="../kasir/kasir.php">Kasir</a>
+                <a href="../../kasir/kasir.php">Kasir</a>
             <?php elseif ($_SESSION['role'] == 'member'): ?>
                 <!-- Tautan untuk Member -->
-                <a href="../home/home.php">Home</a>
-                <a href="../menu/menu.php">Menu</a>
-                <a href="../reservasi/reservasi.php">Reservasi</a>
+                <a href="../../home/home.php">Home</a>
+                <a href="../../menu/menu.php">Menu</a>
+                <a href="../../reservasi/reservasi.php">Reservasi</a>
             <?php endif; ?>
         <?php endif; ?>
         <div class="navbar-icons">

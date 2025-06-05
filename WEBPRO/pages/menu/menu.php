@@ -697,6 +697,14 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                 });
             }
 
+            // Fix: close button for cartInputModal
+            const closeCartInputModal = document.getElementById('closeCartInputModal');
+            if (closeCartInputModal) {
+                closeCartInputModal.addEventListener('click', function () {
+                    document.getElementById('cartInputModal').style.display = 'none';
+                });
+            }
+
             // Initialize cart button handlers
             const openCartBtn = document.getElementById('openCartBtn');
             const cartModal = document.getElementById('cartModal');
@@ -779,6 +787,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                     }
 
                     sessionStorage.setItem('checkout_items', JSON.stringify(selectedItems));
+                    localStorage.removeItem('cart'); // Hapus keranjang setelah checkout
                     window.location.href = 'checkout.php';
                 });
             }
