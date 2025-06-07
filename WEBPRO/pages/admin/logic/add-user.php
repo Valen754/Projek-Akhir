@@ -12,7 +12,7 @@ $password = md5($_POST['password']);
 
 // Handle upload foto profil
 $profile_picture = '';
-if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
+if (isset($_FILES['profile_picture']) ) {
     $ext = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
     $filename = uniqid() . '.' . $ext;
     $upload_path = '../../../asset/user_picture/' . $filename;

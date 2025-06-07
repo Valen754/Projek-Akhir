@@ -51,7 +51,7 @@ $sql = "SELECT
             od.menu_id
         ORDER BY
             total_sold DESC
-        LIMIT 7"; // Mengambil hingga 9 menu terlaris
+        LIMIT 5"; // Mengambil hingga 9 menu terlaris
 
 $result = $conn->query($sql);
 
