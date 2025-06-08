@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            background-color: #f0f2f5; /* Light grey background */
+            background: #8d6748;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -156,6 +156,14 @@
             flex: 1 1 100%; /* Make this group take full width */
         }
 
+        .form-label {
+            display: block;
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -171,6 +179,25 @@
             box-sizing: border-box;
         }
 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333;
+            background-color: #f9f9f9;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
@@ -183,21 +210,46 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa;
-            font-size: 1.1em;
-            pointer-events: none; /* Make icon not clickable */
+            color: #a67c52;
+            font-size: 1.2em;
+            pointer-events: none;
+            width: 20px;
+            text-align: center;
         }
 
+        .form-group .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        /* Adjust textarea icon position */
+        .form-group textarea ~ .icon {
+            top: 25px;
+            transform: none;
+        }
+
+        /* Password toggle button styling */
         .form-group .toggle-password {
             position: absolute;
-            right: 15px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            color: #aaa;
+            color: #a67c52;
             font-size: 1.1em;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            transition: color 0.2s;
+        }
+
+        .form-group .toggle-password:hover {
+            color: #8d6748;
         }
 
         .form-group textarea {
@@ -390,146 +442,109 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <i class="fas fa-user icon"></i>
-                        <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user icon"></i>
+                            <input type="text" name="username" placeholder="Masukkan username" id="username" oninput="validation()" required autofocus>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <i class="fas fa-user-circle icon"></i>
-                        <input type="text" name="nama" placeholder="Full Name" id="nama" oninput="validation()" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <i class="fas fa-envelope icon"></i>
-                        <input type="email" name="email" placeholder="Email" id="email" oninput="validation()" required>
-                    </div>
-                    <div class="form-group">
-                        <i class="fas fa-phone icon"></i>
-                        <input type="text" name="no_telp" placeholder="Phone Number" id="no_telp" oninput="validation()" required>
+                        <label for="nama" class="form-label">Nama Lengkap</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card icon"></i>
+                            <input type="text" name="nama" placeholder="Masukkan nama lengkap" id="nama" required>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <i class="fas fa-venus-mars icon"></i>
-                        <select name="gender" id="gender" oninput="validation()" required>
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
+                        <label for="gender" class="form-label">Jenis Kelamin</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-venus-mars icon"></i>
+                            <select name="gender" id="gender" required>
+                                <option value="" disabled selected>Pilih jenis kelamin</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <i class="fas fa-address-card icon"></i>
-                        <textarea name="alamat" placeholder="Address" id="alamat" oninput="validation()" required></textarea>
+                        <label for="no_telp" class="form-label">Nomor Telepon</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone icon"></i>
+                            <input type="tel" name="no_telp" placeholder="Masukkan nomor telepon" id="no_telp" required>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <i class="fas fa-lock icon"></i>
-                        <input type="password" name="password" id="password" placeholder="Password" oninput="validation()" required>
-                        <button type="button" id="togglePassword" class="toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope icon"></i>
+                            <input type="email" name="email" placeholder="Masukkan email" id="email" required>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <i class="fas fa-lock icon"></i>
-                        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" oninput="validation()" required>
-                        <button type="button" id="toggleConfirmPassword" class="toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <label for="alamat" class="form-label">Alamat</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-map-marker-alt icon"></i>
+                            <textarea name="alamat" id="alamat" placeholder="Masukkan alamat lengkap" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock icon"></i>
+                            <input type="password" name="password" placeholder="Masukkan password" id="password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password" class="form-label">Konfirmasi Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock icon"></i>
+                            <input type="password" name="confirm_password" placeholder="Konfirmasi password" id="confirm_password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirm_password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="terms" required onchange="validation()">
-                    <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
+                    <label>
+                        <input type="checkbox" name="terms" required>
+                        Saya setuju dengan syarat dan ketentuan
+                    </label>
                 </div>
 
-                <button type="submit" name="submit" class="btn-register" id="submit" disabled>Register</button>
+                <button type="submit" class="btn-register" disabled>Register</button>
 
-                <div class="or-separator">OR</div>
+                <div class="or-separator">atau</div>
 
                 <div class="social-buttons">
-                    <button type="button" class="social-button"><i class="fab fa-google"></i> Google</button>
-                    <button type="button" class="social-button"><i class="fab fa-facebook-f"></i> Facebook</button>
+                    <button type="button" class="social-button">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                    <button type="button" class="social-button">
+                        <i class="fab fa-facebook-f"></i>
+                        Facebook
+                    </button>
                 </div>
 
                 <div class="login-link">
-                    Already have an account? <a href="../login/login.php">Log In</a>
+                    Sudah punya akun? <a href="../login/login.php">Login disini</a>
                 </div>
             </form>
         </div>
-   </div>
-
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        function previewFile() {
-            const preview = document.getElementById('previewProfilePic');
-            const file = document.getElementById('profile_picture').files[0];
-            const reader = new FileReader();
-            const uploadIcon = document.querySelector('.profile-pic-upload .upload-icon');
-
-            reader.onloadend = function () {
-                preview.src = reader.result;
-                preview.style.display = 'block';
-                uploadIcon.style.display = 'none'; // Hide the camera icon
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-                preview.style.display = 'none';
-                uploadIcon.style.display = 'block'; // Show the camera icon if no file
-            }
-        }
-
-        function validation() {
-            let username = document.getElementById("username").value;
-            let nama = document.getElementById("nama").value;
-            let email = document.getElementById("email").value;
-            let no_telp = document.getElementById("no_telp").value;
-            let gender = document.getElementById("gender").value;
-            let alamat = document.getElementById("alamat").value;
-            let pass = document.getElementById("password").value;
-            let confirmPass = document.getElementById("confirmPassword").value;
-            let terms = document.getElementById("terms").checked;
-            let profilePicFile = document.getElementById('profile_picture').files[0]; // Get the file input
-
-            // Check if profile picture is selected (optional, remove || !profilePicFile if you want it mandatory)
-            if (username && nama && email && no_telp && gender && alamat && pass && confirmPass && (pass === confirmPass) && terms && profilePicFile) {
-                document.getElementById("submit").disabled = false;
-            } else {
-                document.getElementById("submit").disabled = true;
-            }
-        }
-
-        document.getElementById('togglePassword').addEventListener('click', function () {
-            const passwordField = document.getElementById('password');
-            const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', passwordFieldType);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
-
-        document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
-            const confirmPasswordField = document.getElementById('confirmPassword');
-            const confirmPasswordFieldType = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            confirmPasswordField.setAttribute('type', confirmPasswordFieldType);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
-        });
-
-        // Add event listeners to all relevant input fields to trigger validation
-        document.querySelectorAll('#username, #nama, #email, #no_telp, #gender, #alamat, #password, #confirmPassword, #terms, #profile_picture').forEach(input => {
-            input.addEventListener('input', validation);
-            input.addEventListener('change', validation); // For checkbox/select/file input
-        });
-
-        // Initial validation call
-        validation();
-    </script>
+    </div>
 </body>
 </html>
