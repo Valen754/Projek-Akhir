@@ -51,13 +51,41 @@
             <?php endif; ?>
 
             <form method="POST" action="">
-                <input name="name" placeholder="Name" type="text" style="color: black;" required value="<?php echo htmlspecialchars($user['nama']); ?>" readonly />
-                <input name="phone" placeholder="Phone" type="text" style="color: black;" required value="<?php echo htmlspecialchars($user['no_telp']); ?>" readonly />
-                <input name="email" placeholder="Email" type="email" style="color: black;" required value="<?php echo htmlspecialchars($user['email']); ?>" readonly />
-                <input name="number_of_people" placeholder="Number Of People" type="number" style="color: black;" min="1" required value="<?php echo $_POST['number_of_people'] ?? ''; ?>" />
-                <input name="date" placeholder="Date" type="date"  style="color: black;" required value="<?php echo $_POST['date'] ?? ''; ?>" />
-                <input name="hour" placeholder="Hour" type="time" style="color: black;" required value="<?php echo $_POST['hour'] ?? ''; ?>" />
-                <textarea name="message" placeholder="Write Your Message" style="color: black;"><?php echo $_POST['message'] ?? ''; ?></textarea>
+                <div style="flex: 1 1 45%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Name</label>
+                    <input name="name" type="text" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);" required value="<?php echo htmlspecialchars($user['nama']); ?>" />
+                </div>
+
+                <div style="flex: 1 1 45%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Phone</label>
+                    <input name="phone" type="text" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);" required value="<?php echo htmlspecialchars($user['no_telp']); ?>" />
+                </div>
+
+                <div style="flex: 1 1 45%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Email</label>
+                    <input name="email" type="email" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);" required value="<?php echo htmlspecialchars($user['email']); ?>" />
+                </div>
+
+                <div style="flex: 1 1 45%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Number Of People</label>
+                    <input name="number_of_people" type="number" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);" min="1" required value="<?php echo $_POST['number_of_people'] ?? ''; ?>" />
+                </div>
+
+                <div style="flex: 1 1 45%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Date</label>
+                    <input name="date" type="date" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);" required value="<?php echo $_POST['date'] ?? ''; ?>" />
+                </div>
+
+                <div style="flex: 1 1 45%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Hour</label>
+                    <input name="hour" type="time" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);" required value="<?php echo $_POST['hour'] ?? ''; ?>" />
+                </div>
+
+                <div style="flex: 1 1 100%; margin: 10px;">
+                    <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Message</label>
+                    <textarea name="message" style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100px;"><?php echo $_POST['message'] ?? ''; ?></textarea>
+                </div>
+
                 <button type="submit" name="submit_reservation" class="btn btn-primary mt-3">
                     RESERVE A TABLE
                 </button>
