@@ -129,5 +129,66 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function previewFile() {
+            const preview = document.getElementById('previewProfilePic');
+            const file = document.getElementById('profile_picture').files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '#';
+                preview.style.display = 'none';
+            }
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = event.currentTarget.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function validation() {
+            const form = document.querySelector('form');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const terms = document.querySelector('input[name="terms"]');
+            const registerBtn = document.querySelector('.btn-register');
+
+            const isValid = username && 
+                           password && 
+                           confirmPassword && 
+                           password === confirmPassword && 
+                           terms.checked;
+
+            registerBtn.disabled = !isValid;
+        }
+
+        // Add event listeners to all form inputs
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', validation);
+            element.addEventListener('change', validation);
+        });
+
+        // Initial validation check
+        validation();
+    </script>
 </body>
 </html>
