@@ -78,7 +78,7 @@ try {
     foreach ($items as $item) {
         $item_subtotal = $item['price'] * $item['quantity'];
         // Pastikan ambil catatan dari key 'note' ATAU 'notes' jika ada (untuk kompatibilitas)
-        $item_notes = $item['cartInputNote'] ?? ($item['notes'] ?? '');
+        $item_notes = $item['note'] ?? '';
 
         // Insert order item
         $stmt_items->bind_param(
@@ -90,6 +90,7 @@ try {
             $item_subtotal,
             $item_notes
         );
+        
         if (!$stmt_items->execute()) {
             throw new Exception('Error inserting detail_pembayaran: ' . $stmt_items->error . ' for item: ' . $item['name']);
         }

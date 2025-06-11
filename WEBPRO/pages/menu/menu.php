@@ -16,7 +16,171 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-       
+        /* Checkout styles moved to checkout.php */
+
+        .add-to-cart-btn {
+            cursor: pointer !important;
+            z-index: 2;
+            position: relative;
+            pointer-events: auto;
+            transition: background 0.2s;
+        }
+
+        #cartInputNote {
+            border: 1px solid #ccc;
+            padding: 6px;
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        #cartInputQty {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        #cartModal {
+            transition: background-color 0.3s ease;
+        }
+
+        #cartModal:target {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #cartItems {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .cart-item .item-info {
+            flex: 1;
+            margin-left: 16px;
+            font-size: 18px;
+            /* Increased font size */
+            color: #333;
+        }
+
+        .cart-item .item-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .cart-item .item-actions button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #f39c12;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-item .item-actions button:hover {
+            background-color: #e67e22;
+        }
+
+        #cartModal {
+            transition: background-color 0.3s ease;
+        }
+
+        #cartModal:target {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #cartItems {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item img {
+            width: 60px;
+            /* Adjusted size */
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .cart-item .item-info {
+            flex: 1;
+            margin-left: 12px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .cart-item .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cart-item .item-actions button {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f39c12;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-item .item-actions button:hover {
+            background-color: #e67e22;
+        }
+
+        #qrisImageContainer {
+            display: none;
+            text-align: center;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        #qrisImageContainer img {
+            max-width: 200px;
+            margin: 10px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #qrisImageContainer .qris-text {
+            color: #fff;
+            margin-top: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 

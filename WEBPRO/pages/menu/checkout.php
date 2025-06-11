@@ -163,6 +163,18 @@ include '../../koneksi.php';
             font-size: 14px;
             display: none;
         }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 15px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
     </style>
 </head>
 
@@ -195,6 +207,12 @@ include '../../koneksi.php';
                         <input type="radio" name="jenis_order" value="delivery"> Delivery
                     </label>
                 </div>
+            </div>
+            <!-- alamat delivery -->
+            <div class="form-group" id="deliveryAddressGroup" style="display: none;">
+                <label>Alamat Pengiriman:</label>
+                <textarea name="delivery_address" rows="3" placeholder="Masukkan alamat lengkap pengiriman"
+                    class="form-control"></textarea>
             </div>
 
             <div class="form-group">
@@ -285,6 +303,22 @@ include '../../koneksi.php';
 
             paymentSelect.addEventListener('change', function () {
                 qrisContainer.style.display = this.value === 'qris' ? 'block' : 'none';
+            });
+
+            // Handle delivery address display
+            const radioButtons = document.getElementsByName('jenis_order');
+            const deliveryAddressGroup = document.getElementById('deliveryAddressGroup');
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'delivery') {
+                        deliveryAddressGroup.style.display = 'block';
+                        deliveryAddressGroup.querySelector('textarea').required = true;
+                    } else {
+                        deliveryAddressGroup.style.display = 'none';
+                        deliveryAddressGroup.querySelector('textarea').required = false;
+                    }
+                });
             });
 
             // Handle form submission
