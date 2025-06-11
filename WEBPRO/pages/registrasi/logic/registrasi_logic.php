@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $alamat = trim($_POST['alamat']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
-    $role = "user"; // Default role untuk pengguna baru
+    $role = "member"; 
 
     // Validasi apakah username sudah ada
     $check_username = $conn->prepare("SELECT username FROM users WHERE username = ?");
