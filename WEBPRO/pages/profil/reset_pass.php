@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $user = mysqli_fetch_assoc($result);    // Verify current password using MD5
+    $user = mysqli_fetch_assoc($result);    
     if (md5($current_password) === $user['password']) {
         // Check if new password matches confirmation
         if ($new_password === $confirm_password) {
