@@ -631,7 +631,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
             document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', function (e) {
                     e.preventDefault();
-                    const { id, nama, harga, foto, stok } = this.dataset;
+                    const { id, nama, harga, foto, stok, note } = this.dataset;
 
                     // Update modal inputs
                     document.getElementById('cartInputId').value = id;
@@ -642,7 +642,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                     document.getElementById('cartInputQty').value = "1";
                     document.getElementById('cartInputQty').max = stok;
                     document.getElementById('cartInputStokInfo').textContent = `(Stok: ${stok})`;
-                    document.getElementById('cartInputNote').value = '';
+                    document.getElementById('cartInputNote').value = note || '';
 
                     // Show modal
                     document.getElementById('cartInputModal').style.display = 'block';
@@ -697,7 +697,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                 });
             }
 
-            // Fix: close button for cartInputModal
+            // close button for cartInputModal
             const closeCartInputModal = document.getElementById('closeCartInputModal');
             if (closeCartInputModal) {
                 closeCartInputModal.addEventListener('click', function () {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 04, 2025 at 04:51 PM
+-- Generation Time: Jun 09, 2025 at 01:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -86,7 +86,18 @@ INSERT INTO `detail_pembayaran` (`id`, `order_id`, `menu_id`, `quantity`, `price
 (45, 36, 1, 1, 14000.00, 14000.00, ''),
 (46, 37, 3, 1, 22000.00, 22000.00, ''),
 (47, 37, 4, 1, 14000.00, 14000.00, ''),
-(48, 37, 2, 1, 22000.00, 22000.00, '');
+(48, 37, 2, 1, 22000.00, 22000.00, ''),
+(49, 38, 3, 1, 22000.00, 22000.00, ''),
+(50, 38, 4, 1, 14000.00, 14000.00, ''),
+(51, 38, 2, 1, 22000.00, 22000.00, ''),
+(52, 39, 3, 1, 22000.00, 22000.00, ''),
+(53, 39, 4, 1, 14000.00, 14000.00, ''),
+(54, 39, 2, 1, 22000.00, 22000.00, ''),
+(55, 40, 2, 1, 22000.00, 22000.00, ''),
+(56, 41, 13, 1, 8000.00, 8000.00, ''),
+(57, 42, 11, 1, 17000.00, 17000.00, ''),
+(58, 43, 1, 1, 14000.00, 14000.00, 'manis'),
+(59, 44, 1, 1, 14000.00, 14000.00, 'manis');
 
 -- --------------------------------------------------------
 
@@ -135,19 +146,19 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`id`, `nama`, `url_foto`, `type`, `price`, `quantity`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Kopi Tubruk Arabika', 'arabika.jpg', 'kopi', 14000.00, 1000, 'Nikmati kenikmatan sejati dari secangkir Kopi Tubruk Arabika, dibuat dari 100% biji arabika pilihan yang disangrai sempurna. Diseduh dengan cara tradisional khas Indonesia, kopi ini menawarkan rasa yang kaya, pekat, dan berkarakter, dengan aroma yang membangkitkan semangat sejak tegukan pertama.', 'tersedia', '2025-05-06 04:52:58', '2025-05-24 11:20:27'),
-(2, 'Cappucino', 'cappucino.jpg', 'kopi', 22000.00, 998, 'Butuh pelukan hangat dalam bentuk kopi? Coba Cappuccino kami perpaduan sempurna antara espresso arabika berkualitas, susu steamed yang creamy, dan buih halus di atasnya. Setiap cangkir dibuat dengan cinta dan keseimbangan rasa yang bikin nagih!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 14:49:39'),
-(3, 'ES Kopi Susu', 'kosu.jpg', 'kopi', 22000.00, 999, 'Minuman favorit semua kalangan! Es Kopi Susu kami adalah kombinasi sempurna antara espresso arabika yang bold, susu segar yang lembut, dan sentuhan manis yang pas disajikan dingin untuk kesegaran maksimal.', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 14:49:39'),
-(4, 'Espresso', 'espresso.jpg', 'kopi', 14000.00, 999, 'Espresso kami dibuat dari biji arabika pilihan yang disangrai dengan sempurna untuk menghasilkan rasa kuat, pekat, dan aromatik. Cocok untuk kamu yang butuh dorongan energi tanpa basa-basi—langsung to the point!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 14:49:39'),
+(1, 'Kopi Tubruk Arabika', 'arabika.jpg', 'kopi', 14000.00, 998, 'Nikmati kenikmatan sejati dari secangkir Kopi Tubruk Arabika, dibuat dari 100% biji arabika pilihan yang disangrai sempurna. Diseduh dengan cara tradisional khas Indonesia, kopi ini menawarkan rasa yang kaya, pekat, dan berkarakter, dengan aroma yang membangkitkan semangat sejak tegukan pertama.', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 17:47:38'),
+(2, 'Cappucino', 'cappucino.jpg', 'kopi', 22000.00, 995, 'Butuh pelukan hangat dalam bentuk kopi? Coba Cappuccino kami perpaduan sempurna antara espresso arabika berkualitas, susu steamed yang creamy, dan buih halus di atasnya. Setiap cangkir dibuat dengan cinta dan keseimbangan rasa yang bikin nagih!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 17:34:48'),
+(3, 'ES Kopi Susu', 'kosu.jpg', 'kopi', 22000.00, 997, 'Minuman favorit semua kalangan! Es Kopi Susu kami adalah kombinasi sempurna antara espresso arabika yang bold, susu segar yang lembut, dan sentuhan manis yang pas disajikan dingin untuk kesegaran maksimal.', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 16:44:53'),
+(4, 'Espresso', 'espresso.jpg', 'kopi', 14000.00, 997, 'Espresso kami dibuat dari biji arabika pilihan yang disangrai dengan sempurna untuk menghasilkan rasa kuat, pekat, dan aromatik. Cocok untuk kamu yang butuh dorongan energi tanpa basa-basi—langsung to the point!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 16:44:53'),
 (5, 'Espresso Double', 'espresso1.jpg', 'kopi', 17000.00, 1000, 'Siap hadapi hari yang panjang? Espresso Double kami adalah jawaban untuk kamu yang butuh ekstra tenaga dan ekstra rasa. Dua shot espresso dari biji arabika premium, disajikan pekat dan panas, dengan cita rasa tajam dan aroma yang membangkitkan semangat.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:19'),
 (6, 'Japanase Flavour', 'JAPAN.jpg', 'kopi', 21000.00, 1000, 'Rasakan kelembutan dan keunikan rasa Jepang lewat varian Japanese Flavour kami. Mulai dari Matcha yang earthy, Hojicha yang smoky, hingga Yuzu yang segar setiap rasa dipilih dengan cermat untuk menghadirkan pengalaman yang menenangkan dan autentik.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:22'),
 (7, 'Latte', 'Latte.jpg', 'kopi', 25000.00, 1000, 'Butuh momen tenang di tengah hari yang sibuk? Latte kami hadir dengan perpaduan sempurna antara espresso arabika yang halus dan susu steamed yang creamy. Rasanya ringan, aromanya menenangkan, dan cocok dinikmati kapan saja—pagi, siang, atau sore.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:24'),
 (8, 'Sukomon', 'SUKOMON.jpg', 'kopi', 21000.00, 1000, 'Perpaduan yang tidak biasa, tapi luar biasa!\nSukomon adalah minuman kopi susu lemon yang menyegarkan dan unik. Menggabungkan espresso arabika yang bold, susu yang creamy, dan sentuhan asam segar dari lemon, menciptakan sensasi rasa baru yang bikin penasaran dan langsung jatuh cinta.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:27'),
 (9, 'V60', 'V60.jpg', 'kopi', 19000.00, 1000, 'Nikmati kelezatan kopi dengan cara yang lebih personal dan presisi! V60 kami menggunakan metode manual pour-over, di mana air panas disiram perlahan melalui biji kopi segar pilihan. Hasilnya? Kopi yang lebih clean, dengan rasa yang jelas dan penuh karakter. Setiap tegukan membawa kenikmatan yang seimbang—cocok untuk pecinta kopi sejati yang ingin merasakan setiap nuansa rasa.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:30'),
 (10, 'Vietname Drip', 'VIETNAME.jpg', 'kopi', 19000.00, 1000, 'Rasakan kenikmatan kopi ala Vietnam dengan Vietnamese Drip kami! Diseduh dengan metode drip tradisional, kopi ini memiliki rasa yang kental, kaya, dan sedikit manis dari campuran susu kental manis. Setiap tetesnya memberikan sensasi kopi yang lembut namun penuh rasa, menjadikannya pilihan sempurna untuk menemani aktivitas santai Anda.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:35'),
-(11, 'Matcha', 'maca.jpg', 'minuman', 17000.00, 1000, 'Rasakan kekayaan rasa dari Matcha kami, terbuat dari bubuk teh hijau kualitas terbaik yang diimpor langsung dari Jepang. Dipadukan dengan susu segar, matcha ini memberikan sensasi creamy yang lembut dengan rasa teh hijau yang khas—segar, sedikit pahit, dan menenangkan. Selain rasanya yang nikmat, matcha juga kaya akan antioksidan dan manfaat kesehatan lainnya!', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:39'),
+(11, 'Matcha', 'maca.jpg', 'minuman', 17000.00, 999, 'Rasakan kekayaan rasa dari Matcha kami, terbuat dari bubuk teh hijau kualitas terbaik yang diimpor langsung dari Jepang. Dipadukan dengan susu segar, matcha ini memberikan sensasi creamy yang lembut dengan rasa teh hijau yang khas—segar, sedikit pahit, dan menenangkan. Selain rasanya yang nikmat, matcha juga kaya akan antioksidan dan manfaat kesehatan lainnya!', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 17:39:55'),
 (12, 'Red Velvet Latte', 'red.jpg', 'minuman', 17000.00, 1000, 'Nikmati kelezatan Red Velvet Latte kami kombinasi sempurna antara espresso yang kaya, susu steamed yang creamy, dan sirup red velvet yang manis dan lembut. Dengan warna merah yang memikat dan rasa yang indulgent, setiap tegukan terasa seperti momen spesial. Menyajikan sensasi rasa manis yang tidak terlalu berat, pas untuk menemani hari Anda!', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:43'),
-(13, 'Es Teh Manis', 'TehManis.jpg', 'minuman', 8000.00, 998, 'Nikmati kesegaran Es Teh Manis kami yang sempurna untuk menghilangkan dahaga! Dibuat dari teh pilihan yang diseduh dengan hati-hati dan dicampur dengan gula yang pas, minuman ini memberikan rasa manis yang menyegarkan di setiap tegukan. Disajikan dingin, cocok untuk menemani hari-hari panas atau kapan saja kamu butuh kesegaran.', 'tersedia', '2025-05-06 04:52:58', '2025-05-22 06:47:56'),
+(13, 'Es Teh Manis', 'TehManis.jpg', 'minuman', 8000.00, 997, 'Nikmati kesegaran Es Teh Manis kami yang sempurna untuk menghilangkan dahaga! Dibuat dari teh pilihan yang diseduh dengan hati-hati dan dicampur dengan gula yang pas, minuman ini memberikan rasa manis yang menyegarkan di setiap tegukan. Disajikan dingin, cocok untuk menemani hari-hari panas atau kapan saja kamu butuh kesegaran.', 'tersedia', '2025-05-06 04:52:58', '2025-06-04 17:38:24'),
 (14, 'Wedang', 'wedang.jpg', 'minuman', 8000.00, 1000, 'Nikmati kehangatan Wedang kami minuman tradisional yang penuh rasa dan manfaat. Terbuat dari rempah-rempah pilihan seperti jahe, serai, dan gula merah, Wedang ini memberikan rasa hangat dan menyegarkan yang cocok dinikmati di segala suasana. Ideal untuk menghangatkan tubuh dan menenangkan pikiran, seperti momen santai di rumah.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:50'),
 (15, 'Chicken Teriyaki', 'AyamTeriyaki.jpg', 'makanan_berat', 20000.00, 1000, 'Nikmati kelezatan Chicken Teriyaki kami, ayam yang dipanggang dengan sempurna dan dilapisi dengan saus teriyaki manis dan gurih. Setiap potong ayam dipadukan dengan rasa yang seimbang, memberikan sensasi kenikmatan yang tak terlupakan. Dihidangkan dengan sayuran segar dan nasi putih hangat, menjadikan hidangan ini pilihan sempurna untuk santapan yang memuaskan.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:55'),
 (16, 'Cuanki', 'cuanki.png', 'makanan_berat', 15000.00, 1000, 'Rasakan kenikmatan Cuanki kami, hidangan khas Bandung yang penuh cita rasa. Mie kenyal dipadukan dengan kuah kaldu panas yang gurih, serta berbagai topping seperti bakso, tahu, dan siomay yang menggugah selera. Disajikan dalam kondisi panas, Cuanki ini cocok untuk menghangatkan tubuh dan memuaskan perut. Sempurna untuk makan siang atau malam yang penuh kenikmatan.', 'tersedia', '2025-05-06 04:52:58', '2025-05-21 02:23:58'),
@@ -236,7 +247,14 @@ INSERT INTO `pembayaran` (`id`, `user_id`, `order_date`, `total_amount`, `status
 (34, 9, '2025-06-04 00:41:29', 22000.00, 'completed', 'vemas', 'e-wallet', 'dine_in', ''),
 (35, 9, '2025-06-04 00:43:51', 14000.00, 'completed', 'vemas', 'qris', 'dine_in', ''),
 (36, 9, '2025-06-04 15:25:34', 35000.00, 'completed', 'diki', 'e-wallet', 'take_away', ''),
-(37, 5, '2025-06-04 21:49:39', 63800.00, 'completed', 'haykal', 'cash', 'dine_in', '');
+(37, 5, '2025-06-04 21:49:39', 63800.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(38, 5, '2025-06-04 21:55:35', 63800.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(39, 5, '2025-06-04 23:44:53', 63800.00, 'completed', 'salman', 'cash', 'dine_in', ''),
+(40, 5, '2025-06-05 00:34:48', 24200.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(41, 5, '2025-06-05 00:38:24', 8800.00, 'completed', 'line', 'e-wallet', 'dine_in', ''),
+(42, 5, '2025-06-05 00:39:55', 18700.00, 'completed', 'line', 'cash', 'dine_in', ''),
+(43, 5, '2025-06-05 00:45:32', 15400.00, 'completed', 'haykal', 'cash', 'dine_in', ''),
+(44, 5, '2025-06-05 00:47:38', 15400.00, 'completed', 'haykal', 'cash', 'dine_in', '');
 
 -- --------------------------------------------------------
 
@@ -267,8 +285,9 @@ INSERT INTO `reservasi` (`id`, `user_id`, `kode_reservasi`, `tanggal_reservasi`,
 (2, 6, 'RSV20250521054555141', '2025-05-21 10:42:00', 24, 'salmanisal24@gmail.com', 'test', '076789', 'dikonfirmasi', '2025-05-21 03:45:55', '2025-05-21 04:30:30'),
 (3, 5, 'RSV20250521063607727', '2025-05-22 13:35:00', 6, 'stwncssk@gmail.com', 'masak yang enak', '0987654345', 'dibatalkan', '2025-05-21 04:36:07', '2025-05-21 04:45:16'),
 (4, 5, 'RSV20250521065534445', '2025-05-22 13:55:00', 2, 'vemas@gmail.com', 'qpq', '00976', 'dikonfirmasi', '2025-05-21 04:55:34', '2025-05-21 07:04:45'),
-(5, 5, 'RSV20250521083747657', '2025-05-22 15:37:00', 6, 'vemas@gmail.com', 'iya', '00976', 'dikonfirmasi', '2025-05-21 06:37:47', '2025-06-03 23:29:26'),
-(6, 5, 'RSV20250524151316244', '2025-05-29 03:56:00', 2, 'vemas@gmail.com', 'wleeee', '00976', 'dikonfirmasi', '2025-05-24 13:13:16', '2025-06-03 23:29:39');
+(5, 5, 'RSV20250521083747657', '2025-05-22 15:37:00', 6, 'vemas@gmail.com', 'iya', '00976', 'dikonfirmasi', '2025-05-21 06:37:47', '2025-06-04 15:01:06'),
+(6, 5, 'RSV20250524151316244', '2025-05-29 03:56:00', 2, 'vemas@gmail.com', 'wleeee', '00976', 'dikonfirmasi', '2025-05-24 13:13:16', '2025-06-03 23:29:39'),
+(7, 5, 'RSV20250604170049585', '2025-06-05 02:06:00', 67, 'vemas@gmail.com', 'eryteryt', '00976', 'dikonfirmasi', '2025-06-04 15:00:49', '2025-06-04 16:23:39');
 
 -- --------------------------------------------------------
 
@@ -290,7 +309,8 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `user_id`, `menu_id`, `rating`, `comment`, `created_at`) VALUES
-(14, 5, 1, 5, 'enak buangetttt', '2025-05-24 13:21:56');
+(14, 5, 1, 5, 'enak buangetttt', '2025-05-24 13:21:56'),
+(15, 5, 1, 5, 'awdawd', '2025-06-04 16:29:32');
 
 -- --------------------------------------------------------
 
@@ -397,7 +417,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `detail_pembayaran`
 --
 ALTER TABLE `detail_pembayaran`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `favorites`
@@ -421,19 +441,19 @@ ALTER TABLE `notifikasi`
 -- AUTO_INCREMENT for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `reservasi`
 --
 ALTER TABLE `reservasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`

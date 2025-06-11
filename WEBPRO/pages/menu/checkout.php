@@ -191,15 +191,18 @@ include '../../koneksi.php';
                     <label>
                         <input type="radio" name="jenis_order" value="take_away"> Take Away
                     </label>
+                    <label>
+                        <input type="radio" name="jenis_order" value="delivery"> Delivery
+                    </label>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Metode Pembayaran:</label>
                 <select name="payment_method" id="paymentMethodSelect" required>
-                    <option value="cash">Cash</option>
-                    <option value="e-wallet">E-Wallet</option>
-                    <option value="qris">QRIS</option>
+                    <option value="cash" style="color: black;">Cash</option>
+                    <option value="e-wallet" style="color: black;">E-Wallet</option>
+                    <option value="qris" style="color: black;">QRIS</option>
                 </select>
             </div>
 
