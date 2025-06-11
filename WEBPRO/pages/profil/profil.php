@@ -169,10 +169,13 @@ $user = $result->fetch_assoc();
             <span><?php echo htmlspecialchars($user['nama']); ?></span>
         </div>
         <div class="profile-kasir-menu">
-            <div class="profile-kasir-menu-list">                <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i>Riwayat Pesanan</a>
+            <div class="profile-kasir-menu-list">
+                <a href="../riwayat_pesanan/riwayat.php" class="profile-kasir-menu-item"><i class='bx bx-receipt'></i>Riwayat
+                    Pesanan</a>
                 <a href="edit_profil.php" class="profile-kasir-menu-item"><i class='bx bx-cog'></i> Edit </a>
                 <a href="reset_pass.php" class="profile-kasir-menu-item"><i class='bx bx-lock-alt'></i> Ubah Password</a>
-                
+                <a href="riwayat_reservasi.php" class="profile-kasir-menu-item"><i class='bx bx-calendar'></i>
+                    Riwayat Reservasi</a>
             </div>
         </div>
     </div>

@@ -35,7 +35,6 @@ $role = $user['role'];
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="menu.php">Menu</a>
                             <a class="nav-link" href="tusers.php">Users</a>
-                            <a class="nav-link" href="tnotifikasi.php">Notifikasi</a>
                             <a class="nav-link" href="treviews.php">Reviews</a>
                             <a class="nav-link" href="torders.php">Order</a>
                             <a class="nav-link" href="treservasi.php">Reservasi</a>
