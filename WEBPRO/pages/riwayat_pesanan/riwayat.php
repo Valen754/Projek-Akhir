@@ -32,108 +32,30 @@ $result = $conn->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Pesanan</title>
-    <link href="../../css/menu.css" rel="stylesheet">
+    <link href="../../css/riwayat.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <style>
-        body {
-            background: linear-gradient(135deg, #a67c52 0%, #e0d3c2 100%);
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        .riwayat-header {
-            background: #6d4c2b;
-            color: #fff;
-            text-align: center;
-            padding: 36px 0 22px 0;
-            font-size: 2.3em;
-            letter-spacing: 2px;
-            border-radius: 0 0 24px 24px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        }
-        .riwayat-list {
-            max-width: 700px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 18px;
-            padding: 0;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-            overflow: hidden;
-        }
-        .riwayat-item {
-            display: flex;
-            align-items: center;
-            padding: 22px 28px;
-            border-bottom: 1px solid #e0d3c2;
-            transition: background 0.2s;
-        }
-        .riwayat-item:hover {
-            background: #f8f4ef;
-        }
-        .riwayat-item:last-child {
-            border-bottom: none;
-        }
-        .riwayat-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 12px;
-            object-fit: cover;
-            margin-right: 24px;
-            border: 2px solid #a67c52;
-            background: #f3e9dd;
-        }
-        .riwayat-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .riwayat-title {
-            font-weight: 600;
-            font-size: 1.15em;
-            color: #6d4c2b;
-        }
-        .riwayat-date {
-            font-size: 0.97em;
-            color: #a67c52;
-            margin-top: 2px;
-        }
-        .riwayat-alamat {
-            font-size: 0.95em;
-            color: #7a5a3a;
-            margin-top: 2px;
-        }
-        .riwayat-total {
-            font-weight: bold;
-            color: #a67c52;
-            font-size: 1.1em;
-        }
-        .riwayat-status {
-            font-size: 0.97em;
-            color: #fff;
-            background: #a67c52;
-            padding: 4px 16px;
-            border-radius: 10px;
-            margin-left: 10px;
-            display: inline-block;
-        }
-        @media (max-width: 700px) {
-            .riwayat-list { max-width: 98%; }
-            .riwayat-item { flex-direction: column; align-items: flex-start; padding: 16px 8px; }
-            .riwayat-img { margin-bottom: 10px; margin-right: 0; }
-        }
-    </style>
 </head>
 <body>
     <div class="riwayat-header">
         <i class='bx bx-receipt'></i> Riwayat Pesanan
     </div>
-    <div style="max-width:700px;margin:24px auto 0 auto;padding:0 10px;">
-        <form method="get" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <label>Dari: <input type="date" name="tanggal_awal" value="<?= htmlspecialchars($tanggal_awal) ?>"></label>
-            <label>Sampai: <input type="date" name="tanggal_akhir" value="<?= htmlspecialchars($tanggal_akhir) ?>"></label>
-            <button type="submit" style="background:#a67c52;color:#fff;border:none;padding:6px 18px;border-radius:8px;">Filter</button>
+    <a href="../profil/profil.php" class="back-to-profile">
+        <i class='bx bx-user'></i>
+        Kembali ke Profile
+    </a>
+    <div class="filter-container">
+        <form method="get" class="filter-form">
+            <label>
+                Dari:
+                <input type="date" name="tanggal_awal" value="<?= htmlspecialchars($tanggal_awal) ?>">
+            </label>
+            <label>
+                Sampai:
+                <input type="date" name="tanggal_akhir" value="<?= htmlspecialchars($tanggal_akhir) ?>">
+            </label>
+            <button type="submit" class="filter-btn">Filter</button>
             <?php if ($tanggal_awal || $tanggal_akhir): ?>
-                <a href="riwayat.php" style="margin-left:8px;color:#a67c52;text-decoration:underline;">Reset</a>
+                <a href="riwayat.php" class="reset-link">Reset</a>
             <?php endif; ?>
         </form>
     </div>

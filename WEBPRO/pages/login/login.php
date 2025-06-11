@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Login Page</title>
-    <link rel="stylesheet" href="../../css/login.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="../../css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            background: #8d6748; /* Background utama */
+            background: #8d6748;
+            /* Background utama */
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -25,13 +28,16 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             width: 100%;
-            max-width: 950px; /* Lebar maksimal container */
-            min-height: 500px; /* Tinggi minimal untuk form login */
+            max-width: 950px;
+            /* Lebar maksimal container */
+            min-height: 500px;
+            /* Tinggi minimal untuk form login */
         }
 
         .login-left {
             flex: 1;
-            background-image: linear-gradient(to right bottom, #a67c52, #6d4c2b); /* Gradient warna coklat */
+            background-image: linear-gradient(to right bottom, #a67c52, #6d4c2b);
+            /* Gradient warna coklat */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -56,7 +62,8 @@
         }
 
         /* Optional: Add some abstract shapes */
-        .login-left::before, .login-left::after {
+        .login-left::before,
+        .login-left::after {
             content: '';
             position: absolute;
             background: rgba(255, 255, 255, 0.1);
@@ -79,7 +86,8 @@
         }
 
         .login-form-section {
-            flex: 1.2; /* Lebih lebar dari sisi kiri */
+            flex: 1.2;
+            /* Lebih lebar dari sisi kiri */
             padding: 40px;
             display: flex;
             flex-direction: column;
@@ -97,15 +105,32 @@
         .form-group {
             width: 100%;
             position: relative;
-            margin-bottom: 25px; /* Jarak antar input */
-            display: flex; /* Menggunakan flexbox untuk penyejajaran */
-            align-items: center; /* Menyejajarkan item secara vertikal */
+            margin-bottom: 25px;
+            /* Jarak antar input */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
         }
 
         .form-group input {
-            flex-grow: 1; /* Input akan mengisi ruang yang tersedia */
-            padding: 12px 15px; /* Padding atas/bawah, kanan/kiri */
-            padding-left: 40px; /* Ruang untuk ikon */
+            flex-grow: 1;
+            /* Input akan mengisi ruang yang tersedia */
+            padding: 12px 15px;
+            /* Padding atas/bawah, kanan/kiri */
+            padding-left: 40px;
+            /* Ruang untuk ikon */
             border: 1px solid #ddd;
             border-radius: 8px;
             background-color: #f9f9f9;
@@ -114,8 +139,10 @@
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
             box-sizing: border-box;
-            height: 45px; /* Tinggi tetap untuk input */
-            line-height: 1.5; /* Penyejajaran vertikal placeholder */
+            height: 45px;
+            /* Tinggi tetap untuk input */
+            line-height: 1.5;
+            /* Penyejajaran vertikal placeholder */
         }
 
         .form-group input:focus {
@@ -132,7 +159,8 @@
             color: #aaa;
             font-size: 1.1em;
             z-index: 1;
-            pointer-events: none; /* Klik pada ikon akan mengaktifkan input */
+            pointer-events: none;
+            /* Klik pada ikon akan mengaktifkan input */
         }
 
         /* Gaya tombol toggle password */
@@ -164,7 +192,8 @@
         .btn-login {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(to right, #6d4c2b, #a67c52); /* Gradient warna coklat */
+            background: linear-gradient(to right, #6d4c2b, #a67c52);
+            /* Gradient warna coklat */
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -273,7 +302,8 @@
 
             .login-left {
                 padding: 20px;
-                min-height: 150px; /* Lebih kecil di mobile */
+                min-height: 150px;
+                /* Lebih kecil di mobile */
             }
 
             .login-left h1 {
@@ -303,15 +333,21 @@
             .login-form-section {
                 padding: 20px;
             }
+
             .login-form-section h2 {
                 font-size: 1.8em;
             }
+
             .form-group input {
-                padding-left: 35px; /* Sesuaikan padding ikon untuk mobile */
+                padding-left: 35px;
+                /* Sesuaikan padding ikon untuk mobile */
             }
+
             .form-group .icon-fix {
-                left: 10px; /* Sesuaikan posisi ikon untuk mobile */
+                left: 10px;
+                /* Sesuaikan posisi ikon untuk mobile */
             }
+
             .links-bottom {
                 flex-direction: column;
                 gap: 10px;
@@ -320,30 +356,41 @@
         }
     </style>
 </head>
+
 <body>
-   <div class="login-container">
+    <div class="login-container">
         <div class="login-left">
             <h1>Welcome to Tapal Kuda</h1>
-            <p>Silakan masuk untuk menikmati pengalaman pemesanan yang lebih mudah dan akses ke penawaran eksklusif kami.</p>
+            <p>Silakan masuk untuk menikmati pengalaman pemesanan yang lebih mudah dan akses ke penawaran eksklusif
+                kami.</p>
         </div>
         <div class="login-form-section">
             <h2>Login to your Account</h2>
             <?php if (isset($_GET['error'])): ?>
-                <div style="color: #fff; background: #e57373; padding: 10px 15px; border-radius: 6px; margin-bottom: 18px; text-align:center;">
+                <div
+                    style="color: #fff; background: #e57373; padding: 10px 15px; border-radius: 6px; margin-bottom: 18px; text-align:center;">
                     <?php echo htmlspecialchars($_GET['error']); ?>
                 </div>
             <?php endif; ?>
             <form action="logic/login_logic.php" method="post" style="width: 100%;">
                 <div class="form-group">
-                    <i class="fas fa-user icon-fix"></i>
-                    <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-wrapper" style="position: relative; width: 100%;">
+                        <i class="fas fa-user icon-fix"></i>
+                        <input type="text" name="username" placeholder="Masukkan username" id="username"
+                            oninput="validation()" required autofocus>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <i class="fas fa-lock icon-fix"></i>
-                    <input type="password" name="password" placeholder="Password" id="password" oninput="validation()" required>
-                    <button type="button" id="togglePassword" class="toggle-password">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-wrapper" style="position: relative; width: 100%;">
+                        <i class="fas fa-lock icon-fix"></i>
+                        <input type="password" name="password" placeholder="Masukkan password" id="password"
+                            oninput="validation()" required>
+                        <button type="button" id="togglePassword" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="remember-me">
                     <input type="checkbox" id="rememberMe">
@@ -360,11 +407,11 @@
 
                 <div class="links-bottom">
                     <a href="../registrasi/registrasi.php">Register Here</a>
-                    
+
                 </div>
             </form>
         </div>
-   </div>
+    </div>
 
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -394,4 +441,5 @@
         validation();
     </script>
 </body>
+
 </html>
