@@ -19,7 +19,7 @@ include '../../views/admin/sidebar.php';
             <select id="filter_waktu" class="form-select" style="width:auto;display:inline-block;">
                 <option value="hari">Hari Ini</option>
                 <option value="bulan">Bulan Ini</option>
-                <option value="tahun">Tahun Ini</option>
+    
                 <option value="semua">Semua</option>
             </select>
         </div>

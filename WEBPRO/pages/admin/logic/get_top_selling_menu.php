@@ -1,12 +1,7 @@
 <?php
 // Mengaktifkan pelaporan error untuk debugging (Hapus di produksi)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-// Jalur relatif ke koneksi.php dari file ini.
-// File ini ada di WEBPRO/pages/admin/logic/
-// koneksi.php ada di WEBPRO/
-// Jadi perlu naik 3 tingkat direktori: ../../../
+
 include '../../../koneksi.php';
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'hari';

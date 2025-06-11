@@ -4,20 +4,13 @@ include '../../views/admin/header.php';
 include '../../views/admin/sidebar.php';
 include '../../koneksi.php';
 
-// Hitung total pendapatan HANYA yang status 'Completed'
+
 $total_pendapatan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total_amount) as total FROM pembayaran WHERE status = 'Completed'"))['total'];
 $total_pesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM pembayaran"))['total'];
-// Hanya hitung user dengan role 'pelanggan'
 $total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role = 'member'"))['total'];
 
-// Cek menu dengan stok kurang dari 9
-$menu_low_stock = [];
-$result_menu = mysqli_query($conn, "SELECT nama, quantity FROM menu WHERE quantity < 10");
-while ($row_menu = mysqli_fetch_assoc($result_menu)) {
-    $menu_low_stock[] = $row_menu;
-}
 
-// Cek reservasi baru (status pending)
+
 $reservasi_baru = [];
 $result_reservasi = mysqli_query($conn, "SELECT id, kode_reservasi, email, tanggal_reservasi FROM reservasi WHERE status = 'pending'");
 while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
@@ -26,6 +19,7 @@ while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
 ?>
 
 <main>
+
     <div class="container-fluid px-4">
         <h1 class="mt-4">Dashboard Admin</h1>
         <ol class="breadcrumb mb-4">
