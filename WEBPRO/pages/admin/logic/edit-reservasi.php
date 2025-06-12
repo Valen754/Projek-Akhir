@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'];
     $tanggal_reservasi = $_POST['tanggal_reservasi_date'] . ' ' . $_POST['tanggal_reservasi_time'];
     $jumlah_orang = $_POST['jumlah_orang'];
-    $email = $_POST['email'];
-    $no_telp = $_POST['no_telp'];
+    // $email = $_POST['email']; // Dihapus karena kolom ini tidak ada di tabel `reservasi`
+    // $no_telp = $_POST['no_telp']; // Dihapus karena kolom ini tidak ada di tabel `reservasi`
     $message = $_POST['message'];
     $status = $_POST['status'];
     
@@ -15,23 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Begin transaction
         mysqli_begin_transaction($conn);
         
-        // Update query
+        // Update query - menghapus 'email' dan 'no_telp'
         $query = "UPDATE reservasi SET 
                   tanggal_reservasi = ?,
                   jumlah_orang = ?,
-                  email = ?,
-                  no_telp = ?,
                   message = ?,
                   status = ?,
                   updated_at = CURRENT_TIMESTAMP
                   WHERE id = ?";
                   
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "sissssi", 
+        // Sesuaikan parameter bind_param
+        mysqli_stmt_bind_param($stmt, "sissi", // s (tanggal_reservasi), i (jumlah_orang), s (message), s (status), i (id)
             $tanggal_reservasi,
             $jumlah_orang,
-            $email,
-            $no_telp,
             $message,
             $status,
             $id
@@ -55,3 +52,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ../treservasi.php");
     exit;
 }
+?>

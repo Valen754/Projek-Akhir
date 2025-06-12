@@ -9,7 +9,8 @@ include '../../views/admin/sidebar.php';
 include '../../koneksi.php';
 
 // Query SQL dasar
-$sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama 
+// Menambahkan u.email dan u.no_telp dari tabel users
+$sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u.no_telp
         FROM reservasi r 
         JOIN users u ON r.user_id = u.id";
 

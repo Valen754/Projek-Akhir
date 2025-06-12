@@ -9,7 +9,7 @@ if (isset($_GET['id'])) {
     
     try {
         // First, delete from detail_pembayaran
-        $detail_query = "DELETE FROM detail_pembayaran WHERE order_id = ?";
+        $detail_query = "DELETE FROM detail_pembayaran WHERE pembayaran_id = ?"; // <-- Diubah menjadi pembayaran_id
         $detail_stmt = mysqli_prepare($conn, $detail_query);
         mysqli_stmt_bind_param($detail_stmt, "i", $order_id);
         mysqli_stmt_execute($detail_stmt);
@@ -37,3 +37,4 @@ if (isset($_GET['id'])) {
     header("Location: ../torders.php");
     exit;
 }
+?>

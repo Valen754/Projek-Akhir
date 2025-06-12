@@ -13,17 +13,45 @@ $user_id = $_SESSION['user_id'];
 $tanggal_awal = isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '';
 $tanggal_akhir = isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '';
 
-$where = "user_id = $user_id";
+// Perubahan: Membangun query utama dengan prepared statement untuk keamanan dan perhitungan total_amount
+$sql_main = "SELECT p.id, p.order_date, p.status, p.payment_method, p.order_type,
+                    u.nama AS customer_name,
+                    SUM(od.quantity * od.price_per_item) AS total_amount
+             FROM pembayaran p
+             JOIN users u ON p.user_id = u.id
+             LEFT JOIN detail_pembayaran od ON p.id = od.pembayaran_id
+            ";
+
+$where_clauses = ["p.user_id = ?"];
+$params = [$user_id];
+$types = "i";
+
 if ($tanggal_awal && $tanggal_akhir) {
-    $where .= " AND DATE(order_date) BETWEEN '$tanggal_awal' AND '$tanggal_akhir'";
+    $where_clauses[] = "DATE(p.order_date) BETWEEN ? AND ?";
+    $params[] = $tanggal_awal;
+    $params[] = $tanggal_akhir;
+    $types .= "ss";
 } elseif ($tanggal_awal) {
-    $where .= " AND DATE(order_date) >= '$tanggal_awal'";
+    $where_clauses[] = "DATE(p.order_date) >= ?";
+    $params[] = $tanggal_awal;
+    $types .= "s";
 } elseif ($tanggal_akhir) {
-    $where .= " AND DATE(order_date) <= '$tanggal_akhir'";
+    $where_clauses[] = "DATE(p.order_date) <= ?";
+    $params[] = $tanggal_akhir;
+    $types .= "s";
 }
 
-$query = "SELECT * FROM pembayaran WHERE $where ORDER BY order_date DESC";
-$result = $conn->query($query);
+$sql_main .= " WHERE " . implode(" AND ", $where_clauses);
+$sql_main .= " GROUP BY p.id, p.order_date, p.status, u.nama, p.payment_method, p.order_type ORDER BY p.order_date DESC";
+
+$stmt_main = $conn->prepare($sql_main);
+if ($types) {
+    $stmt_main->bind_param($types, ...$params);
+}
+$stmt_main->execute();
+$result = $stmt_main->get_result();
+$stmt_main->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -62,14 +90,18 @@ $result = $conn->query($query);
     <div class="riwayat-list">
         <?php if ($result && $result->num_rows > 0): ?>
             <?php while ($order = $result->fetch_assoc()): ?>
-                <!-- Ambil detail menu untuk order ini -->
                 <?php
                 $order_id = $order['id'];
-                $q_detail = "SELECT od.*, m.nama, m.url_foto 
+                // Perubahan: od.order_id menjadi od.pembayaran_id, dan hilangkan od.subtotal dari SELECT
+                $q_detail = "SELECT od.quantity, od.price_per_item, od.item_notes, m.nama, m.url_foto 
                              FROM detail_pembayaran od
                              JOIN menu m ON od.menu_id = m.id
-                             WHERE od.order_id = $order_id";
-                $res_detail = $conn->query($q_detail);
+                             WHERE od.pembayaran_id = ?";
+                $stmt_detail = $conn->prepare($q_detail); // Gunakan prepared statement
+                $stmt_detail->bind_param("i", $order_id);
+                $stmt_detail->execute();
+                $res_detail = $stmt_detail->get_result();
+                $stmt_detail->close();
                 ?>
                 <div class="riwayat-item" style="flex-direction:column;align-items:stretch;">
                     <div style="display:flex;align-items:center;">
@@ -89,6 +121,10 @@ $result = $conn->query($query);
                                     <div>
                                         <div style="font-weight:600;color:#6d4c2b;"><?= htmlspecialchars($item['nama']); ?></div>
                                         <div style="font-size:0.97em;color:#a67c52;">x<?= $item['quantity']; ?> @ Rp <?= number_format($item['price_per_item'],0,',','.'); ?></div>
+                                        <?php if (!empty($item['item_notes'])): ?>
+                                            <br><small>Catatan:
+                                                <?= htmlspecialchars($item['item_notes']); ?></small>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endwhile; ?>

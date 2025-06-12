@@ -79,7 +79,7 @@
                         <td><?= $row['nama'] ?></td>
                         <td><img src="../../asset/<?= $row['url_foto'] ?>" width="60" alt="Foto Menu"></td>
                         <td>Rp <?= number_format($row['price'], 0, ',', '.') ?></td>
-                        <td><?= $row['quantity'] ?></td>
+                        <td><?= $row['status'] ?></td>
                         <td><?= $row['type'] ?></td>
                         <td><?= $row['deskripsi'] ?></td>
                         <td><span class="badge bg-<?= $statusBadge ?>"><?= $row['status'] ?></span></td>

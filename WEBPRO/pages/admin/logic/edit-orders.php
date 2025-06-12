@@ -8,23 +8,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Get the form data
         $order_id = $_POST['order_id'];
-        $customer_name = $_POST['customer_name'];
+        // $customer_name = $_POST['customer_name']; // Dihapus karena kolom ini tidak ada di tabel `pembayaran`
         $payment_method = $_POST['payment_method'];
         $status = $_POST['status'];
-        $notes = isset($_POST['notes']) ? $_POST['notes'] : '';
+        // $notes = isset($_POST['notes']) ? $_POST['notes'] : ''; // Dihapus karena kolom ini tidak ada di tabel `pembayaran`
 
         // Validate the data
-        if (empty($order_id) || empty($customer_name) || empty($payment_method) || empty($status)) {
-            throw new Exception("Semua field harus diisi");
+        // Validasi disesuaikan karena `customer_name` dan `notes` dihapus
+        if (empty($order_id) || empty($payment_method) || empty($status)) {
+            throw new Exception("Order ID, Metode Pembayaran, dan Status harus diisi");
         }
 
         // Prepare the SQL query to update the order
         $query = "UPDATE pembayaran SET 
-                  customer_name = ?,
-                  payment_method = ?,
-                  status = ?,
-                  notes = ?
-                  WHERE id = ?";
+                    payment_method = ?,
+                    status = ?
+                    WHERE id = ?";
 
         // Use prepared statement to prevent SQL injection
         $stmt = mysqli_prepare($conn, $query);
@@ -32,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Error preparing statement: " . mysqli_error($conn));
         }
 
-        mysqli_stmt_bind_param($stmt, "ssssi", $customer_name, $payment_method, $status, $notes, $order_id);
+        // Sesuaikan parameter bind_param
+        mysqli_stmt_bind_param($stmt, "ssi", $payment_method, $status, $order_id);
 
         // Execute the query
         if (!mysqli_stmt_execute($stmt)) {
@@ -70,3 +70,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ../torders.php");
     exit;
 }
+?>

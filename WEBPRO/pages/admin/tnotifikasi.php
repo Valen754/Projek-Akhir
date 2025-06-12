@@ -8,10 +8,13 @@ include '../../views/admin/sidebar.php';
 // Koneksi ke database
 include '../../koneksi.php';
 
-// Ambil data menu dengan stok kurang dari 10
+// Ambil data menu yang statusnya 'habis'
 $menu_low_stock = [];
-$result_menu = mysqli_query($conn, "SELECT url_foto, nama, quantity FROM menu WHERE quantity < 10");
+// Query diubah untuk menggunakan kolom 'status' yang ada di tabel 'menu'
+$result_menu = mysqli_query($conn, "SELECT url_foto, nama, status FROM menu WHERE status = 'habis'");
 while ($row_menu = mysqli_fetch_assoc($result_menu)) {
+    // Menggunakan 'status' sebagai pengganti 'quantity' untuk tampilan
+    $row_menu['quantity'] = $row_menu['status']; 
     $menu_low_stock[] = $row_menu;
 }
 ?>
@@ -29,7 +32,7 @@ while ($row_menu = mysqli_fetch_assoc($result_menu)) {
             <div class="card-body">
                 <?php if (!empty($menu_low_stock)): ?>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>Perhatian!</strong> Menu berikut stoknya hampir habis (kurang dari 10):
+                        <strong>Perhatian!</strong> Menu berikut stoknya hampir habis (status: habis):
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <div class="table-responsive">
@@ -39,8 +42,7 @@ while ($row_menu = mysqli_fetch_assoc($result_menu)) {
                                     <th>No</th>
                                     <th>Foto</th>
                                     <th>Nama Menu</th>
-                                    <th>Sisa Stok</th>
-                                </tr>
+                                    <th>Status Stok</th> </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($menu_low_stock as $i => $menu): ?>
@@ -62,13 +64,12 @@ while ($row_menu = mysqli_fetch_assoc($result_menu)) {
                     </div>
                 <?php else: ?>
                     <div class="alert alert-success" role="alert">
-                        Semua stok menu aman (>= 10).
+                        Semua stok menu aman (tidak ada yang berstatus 'habis').
                     </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 </main>
-<!-- Bootstrap JS (wajib untuk dropdown, alert, dsb) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <?php include '../../views/admin/footer.php'; ?>

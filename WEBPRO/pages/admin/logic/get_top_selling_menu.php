@@ -1,25 +1,22 @@
 <?php
 // Mengaktifkan pelaporan error untuk debugging (Hapus di produksi)
 
-
+header('Content-Type: application/json');
 include '../../../koneksi.php';
 
-$filter = isset($_GET['filter']) ? $_GET['filter'] : 'hari';
-$tanggal = isset($_GET['tanggal']) ? $_GET['tanggal'] : '';
+$tanggal_awal = isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '';
+$tanggal_akhir = isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '';
 
 $where = '';
-if ($filter == 'hari') {
-    $where = "AND DATE(o.order_date) = CURDATE()";
-} elseif ($filter == 'bulan') {
-    $where = "AND MONTH(o.order_date) = MONTH(CURDATE()) AND YEAR(o.order_date) = YEAR(CURDATE())";
-} elseif ($filter == 'tahun') {
-    $where = "AND YEAR(o.order_date) = YEAR(CURDATE())";
-} elseif ($filter == 'tanggal' && !empty($tanggal)) {
-    $where = "AND DATE(o.order_date) = '" . mysqli_real_escape_string($conn, $tanggal) . "'";
-} // jika 'semua', $where tetap kosong
-
-// Menentukan header agar browser tahu responsnya adalah JSON
-header('Content-Type: application/json');
+if (!empty($tanggal_awal) && !empty($tanggal_akhir)) {
+    $where = "AND DATE(p.order_date) BETWEEN '" . 
+             mysqli_real_escape_string($conn, $tanggal_awal) . "' AND '" . 
+             mysqli_real_escape_string($conn, $tanggal_akhir) . "'";
+} elseif (!empty($tanggal_awal)) {
+    $where = "AND DATE(p.order_date) >= '" . mysqli_real_escape_string($conn, $tanggal_awal) . "'";
+} elseif (!empty($tanggal_akhir)) {
+    $where = "AND DATE(p.order_date) <= '" . mysqli_real_escape_string($conn, $tanggal_akhir) . "'";
+}
 
 $data = [
     'labels' => [],       // Nama menu untuk label diagram
@@ -40,10 +37,10 @@ $sql = "SELECT
         JOIN
             menu m ON od.menu_id = m.id
         JOIN
-            pembayaran o ON od.order_id = o.id
+            pembayaran p ON od.pembayaran_id = p.id
         WHERE 1 $where
         GROUP BY
-            od.menu_id
+            m.id, m.nama
         ORDER BY
             total_sold DESC
         LIMIT 5"; // Mengambil hingga 9 menu terlaris

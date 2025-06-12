@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama       = $_POST['nama'];
     $type       = $_POST['type'];
     $price      = $_POST['price'];
-    $quantity   = $_POST['quantity'];
+    // $quantity   = $_POST['quantity']; // Dihapus karena kolom 'quantity' tidak ada di tabel 'menu'
     $deskripsi  = $_POST['deskripsi'];
     $status     = $_POST['status'];
     $fotoLama   = $_POST['url_foto_lama']; // dari input hidden
@@ -37,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 url_foto = '$url_foto',
                 type = '$type',
                 price = '$price',
-                quantity = '$quantity',
                 deskripsi = '$deskripsi',
                 status = '$status'
               WHERE id = $id";

@@ -23,17 +23,21 @@ $sql_orders = "SELECT
                 o.id AS order_id,
                 o.user_id,
                 u.username AS kasir_username,
+                u.nama AS customer_name, -- Mengambil nama pelanggan dari tabel users
                 o.order_date,
-                o.total_amount,
+                SUM(dp.quantity * dp.price_per_item) AS total_amount, -- Menghitung total_amount dari detail_pembayaran
                 o.status,
-                o.customer_name,
-                o.payment_method,
-                o.notes
+                o.payment_method
+                -- o.notes dihapus karena tidak ada di tabel pembayaran
             FROM
                 pembayaran o
             JOIN
                 users u ON o.user_id = u.id
+            LEFT JOIN
+                detail_pembayaran dp ON o.id = dp.pembayaran_id
             $where
+            GROUP BY
+                o.id, o.user_id, u.username, u.nama, o.order_date, o.status, o.payment_method
             ORDER BY
                 o.order_date DESC";
 
@@ -178,14 +182,14 @@ $result_orders = mysqli_query($conn, $sql_orders);
                             <td colspan="10">
                                 <div class="order-details-content">
                                     <?php
-                                    // Query untuk mengambil detail pesanan
+                                    // Query untuk mengambil detail pesanan - diperbarui
                                     $detail_query = "SELECT 
                                     dp.*, 
                                     m.nama as menu_name,
                                     m.price as menu_price
                                     FROM detail_pembayaran dp 
                                     JOIN menu m ON dp.menu_id = m.id 
-                                    WHERE dp.order_id = " . $order['order_id'];
+                                    WHERE dp.pembayaran_id = " . $order['order_id']; // <-- Diubah menjadi pembayaran_id
                                     $detail_result = mysqli_query($conn, $detail_query);
                                     ?>
                                     <h5>Detail Pesanan #<?= $order['order_id'] ?></h5>
@@ -216,15 +220,13 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <?php if ($order['notes']): ?>
-                                        <div class="mt-2">
-                                            <strong>Catatan:</strong> <?= htmlspecialchars($order['notes']) ?>
-                                        </div>
-                                    <?php endif; ?>
+                                    <?php
+                                    // Kolom 'notes' tidak ada di tabel 'pembayaran'
+                                    // if ($order['notes']): ?>
+                                        <?php // endif; ?>
                                 </div>
                             </td>
-                        </tr> <!-- Modal Edit -->
-                        <div class="modal fade" id="editModal<?= $order['order_id'] ?>" tabindex="-1"
+                        </tr> <div class="modal fade" id="editModal<?= $order['order_id'] ?>" tabindex="-1"
                             aria-labelledby="editModalLabel<?= $order['order_id'] ?>" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="logic/edit-orders.php" method="POST">
@@ -256,17 +258,11 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                             <div class="mb-3">
                                                 <label for="status" class="form-label">Status</label>
                                                 <select class="form-select" id="status" name="status">
-                        
                                                     <option value="completed" <?= $order['status'] == 'completed' ? 'selected' : '' ?>>Completed</option>
                                                     <option value="cancelled" <?= $order['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
                                                 </select>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="notes<?= $order['order_id'] ?>" class="form-label">Catatan</label>
-                                                <textarea class="form-control" id="notes<?= $order['order_id'] ?>" name="notes"
-                                                    rows="3"><?= htmlspecialchars($order['notes']) ?></textarea>
                                             </div>
-                                        </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Batal</button>
@@ -291,7 +287,6 @@ $result_orders = mysqli_query($conn, $sql_orders);
 </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">

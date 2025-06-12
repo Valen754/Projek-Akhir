@@ -4,7 +4,7 @@ session_start();
 
 // Pastikan pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/login.php"); // Arahkan ke halaman login jika belum login
+    header("Location: ../login/login.php");// Arahkan ke halaman login jika belum login
     exit();
 }
 
@@ -14,8 +14,8 @@ if ($_SESSION['role'] !== 'kasir') {
     exit();
 }
 
-// Query untuk mendapatkan reservasi yang sudah dikonfirmasi beserta nama user
-$sql = "SELECT reservasi.*, users.nama 
+// Query untuk mendapatkan reservasi yang sudah dikonfirmasi beserta nama, email, dan no_telp user
+$sql = "SELECT reservasi.*, users.nama, users.email, users.no_telp 
         FROM reservasi 
         JOIN users ON reservasi.user_id = users.id 
         WHERE reservasi.status = 'dikonfirmasi' 
@@ -84,7 +84,7 @@ $result = $conn->query($sql);
     <div class="container" role="main">
         <?php $activePage = 'reservasi'; ?>
         <?php include '../../views/kasir/sidebar.php'; ?>
-       
+        
         <main>
             <header>
                 <h1>Reservasi Kasir</h1>

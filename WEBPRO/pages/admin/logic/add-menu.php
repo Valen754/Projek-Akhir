@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama = $_POST['nama'];
     $type = $_POST['type'];
     $price = $_POST['price'];
-    $quantity = $_POST['quantity'];
+    // $quantity = $_POST['quantity']; // Kolom ini dihapus karena tidak ada di tabel `menu`
     $deskripsi = $_POST['deskripsi'];
     $status = $_POST['status'];
 
@@ -18,8 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db_path = $foto_name;
 
     if (move_uploaded_file($_FILES['url_foto']['tmp_name'], $target_path)) {
-        $query = "INSERT INTO menu (nama, url_foto, type, price, quantity, deskripsi, status) 
-                  VALUES ('$nama', '$db_path', '$type', '$price', '$quantity', '$deskripsi', '$status')";
+        // Query diubah untuk tidak menyertakan `quantity`
+        $query = "INSERT INTO menu (nama, url_foto, type, price, deskripsi, status) 
+                  VALUES ('$nama', '$db_path', '$type', '$price', '$deskripsi', '$status')";
 
         if (mysqli_query($conn, $query)) {
             header("Location: ../menu.php?msg=added");

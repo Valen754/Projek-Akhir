@@ -15,13 +15,20 @@ include '../../views/admin/sidebar.php';
 
         <!-- Filter Waktu -->
         <div class="mb-3">
-            <label for="filter_waktu" class="form-label">Filter Waktu:</label>
-            <select id="filter_waktu" class="form-select" style="width:auto;display:inline-block;">
-                <option value="hari">Hari Ini</option>
-                <option value="bulan">Bulan Ini</option>
-    
-                <option value="semua">Semua</option>
-            </select>
+            <form id="filterForm" class="row g-3 align-items-end">
+                <div class="col-auto">
+                    <label for="tanggal_awal" class="form-label">Tanggal Awal:</label>
+                    <input type="date" class="form-control" id="tanggal_awal" name="tanggal_awal">
+                </div>
+                <div class="col-auto">
+                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir:</label>
+                    <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="button" class="btn btn-secondary" id="resetFilter">Reset</button>
+                </div>
+            </form>
         </div>
 
         <div class="row">
@@ -80,13 +87,25 @@ include '../../views/admin/footer.php';
 <script>
     // Pastikan skrip berjalan setelah DOM sepenuhnya dimuat
     document.addEventListener('DOMContentLoaded', function() {
-        const filterSelect = document.getElementById('filter_waktu');
-        function loadChartData() {
-            const filter = filterSelect.value;
-            let url = 'logic/get_top_selling_menu.php?filter=' + filter;
-            if (filter === 'tanggal') {
-                url += '&tanggal=' + tanggalInput.value;
+        const form = document.getElementById('filterForm');
+        const resetButton = document.getElementById('resetFilter');
+
+        function loadChartData(event) {
+            if (event) event.preventDefault();
+            
+            const tanggal_awal = document.getElementById('tanggal_awal').value;
+            const tanggal_akhir = document.getElementById('tanggal_akhir').value;
+            
+            let url = 'logic/get_top_selling_menu.php';
+            const params = new URLSearchParams();
+            
+            if (tanggal_awal) params.append('tanggal_awal', tanggal_awal);
+            if (tanggal_akhir) params.append('tanggal_akhir', tanggal_akhir);
+            
+            if (params.toString()) {
+                url += '?' + params.toString();
             }
+
             fetch(url)
                 .then(response => {
                     if (!response.ok) {
@@ -187,7 +206,14 @@ include '../../views/admin/footer.php';
                     dataTableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: red;">Error memuat data: ' + error.message + '</td></tr>';
                 });
         }
-        filterSelect.addEventListener('change', loadChartData);
+        form.addEventListener('submit', loadChartData);
+        
+        resetButton.addEventListener('click', function() {
+            form.reset();
+            loadChartData();
+        });
+
+        // Initial load
         loadChartData();
     });
 </script>

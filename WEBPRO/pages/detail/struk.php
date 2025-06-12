@@ -10,10 +10,14 @@ if (!isset($_GET['id'])) {
 $order_id = (int) $_GET['id'];
 
 // Get order details
-$sql = "SELECT p.*, dp.menu_id, dp.quantity, dp.price_per_item as price, dp.item_notes as notes, 
-        dp.subtotal, m.nama as menu_name 
+// Query SQL disesuaikan untuk mengambil kolom yang sesuai dengan skema database
+$sql = "SELECT p.id, p.user_id, p.order_date, p.status, p.payment_method, p.order_type, 
+               u.nama AS customer_name, -- Mengambil customer_name dari tabel users
+               dp.menu_id, dp.quantity, dp.price_per_item as price, dp.item_notes as notes, 
+               m.nama as menu_name 
         FROM pembayaran p 
-        JOIN detail_pembayaran dp ON p.id = dp.order_id 
+        JOIN users u ON p.user_id = u.id -- Join dengan tabel users untuk customer_name
+        JOIN detail_pembayaran dp ON p.id = dp.pembayaran_id -- Perbaikan: order_id diubah menjadi pembayaran_id
         JOIN menu m ON dp.menu_id = m.id 
         WHERE p.id = ?";
 
@@ -29,32 +33,41 @@ if ($result->num_rows === 0) {
 
 $items = [];
 $order = null;
+$calculated_subtotal = 0; // Variabel untuk menghitung subtotal
 
 while ($row = $result->fetch_assoc()) {
     if (!$order) {
-        // Calculate tax (10% of total)
-        $tax = round($row['total_amount'] * 0.10);
-        $subtotal = $row['total_amount'] - $tax;
-
+        // Inisialisasi data order hanya sekali dari baris pertama
         $order = [
             'id' => $row['id'],
             'customer_name' => $row['customer_name'],
             'order_type' => $row['order_type'] ?? 'dine_in',
             'payment_method' => $row['payment_method'],
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'total' => $row['total_amount'],
             'order_date' => $row['order_date']
         ];
     }
 
+    // Menambahkan item ke array items dan menghitung subtotal
+    $item_total = $row['price'] * $row['quantity'];
     $items[] = [
         'name' => $row['menu_name'],
         'quantity' => $row['quantity'],
         'price' => $row['price'],
-        'notes' => $row['notes']
+        'notes' => $row['notes'],
+        'total' => $item_total // Menyimpan total per item
     ];
+    $calculated_subtotal += $item_total; // Menambahkan ke subtotal keseluruhan
 }
+
+// Menghitung pajak dan total keseluruhan setelah semua item diproses
+$tax = round($calculated_subtotal * 0.10);
+$total = $calculated_subtotal + $tax;
+
+// Menambahkan total_amount, subtotal, dan tax ke array order
+$order['subtotal'] = $calculated_subtotal;
+$order['tax'] = $tax;
+$order['total'] = $total;
+
 ?>
 
 <!DOCTYPE html>
@@ -181,7 +194,7 @@ while ($row = $result->fetch_assoc()) {
                         <br><small style="color: #aaa;">Note: <?php echo htmlspecialchars($item['notes']); ?></small>
                     <?php endif; ?>
                 </div>
-                <div>Rp <?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?></div>
+                <div>Rp <?php echo number_format($item['total'], 0, ',', '.'); ?></div>
             </div>
         <?php endforeach; ?>
 

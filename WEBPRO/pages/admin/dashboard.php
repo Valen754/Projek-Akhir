@@ -5,14 +5,28 @@ include '../../views/admin/sidebar.php';
 include '../../koneksi.php';
 
 
-$total_pendapatan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total_amount) as total FROM pembayaran WHERE status = 'Completed'"))['total'];
+// Query untuk Total Pendapatan
+// Menggabungkan tabel pembayaran dan detail_pembayaran untuk menghitung total_amount
+$total_pendapatan_query = "SELECT SUM(dp.quantity * dp.price_per_item) as total 
+                           FROM pembayaran p
+                           JOIN detail_pembayaran dp ON p.id = dp.pembayaran_id
+                           WHERE p.status = 'completed'"; // Status 'Completed' diubah menjadi 'completed' (huruf kecil)
+$total_pendapatan_result = mysqli_query($conn, $total_pendapatan_query);
+$total_pendapatan = mysqli_fetch_assoc($total_pendapatan_result)['total'];
+
+
 $total_pesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM pembayaran"))['total'];
 $total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role = 'member'"))['total'];
 
 
 
 $reservasi_baru = [];
-$result_reservasi = mysqli_query($conn, "SELECT id, kode_reservasi, email, tanggal_reservasi FROM reservasi WHERE status = 'pending'");
+// Query untuk Reservasi Baru
+// Menggabungkan tabel reservasi dan users untuk mendapatkan email
+$result_reservasi = mysqli_query($conn, "SELECT r.id, r.kode_reservasi, u.email, r.tanggal_reservasi 
+                                        FROM reservasi r
+                                        JOIN users u ON r.user_id = u.id
+                                        WHERE r.status = 'pending'");
 while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
     $reservasi_baru[] = $row_reservasi;
 }
@@ -26,7 +40,6 @@ while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
             <li class="breadcrumb-item active">Ringkasan Pesanan</li>
         </ol>
         <div class="row">
-            <!-- Total Pendapatan -->
             <div class="col-xl-4 col-md-6">
                 <div class="card bg-info text-white mb-4">
                     <div class="card-body">
@@ -41,7 +54,6 @@ while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
                     </div>
                 </div>
             </div>
-            <!-- Total Pesanan -->
             <div class="col-xl-4 col-md-6">
                 <div class="card bg-primary text-white mb-4">
                     <div class="card-body">
@@ -54,7 +66,6 @@ while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
                     </div>
                 </div>
             </div>
-            <!-- Pelanggan Terdaftar -->
             <div class="col-xl-4 col-md-6">
                 <div class="card bg-secondary text-white mb-4">
                     <div class="card-body">

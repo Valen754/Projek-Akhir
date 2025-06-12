@@ -1,13 +1,16 @@
 <?php
-
-include '../../koneksi.php';
+include '../../koneksi.php'; //
 session_start();
 
 $order_id = $_GET['id'] ?? 0;
 
-
 // Ambil data pembayaran
-$stmt = $conn->prepare("SELECT * FROM pembayaran WHERE id = ?");
+// Query diubah: JOIN dengan users untuk customer_name; total_amount tidak ada di tabel pembayaran
+$stmt = $conn->prepare("SELECT p.id, p.user_id, p.order_date, p.status, p.payment_method, p.order_type, 
+                               u.nama AS customer_name 
+                        FROM pembayaran p 
+                        JOIN users u ON p.user_id = u.id 
+                        WHERE p.id = ?");
 $stmt->bind_param("i", $order_id);
 $stmt->execute();
 $pembayaran = $stmt->get_result()->fetch_assoc();
@@ -19,11 +22,24 @@ if (!$pembayaran) {
 }
 
 // Ambil detail item
-$stmt = $conn->prepare("SELECT d.*, m.nama FROM detail_pembayaran d JOIN menu m ON d.menu_id = m.id WHERE d.order_id = ?");
+// Query diubah: order_id diganti pembayaran_id, subtotal dihapus dari SELECT
+$stmt = $conn->prepare("SELECT d.id, d.pembayaran_id, d.menu_id, d.quantity, d.price_per_item, d.item_notes, m.nama 
+                        FROM detail_pembayaran d 
+                        JOIN menu m ON d.menu_id = m.id 
+                        WHERE d.pembayaran_id = ?");
 $stmt->bind_param("i", $order_id);
 $stmt->execute();
 $detail = $stmt->get_result();
 $stmt->close();
+
+// Hitung total_amount secara manual dari detail_pembayaran
+$total_amount_calculated = 0;
+$detail_items = []; // Simpan detail ke array terpisah untuk iterasi kedua
+while ($row_detail = $detail->fetch_assoc()) {
+    $item_subtotal_calculated = $row_detail['quantity'] * $row_detail['price_per_item'];
+    $total_amount_calculated += $item_subtotal_calculated;
+    $detail_items[] = array_merge($row_detail, ['subtotal_calculated' => $item_subtotal_calculated]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -65,24 +81,24 @@ $stmt->close();
             </tr>
         </thead>
         <tbody>
-        <?php while ($row = $detail->fetch_assoc()): ?>
+        <?php foreach ($detail_items as $row): ?>
             <tr>
                 <td><?= htmlspecialchars($row['nama']) ?></td>
                 <td><?= $row['quantity'] ?></td>
                 <td>Rp<?= number_format($row['price_per_item'], 0, ',', '.') ?></td>
-                <td>Rp<?= number_format($row['subtotal'], 0, ',', '.') ?></td>
+                <td>Rp<?= number_format($row['subtotal_calculated'], 0, ',', '.') ?></td>
             </tr>
             <?php if (!empty($row['item_notes'])): ?>
             <tr>
                 <td colspan="4" style="font-size:12px;color:#888;">Catatan: <?= htmlspecialchars($row['item_notes']) ?></td>
             </tr>
             <?php endif; ?>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="3">Total</td>
-                <td>Rp<?= number_format($pembayaran['total_amount'], 0, ',', '.') ?></td>
+                <td>Rp<?= number_format($total_amount_calculated, 0, ',', '.') ?></td>
             </tr>
         </tfoot>
     </table>

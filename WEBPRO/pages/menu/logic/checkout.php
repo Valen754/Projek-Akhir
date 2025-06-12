@@ -20,86 +20,101 @@ try {
     // Begin transaction to ensure data consistency
     $conn->begin_transaction();
 
-    // Validate stock levels and calculate totals
+    // --- BAGIAN VALIDASI STOK DIKOMENTARI KARENA KOLOM 'QUANTITY' TIDAK ADA DI TABEL 'MENU' PADA SKEMA DB YANG DIBERIKAN ---
+    // $subtotal = 0;
+    // $stock_errors = [];
+
+    // foreach ($items as $item) {
+    //     // Get current stock level
+    //     $stmt = $conn->prepare("SELECT quantity FROM menu WHERE id = ?");
+    //     $stmt->bind_param("i", $item['id']);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
+    //     $current_stock = $result->fetch_assoc()['quantity'];
+
+    //     if ($current_stock < $item['quantity']) {
+    //         $stock_errors[] = "Stok untuk {$item['name']} tidak mencukupi. Tersedia: $current_stock";
+    //         continue;
+    //     }
+    //     $subtotal += $item['price'] * $item['quantity'];
+    // }
+
+    // if (!empty($stock_errors)) {
+    //     $conn->rollback();
+    //     throw new Exception(implode("\n", $stock_errors));
+    // }
+    // --- AKHIR BAGIAN VALIDASI STOK YANG DIKOMENTARI ---
+
+    // Menghitung subtotal dari item yang ada di keranjang (tanpa validasi stok dari DB)
     $subtotal = 0;
-    $stock_errors = [];
-
     foreach ($items as $item) {
-        // Get current stock level
-        $stmt = $conn->prepare("SELECT quantity FROM menu WHERE id = ?");
-        $stmt->bind_param("i", $item['id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $current_stock = $result->fetch_assoc()['quantity'];
-
-        if ($current_stock < $item['quantity']) {
-            $stock_errors[] = "Stok untuk {$item['name']} tidak mencukupi. Tersedia: $current_stock";
-            continue;
-        }
-
         $subtotal += $item['price'] * $item['quantity'];
     }
 
-    if (!empty($stock_errors)) {
-        $conn->rollback();
-        throw new Exception(implode("\n", $stock_errors));
-    }
 
     $tax = round($subtotal * 0.10);
-    $total = $subtotal + $tax;    // Get user_id from session
+    $total = $subtotal + $tax;
+
+    // Get user_id from session
     $user_id = $_SESSION['user_id'] ?? null;
     if (!$user_id) {
         throw new Exception('User not logged in');
-    }    // Insert pembayaran
-    $status = 'completed';  // Default status for new orders
-    $order_notes = ''; // Initialize empty order notes
-    $sql = "INSERT INTO pembayaran (user_id, order_date, total_amount, status, customer_name, payment_method, order_type, notes) 
-            VALUES (?, NOW(), ?, ?, ?, ?, ?, ?)";
+    }
+
+    // Insert pembayaran
+    $status = 'completed';   // Default status for new orders
+    // Kolom 'notes' tidak ada di tabel 'pembayaran', sehingga dihapus
+    // Kolom 'total_amount' dan 'customer_name' juga tidak ada, dihapus
+    $sql = "INSERT INTO pembayaran (user_id, order_date, status, payment_method, order_type) 
+             VALUES (?, NOW(), ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         throw new Exception('Error preparing pembayaran statement: ' . $conn->error);
     }
-    $stmt->bind_param("idsssss", $user_id, $total, $status, $customer_name, $payment_method, $jenis_order, $order_notes);
+    // Sesuaikan bind_param: i (user_id), s (status), s (payment_method), s (order_type)
+    $stmt->bind_param("isss", $user_id, $status, $payment_method, $jenis_order);
     if (!$stmt->execute()) {
         throw new Exception('Error executing pembayaran insert: ' . $stmt->error);
     }
     $order_id = $conn->insert_id;
 
-    // Insert detail pembayaran and update stock
-    $sql_items = "INSERT INTO detail_pembayaran (order_id, menu_id, quantity, price_per_item, subtotal, item_notes) VALUES (?, ?, ?, ?, ?, ?)";
-    $sql_stock = "UPDATE menu SET quantity = quantity - ? WHERE id = ?";
+    // Insert detail pembayaran (tanpa update stok)
+    // Kolom 'order_id' diubah menjadi 'pembayaran_id'
+    // Kolom 'subtotal' dihapus karena tidak ada di tabel 'detail_pembayaran'
+    $sql_items = "INSERT INTO detail_pembayaran (pembayaran_id, menu_id, quantity, price_per_item, item_notes) VALUES (?, ?, ?, ?, ?)";
+    // $sql_stock = "UPDATE menu SET quantity = quantity - ? WHERE id = ?"; // <-- DIKOMENTARI: KOLOM 'QUANTITY' TIDAK ADA DI TABEL 'MENU'
 
     $stmt_items = $conn->prepare($sql_items);
     if (!$stmt_items) {
         throw new Exception('Error preparing detail_pembayaran statement: ' . $conn->error);
     }
-    $stmt_stock = $conn->prepare($sql_stock);
+    // $stmt_stock = $conn->prepare($sql_stock); // <-- DIKOMENTARI
 
     foreach ($items as $item) {
-        $item_subtotal = $item['price'] * $item['quantity'];
-        // Pastikan ambil catatan dari key 'note' ATAU 'notes' jika ada (untuk kompatibilitas)
-        $item_notes = $item['note'] ?? '';
+        // $item_subtotal = $item['price'] * $item['quantity']; // Dihapus karena tidak ada kolom 'subtotal' di detail_pembayaran
+        $item_notes = $item['note'] ?? ''; // Menggunakan 'note' dari JS, fallback ke string kosong
 
         // Insert order item
+        // Sesuaikan bind_param: i (pembayaran_id), i (menu_id), i (quantity), d (price_per_item), s (item_notes)
         $stmt_items->bind_param(
-            "iiidds",
+            "iiids",
             $order_id,
             $item['id'],
             $item['quantity'],
             $item['price'],
-            $item_subtotal,
             $item_notes
         );
-        
         if (!$stmt_items->execute()) {
             throw new Exception('Error inserting detail_pembayaran: ' . $stmt_items->error . ' for item: ' . $item['name']);
         }
 
+        // --- BAGIAN UPDATE STOK DIKOMENTARI KARENA KOLOM 'QUANTITY' TIDAK ADA DI TABEL 'MENU' PADA SKEMA DB YANG DIBERIKAN ---
         // Update stock
-        $stmt_stock->bind_param("ii", $item['quantity'], $item['id']);
-        if (!$stmt_stock->execute()) {
-            throw new Exception('Error updating stock: ' . $stmt_stock->error . ' for item: ' . $item['name']);
-        }
+        // $stmt_stock->bind_param("ii", $item['quantity'], $item['id']);
+        // if (!$stmt_stock->execute()) {
+        //     throw new Exception('Error updating stock: ' . $stmt_stock->error . ' for item: ' . $item['name']);
+        // }
+        // --- AKHIR BAGIAN UPDATE STOK YANG DIKOMENTARI ---
     }
 
     // Commit transaction

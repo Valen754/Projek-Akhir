@@ -231,7 +231,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <h3 id="price">Rp <?= number_format($product['price'], 0, ',', '.') ?></h3>
                 <button class="add-to-cart-btn" data-id="<?= $product['id'] ?>"
                     data-nama="<?= htmlspecialchars($product['nama']) ?>" data-harga="<?= $product['price'] ?>"
-                    data-foto="<?= htmlspecialchars($product['url_foto']) ?>" data-stok="<?= $product['quantity'] ?>"
+                    data-foto="<?= htmlspecialchars($product['url_foto']) ?>" data-stok="<?= $product['status'] ?>"
                     style="background:#6d4c2b;color:#fff;padding:10px 24px;border:none;border-radius:6px;font-size:16px;cursor:pointer;margin-top:12px;">
                     <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
                 </button>

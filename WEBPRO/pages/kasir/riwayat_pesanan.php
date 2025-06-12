@@ -14,18 +14,17 @@ if ($_SESSION['role'] !== 'kasir') {
     exit();
 }
 
-// Ambil riwayat pesanan dari tabel 'orders'
-// Kita akan melakukan JOIN ke 'order_details' dan 'menu' nanti di dalam loop
+// Ambil riwayat pesanan dari tabel 'pembayaran'
+// Query diubah untuk mengambil kolom yang sesuai dengan skema database
 $sql_orders = "SELECT
                 p.id AS order_id,
                 p.order_date,
-                p.total_amount,
                 p.status,
                 u.username AS kasir_username,
-                p.customer_name,
+                u.nama AS customer_name, -- Mengambil nama pelanggan dari tabel users
                 p.payment_method,
-                p.order_type,
-                p.notes
+                p.order_type
+                -- p.total_amount dan p.notes dihapus karena tidak ada di tabel pembayaran
             FROM
                 pembayaran p
             JOIN
@@ -48,7 +47,6 @@ $result_orders = $conn->query($sql_orders);
     <title>Riwayat Pesanan Kasir</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <!-- Tambahkan ini di <head> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/kasir.css" rel="stylesheet">
     <style>
@@ -133,13 +131,25 @@ $result_orders = $conn->query($sql_orders);
                             if ($result_orders->num_rows > 0) {
                                 $no = 1;
                                 while ($order = $result_orders->fetch_assoc()) {
+                                    // Hitung total_amount di sini
+                                    $current_order_total = 0;
+                                    $sql_calculate_total = "SELECT SUM(quantity * price_per_item) AS total_sum FROM detail_pembayaran WHERE pembayaran_id = ?";
+                                    $stmt_calculate_total = $conn->prepare($sql_calculate_total);
+                                    $stmt_calculate_total->bind_param("i", $order['order_id']);
+                                    $stmt_calculate_total->execute();
+                                    $result_calculate_total = $stmt_calculate_total->get_result();
+                                    $total_row = $result_calculate_total->fetch_assoc();
+                                    $current_order_total = $total_row['total_sum'] ?? 0;
+                                    $stmt_calculate_total->close();
+
+
                                     ?>
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td><?= $order['order_id']; ?></td>
                                         <td><?= htmlspecialchars($order['customer_name'] ?? $order['kasir_username']); ?></td>
                                         <td><?= date('d M Y H:i:s', strtotime($order['order_date'])); ?></td>
-                                        <td>Rp <?= number_format($order['total_amount'], 0, ',', '.'); ?></td>
+                                        <td>Rp <?= number_format($current_order_total, 0, ',', '.'); ?></td>
                                         <td><?= htmlspecialchars($order['payment_method']); ?></td>
                                         <td>
                                             <span class="badge bg-<?php
@@ -170,7 +180,7 @@ $result_orders = $conn->query($sql_orders);
                                                     $sql_order_details = "SELECT
                                                         dp.quantity,
                                                         dp.price_per_item,
-                                                        dp.subtotal,
+                                                        -- dp.subtotal dihapus karena tidak ada di tabel detail_pembayaran
                                                         dp.item_notes,
                                                         m.nama AS menu_nama,
                                                         m.url_foto
@@ -179,7 +189,7 @@ $result_orders = $conn->query($sql_orders);
                                                     JOIN
                                                         menu m ON dp.menu_id = m.id
                                                     WHERE
-                                                        dp.order_id = ?";
+                                                        dp.pembayaran_id = ?"; // Perbaikan: order_id diubah menjadi pembayaran_id
                                                     $stmt_order_details = $conn->prepare($sql_order_details);
                                                     $stmt_order_details->bind_param("i", $order['order_id']);
                                                     $stmt_order_details->execute();
@@ -187,6 +197,7 @@ $result_orders = $conn->query($sql_orders);
 
                                                     if ($result_order_details->num_rows > 0) {
                                                         while ($item_detail = $result_order_details->fetch_assoc()) {
+                                                            $item_subtotal_calculated = $item_detail['quantity'] * $item_detail['price_per_item'];
                                                             ?>
                                                             <li style="margin-bottom: 6px;">
                                                                 <img src="../../asset/<?= htmlspecialchars($item_detail['url_foto']); ?>"
@@ -196,7 +207,7 @@ $result_orders = $conn->query($sql_orders);
                                                                 <?= htmlspecialchars($item_detail['menu_nama']); ?>
                                                                 (<?= $item_detail['quantity']; ?>x)
                                                                 @ Rp<?= number_format($item_detail['price_per_item'], 0, ',', '.'); ?>
-                                                                = Rp<?= number_format($item_detail['subtotal'], 0, ',', '.'); ?>
+                                                                = Rp<?= number_format($item_subtotal_calculated, 0, ',', '.'); ?>
                                                                 <?php if (!empty($item_detail['item_notes'])): ?>
                                                                     <br><small>Catatan Item:
                                                                         <?= htmlspecialchars($item_detail['item_notes']); ?></small>
@@ -210,10 +221,9 @@ $result_orders = $conn->query($sql_orders);
                                                     $stmt_order_details->close();
                                                     ?>
                                                 </ul>
-                                                <?php if (!empty($order['notes'])): ?>
-                                                    <p style="margin-top: 10px;"><strong>Catatan Pesanan Umum:</strong>
-                                                        <?= htmlspecialchars($order['notes']); ?></p>
-                                                <?php endif; ?>
+                                                <?php // if (!empty($order['notes'])): ?>
+                                                    <?php //= htmlspecialchars($order['notes']); ?></p>
+                                                <?php // endif; ?>
                                             </div>
                                         </td>
                                     </tr>

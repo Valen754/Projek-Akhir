@@ -9,8 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Query untuk mendapatkan data reservasi pengguna
-$query = "SELECT * FROM reservasi WHERE user_id = ? ORDER BY tanggal_reservasi DESC";
+// Query untuk mendapatkan data reservasi pengguna, termasuk email dan no_telp dari tabel users
+$query = "SELECT r.*, u.email, u.no_telp 
+          FROM reservasi r 
+          JOIN users u ON r.user_id = u.id 
+          WHERE r.user_id = ? ORDER BY r.tanggal_reservasi DESC";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -148,7 +151,6 @@ $result = $stmt->get_result();
     <div class="reservasi-container">
         <h2 class="reservasi-header">Riwayat Reservasi</h2>
 
-        <!-- Tab Navigation -->
         <div class="tab-navigation">
             <a href="riwayat_reservasi.php" class="tab-link active">Semua Reservasi</a>
             <a href="reservasi_ditolak.php" class="tab-link">Reservasi Ditolak</a>
