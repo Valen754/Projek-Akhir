@@ -117,12 +117,14 @@ $result = $conn->query($sql);
                                     <p><strong>Pesan:</strong> <?php echo $row['message']; ?></p>
                                 </div>
                                 <div class="actions">
-                                    <form class="update-form">
+                                    <form action="logic/update_reservasi.php" method="POST" style="display: inline;">
                                         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                        <button type="submit" name="action" value="confirm"
-                                            class="btn-confirm">Konfirmasi</button>
-                                        <button type="submit" name="action" value="cancel" class="btn-cancel">Batalkan</button>
+                                        <input type="hidden" name="action" value="confirm">
+                                        <button type="submit" class="btn-confirm">Konfirmasi</button>
                                     </form>
+                                    <button
+                                        onclick="document.getElementById('cancelModal').style.display='block'; document.getElementById('reservationId').value='<?php echo $row['id']; ?>'"
+                                        class="btn-cancel">Batalkan</button>
                                 </div>
                             </div>
                             <?php
@@ -135,52 +137,78 @@ $result = $conn->query($sql);
             </section>
         </main>
     </div>
+    <div id="cartInputModal"
+        style="display:none;position:fixed;z-index:10001;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);">
+        <div
+            style="background:#fff;padding:24px 32px;border-radius:8px;max-width:350px;margin:120px auto 0;box-shadow:0 2px 8px rgba(0,0,0,0.15);position:relative;">
+            <span id="closeCartInputModal"
+                style="position:absolute;top:8px;right:16px;cursor:pointer;font-size:22px;">&times;</span>
+            <h3>Tambah ke Keranjang</h3>
+            <form id="cartInputForm">
+                <input type="hidden" id="cartInputId">
+                <input type="hidden" id="cartInputNama">
+                <input type="hidden" id="cartInputHarga">
+                <input type="hidden" id="cartInputFoto">
+                <input type="hidden" id="cartInputStok">
+                <div style="margin-bottom:10px;">
+                    <label>Jumlah:</label>
+                    <input type="number" id="cartInputQty" min="1" value="1" style="width:60px;">
+                    <span id="cartInputStokInfo" style="font-size:12px;color:#888;"></span>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Catatan:</label>
+                    <textarea id="cartInputNote" rows="2" style="width:100%; border-radius: 5px;"></textarea>
+                </div>
+                <button type="submit"
+                    style="background:#6d4c2b;color:#fff;padding:8px 18px;border:none;border-radius:4px;cursor:pointer;">Tambah</button>
+            </form>
+        </div>
+    </div>    <div id="cancelModal"
+        style="display:none;position:fixed;z-index:10001;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);">
+        <div
+            style="background:#fff;padding:24px 32px;border-radius:8px;max-width:450px;margin:120px auto 0;box-shadow:0 2px 8px rgba(0,0,0,0.15);position:relative;">
+            <span onclick="document.getElementById('cancelModal').style.display='none'"
+                style="position:absolute;top:8px;right:16px;cursor:pointer;font-size:22px;">&times;</span>
+            <h3>Alasan Pembatalan Reservasi</h3>
+            <form action="logic/update_reservasi.php" method="POST">
+                <input type="hidden" id="reservationId" name="id">
+                <input type="hidden" name="action" value="cancel">
+                <div style="margin-bottom:15px;">
+                    <label style="display:block;margin-bottom:5px;">Alasan Pembatalan:</label>
+                    <textarea name="reason" rows="4"
+                        style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;" 
+                        placeholder="Masukkan alasan pembatalan reservasi..." required></textarea>
+                </div>
+                <div style="display:flex;gap:10px;justify-content:flex-end">
+                    <button type="button" 
+                        onclick="document.getElementById('cancelModal').style.display='none'"
+                        style="padding:8px 16px;border:1px solid #ddd;border-radius:4px;background:#fff;">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        style="padding:8px 16px;border:none;border-radius:4px;background:#dc3545;color:#fff;">
+                        Konfirmasi Pembatalan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div><?php
+    // Tampilkan pesan status jika ada
+    if (isset($_GET['status']) && isset($_GET['message'])) {
+        $alertClass = $_GET['status'] === 'success' ? 'success' : 'error';
+        echo "<div class='alert alert-{$alertClass}' style='padding: 15px; margin: 10px; border-radius: 4px; background-color: " .
+            ($_GET['status'] === 'success' ? '#d4edda' : '#f8d7da') . "; color: " .
+            ($_GET['status'] === 'success' ? '#155724' : '#721c24') . ";'>" .
+            htmlspecialchars($_GET['message']) . "</div>";
+    }
+    ?>    <!-- Minimal JavaScript untuk modal -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const forms = document.querySelectorAll('.update-form');
-
-            forms.forEach(form => {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-
-                    // Dapatkan button yang diklik
-                    const clickedButton = e.submitter;
-                    const formData = new FormData();
-
-                    // Tambahkan data dari form
-                    formData.append('id', this.querySelector('input[name="id"]').value);
-                    formData.append('action', clickedButton.value);
-
-                    // Log form data untuk debugging
-                    console.log('Sending data:', {
-                        id: formData.get('id'),
-                        action: formData.get('action')
-                    });
-
-                    fetch('logic/update_reservasi.php', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Server response:', data);
-                            if (data.status === 'success') {
-                                alert(data.message);
-                                window.location.reload();
-                            } else {
-                                throw new Error(data.message || 'Terjadi kesalahan');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Terjadi kesalahan saat memperbarui status: ' + error.message);
-                        });
-                });
-            });
-        });
+        // Tutup modal ketika mengklik di luar modal
+        window.onclick = function (event) {
+            if (event.target.id === 'cancelModal') {
+                document.getElementById('cancelModal').style.display = 'none';
+            }
+        }
     </script>
 </body>
 
