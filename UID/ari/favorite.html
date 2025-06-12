@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="newhomepage1.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+   <link rel="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: none;
+  scroll-behavior: smooth;
+  font-family: 0;
+}
+
+html {
+  font-size: 80%;
+  overflow-x: hidden;
+}
+
+:root {
+  --bg-color: #080808;
+  --text-color:white;
+  --main-color: #543310;
+}
+
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem 9%;
+  background: rgba(0, 0, 0, 1);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  z-index: 100;
+  flex-wrap: wrap; /* Allow items to wrap */
+}
+
+.brand {
+  font-size: 3rem;
+  font-weight: 00;
+  cursor: pointer;
+  transition: 0.3s ease;
+  color: var(--text-color);
+}
+
+span {
+  color: var(--main-color);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 40px; 
+  margin-left: auto; /* Align navbar to the right */
+}
+
+.navbar a {
+  font-size: 1.8rem;
+  color: white;
+  transition: 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cart-badge {
+    position: absolute;
+    top: px;
+    right: px;
+    background-color: var(--main-color);
+    color: var(--text-color);
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar a:hover,
+.navbar a:active {
+  color: var(--main-color);
+  border-bottom: 3px solid var(--main-color);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  min-width: 12rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  padding: 0.5rem 0;
+}
+
+.dropdown-content a {
+  font-size: 1.4rem;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.8rem 1.2rem;
+  display: block;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+section {
+  min-height: 100vh;
+  padding: 10rem 9%   ;
+
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column; /* Mengubah arah flex menjadi kolom */
+        align-items: center; /* Mengatur elemen di tengah */
+        padding: 1rem; /* Mengurangi padding */
+    }
+
+    .navbar {
+        flex-direction: column; /* Mengubah navbar menjadi kolom */
+        gap: 20px; /* Mengurangi jarak antar elemen */
+        margin-left: 0; /* Menghapus margin kiri */
+    }
+
+    .navbar a {
+        font-size: 1.6rem; /* Mengurangi ukuran font */
+    }
+
+    .brand {
+        font-size: 2.5rem; /* Mengurangi ukuran font brand */
+    }
+}
+
+
+
+
+  .sidebar {
+        position: fixed;
+        top: 80px; /* Adjusted to be further below the navbar */
+        left: 0;
+        width: 250px;
+        height: calc(100% - 80px); /* Adjusted to be further below the navbar */
+        background-color: #111;
+        padding-top: 20px;
+        z-index: 99;
+        transition: 0.3s;
+    }
+
+    .sidebar .profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar .profile img {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+    }
+
+    .sidebar .profile button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #c5a880;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+   
+    .sidebar .options {
+    margin-top: 20px;
+    width: 100%;
+}
+    .sidebar .options a {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px 40px;
+    
+}
+.sidebar .options a i {
+    margin-right: 10px;
+}
+
+    .sidebar .options a:hover {
+        background-color: var(--main-color);
+    }
+
+    .main-content {
+        margin-left: 270px;
+        padding: 20px;
+        margin-top: 100px;
+    }
+
+    .favorite-products {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .product-card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+        width: calc(33.333% - 20px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+    }
+
+   
+
+    .product-card img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        
+    }
+
+    .product-card .product-info {
+        padding: 15px;
+        color: rgb(0, 0, 0);
+    }
+
+    .product-card .product-info h3 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    .product-card .product-info p {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .product-card .product-info .price {
+        font-size: 2rem;
+        color: var(--main-color);
+    }
+
+    @media (max-width: 768px) {
+        .product-card {
+            width: calc(50% - 20px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-card {
+            width: 100%;
+        }
+    }
+    
+    .footer {
+    background-color: #111; 
+    color: #eee; 
+    padding: 1rem 2rem;
+   
+    margin-left: 250px;
+   
+    
+  }
+  
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 2rem; 
+    justify-content: space-between;
+  }
+  
+  .footer-container > div {
+    flex: 1;
+    min-width: 200px; 
+  }
+  
+  .footer-about h2 {
+    font-size: 2rem;
+    color: var(--main-color); 
+    margin-bottom: 1rem;
+  }
+  
+  .footer-about p {
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+  
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin: 0.5rem 0;
+  }
+  
+  .footer-links a {
+    color: #eee;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-links a:hover {
+    color: var(--main-color);
+  }
+  
+  .footer-contact p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .footer-contact i {
+    margin-right: 0.5rem;
+    color: var(--main-color);
+  }
+  
+  .footer-social {
+    text-align: center;
+  }
+  
+  .footer-social .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .footer-social a {
+    color: #eee;
+    font-size: 1.5rem;
+    transition: color 0.3s;
+  }
+  
+  .footer-social a:hover {
+    color: var(--main-color);
+  }
+  
+  .footer-bottom {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #aaa;
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+  }
+
+</style>
+<body>
+    <header class="header">
+        <a href="#home" class="brand">Tapal<span>Kuda</span></a>
+        <i class='bx bx-menu' id="menu-icon"></i>
+        <nav class="navbar">
+            <a href="#home">Home</a>
+            <a href="aboutus.html">About</a>
+            <a href="menulist.html">Menu</a>
+            <a href="referensi.html">Reservation</a>
+            <a href="contact.html">Contact</a>
+            <div class="navbar-icons">
+                <a href="keranjang.html" class="cart-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        class="bi bi-cart2" viewBox="0 0 16 16">
+                        <path
+                            d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                    </svg>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </a>
+                <a>
+                    <div class="dropdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                            class="bi bi-person" viewBox="0 0 16 16">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="login.html">Sign In</a>
+                            <a href="register.html">Sign Up</a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="sidebar">
+        <div class="profile">
+         <img alt="Profile picture of a user with a neutral expression" height="100" src="https://storage.googleapis.com/a1aa/image/PIqApYFj5DIUKNCDZ7p9pNVo0dyEG9rFLkNB6P4UG3D00LAF.jpg" width="100"/>
+         <button>
+          Edit Profile
+         </button>
+        </div>
+        <div class="options">
+          <a href="profile.html"><i class='bx bx-user'></i>Profile</a>
+   
+      </a>
+      <a href="history.html"><i class="bx bx-basket"></i>Riwayat Pesanan</a>
+   
+      </a>
+      <a href="vocer.html"><i class="bx bx-purchase-tag"></i> Voucher Saya</a>
+   
+      </a>
+      <a href="favorite.html"><i class="bx bx-heart"></i> Favorit</a>
+     
+      </a>
+      <a href="point.html"> <i class='bx bx-coin' ></i>Point Saya</a>
+ 
+      </a>
+      <a href="tukarpoint.html"><i class='bx bx-refresh'></i></i>Tukar Point</a>
+ 
+      </a>
+      <a href="#option5"><i class='bx bx-log-out'></i></i>Keluar</a>
+     
+      </a>
+      </div>
+     </div>
+
+       <div class="main-content">
+        <div class="favorite-products">
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 1
+           </h3>
+           <p>
+            Description of product 1.
+           </p>
+           <p class="price">
+            $10.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 1
+           </h3>
+           <p>
+            Description of product 1.
+           </p>
+           <p class="price">
+            $10.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 1
+           </h3>
+           <p>
+            Description of product 1.
+           </p>
+           <p class="price">
+            $10.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 1
+           </h3>
+           <p>
+            Description of product 1.
+           </p>
+           <p class="price">
+            $10.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 2
+           </h3>
+           <p>
+            Description of product 2.
+           </p>
+           <p class="price">
+            $12.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 3
+           </h3>
+           <p>
+            Description of product 3.
+           </p>
+           <p class="price">
+            $15.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 4
+           </h3>
+           <p>
+            Description of product 4.
+           </p>
+           <p class="price">
+            $8.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 5
+           </h3>
+           <p>
+            Description of product 5.
+           </p>
+           <p class="price">
+            $20.00
+           </p>
+          </div>
+         </div>
+         <div class="product-card">
+          <img alt="Image of a delicious looking dish with vibrant colors" height="200" src="https://storage.googleapis.com/a1aa/image/WsAKUn8R03LZFhIk1FejVMeRoItUFWH29W7Y6oU1pAaAkVBUA.jpg" width="300"/>
+          <div class="product-info">
+           <h3>
+            Product 6
+           </h3>
+           <p>
+            Description of product 6.
+           </p>
+           <p class="price">
+            $18.00
+           </p>
+          </div>
+         </div>
+        </div>
+       </div>
+
+       <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <h2 class="logo"><span>Tapal</span>Kuda</h2>
+                <p>
+                    Tempat terbaik untuk menikmati kopi berkualitas tinggi dan suasana yang nyaman. Kami hadir untuk memberikan pengalaman yang tak terlupakan.
+                </p>
+            </div>
+    
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#coffees">Coffees</a></li>
+                    <li><a href="#reviews">Reviews</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p><i class='bx bx-map'></i> Pasanggrahan Baru,Kec.Sumedang Sel.,Kab.Sumedang,Jawa Barat</p>
+                <p><i class='bx bx-phone'></i> +62 8531 1514 1920</p>
+                <p><i class='bx bx-envelope'></i> info@tapalkuda.com</p>
+            </div>
+    
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/KedaiTapalKuda?mibextid=ZbWKwL"><i class='bx bxl-facebook'></i></a>
+                    <a href="https://x.com/kedaitapalkuda?s=21"><i class='bx bxl-instagram'></i></a>
+                    <a href="https://instagram.com/kedaitapalkuda"><i class='bx bxl-twitter'></i></a>
+                    <a href="http://www.youtube.com/@kedaikopitapalkuda2143"><i class='bx bxl-youtube'></i></a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="footer-bottom">
+            <p>&copy; 2024 TapalKuda. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+
+       
+      
+      </body>
+     </html>
+       
+
+    
