@@ -2,7 +2,7 @@
 $servername = "localhost"; 
 $username = "root";     
 $password = "";           
-$dbname = "tapal_kuda";    
+$dbname = "tapal_kuda_basdat";    
 
 // Membuat koneksi ke database
 $conn = new mysqli($servername, $username, $password, $dbname);
