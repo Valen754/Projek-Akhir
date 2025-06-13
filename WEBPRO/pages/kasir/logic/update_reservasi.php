@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Gagal mengupdate status reservasi");
             }
             
-            // 2. Insert data ke tabel reservation_cancellations
+            // 2. Insert data ke tabel reservati_ditolak
             $stmt = $conn->prepare("INSERT INTO reservasi_ditolak (reservation_id, alasan_ditolak, ditolak_oleh) VALUES (?, ?, ?)");
             $stmt->bind_param("iss", $id, $reason, $_SESSION['username']);
             
