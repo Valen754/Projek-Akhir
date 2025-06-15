@@ -14,13 +14,20 @@ $tanggal_awal = isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '';
 $tanggal_akhir = isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '';
 
 // Perubahan: Membangun query utama dengan prepared statement untuk keamanan dan perhitungan total_amount
-$sql_main = "SELECT p.id, p.order_date, p.status, p.payment_method, p.order_type,
+// Updated to join with payment_status, payment_methods, and order_types
+$sql_main = "SELECT p.id, p.order_date, 
+                    ps.status_name AS order_status_name,      -- Get status name from payment_status
+                    pm.method_name AS payment_method_name,     -- Get method name from payment_methods
+                    ot.type_name AS order_type_name,           -- Get type name from order_types
                     u.nama AS customer_name,
                     SUM(od.quantity * od.price_per_item) AS total_amount
              FROM pembayaran p
              JOIN users u ON p.user_id = u.id
              LEFT JOIN detail_pembayaran od ON p.id = od.pembayaran_id
-            ";
+             JOIN payment_status ps ON p.status_id = ps.id    -- Join to get status name
+             JOIN payment_methods pm ON p.payment_method_id = pm.id -- Join to get method name
+             JOIN order_types ot ON p.order_type_id = ot.id   -- Join to get order type name
+             ";
 
 $where_clauses = ["p.user_id = ?"];
 $params = [$user_id];
@@ -42,7 +49,8 @@ if ($tanggal_awal && $tanggal_akhir) {
 }
 
 $sql_main .= " WHERE " . implode(" AND ", $where_clauses);
-$sql_main .= " GROUP BY p.id, p.order_date, p.status, u.nama, p.payment_method, p.order_type ORDER BY p.order_date DESC";
+// Updated GROUP BY clause
+$sql_main .= " GROUP BY p.id, p.order_date, ps.status_name, pm.method_name, ot.type_name, u.nama ORDER BY p.order_date DESC";
 
 $stmt_main = $conn->prepare($sql_main);
 if ($types) {
@@ -92,7 +100,6 @@ $stmt_main->close();
             <?php while ($order = $result->fetch_assoc()): ?>
                 <?php
                 $order_id = $order['id'];
-                // Perubahan: od.order_id menjadi od.pembayaran_id, dan hilangkan od.subtotal dari SELECT
                 $q_detail = "SELECT od.quantity, od.price_per_item, od.item_notes, m.nama, m.url_foto 
                              FROM detail_pembayaran od
                              JOIN menu m ON od.menu_id = m.id
@@ -107,11 +114,12 @@ $stmt_main->close();
                     <div style="display:flex;align-items:center;">
                         <div class="riwayat-info" style="flex:1;">
                             <span class="riwayat-title">#<?= $order['id']; ?> - <?= date('d M Y H:i', strtotime($order['order_date'])); ?></span>
-                        </div>
+                            <br>
+                            <small>Jenis Order: <?= htmlspecialchars($order['order_type_name']); ?></small> <br>
+                            <small>Metode Pembayaran: <?= htmlspecialchars($order['payment_method_name']); ?></small> </div>
                         <div style="text-align:right;">
                             <span class="riwayat-total">Rp <?= number_format($order['total_amount'],0,',','.'); ?></span><br>
-                            <span class="riwayat-status"><?= htmlspecialchars($order['status']); ?></span>
-                        </div>
+                            <span class="riwayat-status"><?= htmlspecialchars($order['order_status_name']); ?></span> </div>
                     </div>
                     <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;">
                         <?php if ($res_detail && $res_detail->num_rows > 0): ?>

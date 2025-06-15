@@ -9,12 +9,12 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Query untuk mendapatkan data reservasi pengguna
-// Query untuk mendapatkan data reservasi yang ditolak dan alasan penolakannya
-$query = "SELECT r.*, rd.alasan_ditolak, rd.ditolak_oleh, rd.cancelled_at 
+// Query untuk mendapatkan data reservasi yang ditolak dan alasan penolakannya - Updated to join with reservation_status
+$query = "SELECT r.*, rd.alasan_ditolak, rd.ditolak_oleh, rd.cancelled_at, rs.status_name AS reservation_status_name
           FROM reservasi r 
           LEFT JOIN reservasi_ditolak rd ON r.id = rd.reservation_id 
-          WHERE r.user_id = ? AND r.status = 'dibatalkan' 
+          JOIN reservation_status rs ON r.status_id = rs.id -- Join to get status name
+          WHERE r.user_id = ? AND rs.status_name = 'dibatalkan' -- Filter by status_name
           ORDER BY r.tanggal_reservasi DESC";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $user_id);
@@ -32,7 +32,7 @@ $result = $stmt->get_result();
     <link href="../../css/menu.css" rel="stylesheet">
     <style>
         body {
-            background:#8d6748;
+            background: #8d6748;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
 
@@ -83,7 +83,9 @@ $result = $stmt->get_result();
         .status-dikonfirmasi {
             color: #27ae60;
             font-weight: bold;
-        }        .status-dibatalkan {
+        }
+
+        .status-dibatalkan {
             color: #e74c3c;
             font-weight: bold;
         }
@@ -128,9 +130,17 @@ $result = $stmt->get_result();
 
         /* Add subtle animation */
         @keyframes tabHover {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .tab-link:hover {
@@ -142,7 +152,7 @@ $result = $stmt->get_result();
 <body>
     <div class="reservasi-container">
         <h2 class="reservasi-header">Riwayat Reservasi</h2>
-        <!-- Tab Navigation -->        <div class="tab-navigation">
+        <div class="tab-navigation">
             <a href="riwayat_reservasi.php" class="tab-link">Semua Reservasi</a>
             <a href="reservasi_ditolak.php" class="tab-link active">Reservasi Ditolak</a>
         </div>
@@ -170,10 +180,10 @@ $result = $stmt->get_result();
                             <td><?php echo htmlspecialchars($row['jumlah_orang']); ?></td>
                             <td><?php echo htmlspecialchars($row['alasan_ditolak']); ?></td>
                             <td><?php echo htmlspecialchars($row['ditolak_oleh']); ?></td>
-                            <td><?php echo htmlspecialchars(date('d-m-Y H:i', strtotime($row['cancelled_at']))); ?></td>                            <td>
-                                <span class="<?php echo 'status-' . strtolower($row['status']); ?>">
-                                    <?php echo htmlspecialchars($row['status']); ?>
-                                </span>
+                            <td><?php echo htmlspecialchars(date('d-m-Y H:i', strtotime($row['cancelled_at']))); ?></td>
+                            <td>
+                                <span class="<?php echo 'status-' . strtolower($row['reservation_status_name']); ?>">
+                                    <?php echo htmlspecialchars($row['reservation_status_name']); ?> </span>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -187,7 +197,7 @@ $result = $stmt->get_result();
                 style="text-decoration: none; color: #333; font-weight: bold; font-size: 16px;">&larr; Kembali ke
                 Profil</a>
         </div>
-    </div>    <?php include '../../views/footer.php'; ?>
+    </div> <?php include '../../views/footer.php'; ?>
 </body>
 
 </html>

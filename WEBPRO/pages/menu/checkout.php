@@ -1,6 +1,21 @@
 <?php
-include '../../views/header.php';
 include '../../koneksi.php';
+session_start(); // Assuming session is started here for user_id, though not directly used in this frontend.
+
+// Fetch all order types for radio buttons
+$order_types_query = mysqli_query($conn, "SELECT id, type_name FROM order_types ORDER BY type_name ASC");
+$order_types = [];
+while ($row = mysqli_fetch_assoc($order_types_query)) {
+    $order_types[] = $row;
+}
+
+// Fetch all payment methods for dropdown
+$payment_methods_query = mysqli_query($conn, "SELECT id, method_name FROM payment_methods ORDER BY method_name ASC");
+$payment_methods = [];
+while ($row = mysqli_fetch_assoc($payment_methods_query)) {
+    $payment_methods[] = $row;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -186,8 +201,7 @@ include '../../koneksi.php';
             <div class="error-message" id="errorMessage"></div>
 
             <div id="checkoutPreview" class="checkout-preview">
-                <!-- Items will be displayed here via JavaScript -->
-            </div>
+                </div>
 
             <div class="form-group">
                 <label>Nama Customer:</label>
@@ -197,18 +211,16 @@ include '../../koneksi.php';
             <div class="form-group">
                 <label>Jenis Pesanan:</label>
                 <div class="radio-group">
-                    <label>
-                        <input type="radio" name="jenis_order" value="dine_in" checked> Dine In
-                    </label>
-                    <label>
-                        <input type="radio" name="jenis_order" value="take_away"> Take Away
-                    </label>
-                    <label>
-                        <input type="radio" name="jenis_order" value="delivery"> Delivery
-                    </label>
+                    <?php foreach ($order_types as $type_option): ?>
+                        <label>
+                            <input type="radio" name="jenis_order"
+                                value="<?= htmlspecialchars($type_option['type_name']) ?>"
+                                <?= (strtolower($type_option['type_name']) == 'dine in') ? 'checked' : '' ?>>
+                            <?= ucwords(str_replace('_', ' ', htmlspecialchars($type_option['type_name']))) ?>
+                        </label>
+                    <?php endforeach; ?>
                 </div>
             </div>
-            <!-- alamat delivery -->
             <div class="form-group" id="deliveryAddressGroup" style="display: none;">
                 <label>Alamat Pengiriman:</label>
                 <textarea name="delivery_address" rows="3" placeholder="Masukkan alamat lengkap pengiriman"
@@ -218,9 +230,12 @@ include '../../koneksi.php';
             <div class="form-group">
                 <label>Metode Pembayaran:</label>
                 <select name="payment_method" id="paymentMethodSelect" required>
-                    <option value="cash" style="color: black;">Cash</option>
-                    <option value="e-wallet" style="color: black;">E-Wallet</option>
-                    <option value="qris" style="color: black;">QRIS</option>
+                    <?php foreach ($payment_methods as $method_option): ?>
+                        <option value="<?= htmlspecialchars($method_option['method_name']) ?>"
+                            style="color: black;">
+                            <?= htmlspecialchars($method_option['method_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -301,6 +316,9 @@ include '../../koneksi.php';
             const paymentSelect = document.getElementById('paymentMethodSelect');
             const qrisContainer = document.getElementById('qrisImageContainer');
 
+            // Initial state based on selected option
+            qrisContainer.style.display = paymentSelect.value === 'qris' ? 'block' : 'none';
+
             paymentSelect.addEventListener('change', function () {
                 qrisContainer.style.display = this.value === 'qris' ? 'block' : 'none';
             });
@@ -308,24 +326,37 @@ include '../../koneksi.php';
             // Handle delivery address display
             const radioButtons = document.getElementsByName('jenis_order');
             const deliveryAddressGroup = document.getElementById('deliveryAddressGroup');
+            const deliveryAddressTextarea = deliveryAddressGroup.querySelector('textarea');
 
+            // Set initial state
             radioButtons.forEach(radio => {
+                if (radio.checked) {
+                    if (radio.value === 'delivery') {
+                        deliveryAddressGroup.style.display = 'block';
+                        deliveryAddressTextarea.required = true;
+                    } else {
+                        deliveryAddressGroup.style.display = 'none';
+                        deliveryAddressTextarea.required = false;
+                    }
+                }
                 radio.addEventListener('change', function () {
                     if (this.value === 'delivery') {
                         deliveryAddressGroup.style.display = 'block';
-                        deliveryAddressGroup.querySelector('textarea').required = true;
+                        deliveryAddressTextarea.required = true;
                     } else {
                         deliveryAddressGroup.style.display = 'none';
-                        deliveryAddressGroup.querySelector('textarea').required = false;
+                        deliveryAddressTextarea.required = false;
                     }
                 });
             });
+
 
             // Handle form submission
             document.querySelector('.checkout-form').addEventListener('submit', function (e) {
                 if (paymentSelect.value === 'qris') {
                     const img = document.getElementById('qrisImg');
-                    if (img.naturalWidth === 0) {
+                    // Check if the image failed to load (naturalWidth will be 0)
+                    if (img.naturalWidth === 0 && img.src.includes('qr.jpg')) { // Added check for qr.jpg in src
                         e.preventDefault();
                         document.getElementById('qrisImgError').style.display = 'block';
                     }

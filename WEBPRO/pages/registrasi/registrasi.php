@@ -1,3 +1,15 @@
+<?php
+// Include koneksi.php if needed for fetching gender types
+include '../../koneksi.php';
+
+// Fetch all gender types for dropdown
+$gender_types_query = mysqli_query($conn, "SELECT id, gender_name FROM gender_types ORDER BY gender_name ASC");
+$gender_options = [];
+while ($row = mysqli_fetch_assoc($gender_types_query)) {
+    $gender_options[] = $row;
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,8 +59,11 @@
                             <i class="fas fa-venus-mars icon"></i>
                             <select name="gender" id="gender" required>
                                 <option value="" disabled selected>Pilih jenis kelamin</option>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
+                                <?php foreach ($gender_options as $gender_option): ?>
+                                    <option value="<?= htmlspecialchars($gender_option['gender_name']) ?>">
+                                        <?= htmlspecialchars($gender_option['gender_name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -173,10 +188,10 @@
             const registerBtn = document.querySelector('.btn-register');
 
             const isValid = username && 
-                           password && 
-                           confirmPassword && 
-                           password === confirmPassword && 
-                           terms.checked;
+                            password && 
+                            confirmPassword && 
+                            password === confirmPassword && 
+                            terms.checked;
 
             registerBtn.disabled = !isValid;
         }

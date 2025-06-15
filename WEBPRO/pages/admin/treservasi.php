@@ -8,11 +8,19 @@ include '../../views/admin/sidebar.php';
 // Koneksi ke database
 include '../../koneksi.php';
 
-// Query SQL dasar
-// Menambahkan u.email dan u.no_telp dari tabel users
-$sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u.no_telp
+// Fetch all reservation statuses for dropdowns
+$reservation_statuses_query = mysqli_query($conn, "SELECT id, status_name FROM reservation_status ORDER BY status_name ASC");
+$reservation_statuses = [];
+while ($row = mysqli_fetch_assoc($reservation_statuses_query)) {
+    $reservation_statuses[] = $row;
+}
+
+// Query SQL dasar - Updated to join with reservation_status
+// Menambahkan rs.status_name dari tabel reservation_status
+$sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u.no_telp, rs.status_name AS reservation_status_name
         FROM reservasi r 
-        JOIN users u ON r.user_id = u.id";
+        JOIN users u ON r.user_id = u.id
+        JOIN reservation_status rs ON r.status_id = rs.id"; // Join to get status_name
 
 ?>
 
@@ -71,7 +79,7 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                 $query = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($query)) {
                     $statusBadge = '';
-                    switch ($row['status']) {
+                    switch (strtolower($row['reservation_status_name'])) { // Use reservation_status_name
                         case 'pending':
                             $statusBadge = 'warning';
                             break;
@@ -80,6 +88,9 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                             break;
                         case 'dibatalkan':
                             $statusBadge = 'danger';
+                            break;
+                        default:
+                            $statusBadge = 'secondary'; // Default for unknown status
                             break;
                     }
                     ?>
@@ -93,7 +104,7 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                         <td><?= htmlspecialchars($row['no_telp']) ?></td>
                         <td><?= htmlspecialchars($row['message']) ?></td>
                         <td><span
-                                class="badge bg-<?= $statusBadge ?>"><?= htmlspecialchars(ucfirst($row['status'])) ?></span>
+                                class="badge bg-<?= $statusBadge ?>"><?= htmlspecialchars(ucfirst($row['reservation_status_name'])) ?></span>
                         </td>
                         <td><?= $row['created_at'] ?></td>
                         <td><?= $row['updated_at'] ?></td>
@@ -117,6 +128,7 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                                     </div>
                                     <div class="modal-body">
                                         <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                        <input type="hidden" name="user_id" value="<?= $row['user_id'] ?>">
 
                                         <div class="mb-3">
                                             <label class="form-label">Kode Reservasi</label>
@@ -127,7 +139,6 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                                             <label class="form-label">Pengguna (ID)</label>
                                             <input type="text" class="form-control"
                                                 value="<?= htmlspecialchars($row['user_username']) ?>" readonly>
-                                            <input type="hidden" name="user_id" value="<?= $row['user_id'] ?>">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Tanggal Reservasi</label>
@@ -144,12 +155,12 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                                         <div class="mb-3">
                                             <label class="form-label">Email</label>
                                             <input type="email" name="email" class="form-control"
-                                                value="<?= htmlspecialchars($row['email']) ?>" required>
+                                                value="<?= htmlspecialchars($row['email']) ?>" readonly>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">No. Telp</label>
                                             <input type="text" name="no_telp" class="form-control"
-                                                value="<?= htmlspecialchars($row['no_telp']) ?>" required>
+                                                value="<?= htmlspecialchars($row['no_telp']) ?>" readonly>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Pesan</label>
@@ -159,10 +170,13 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                                         <div class="mb-3">
                                             <label class="form-label">Status</label>
                                             <select name="status" class="form-select" required>
-                                                <option value="pending" <?= $row['status'] === 'pending' ? 'selected' : '' ?>>
-                                                    Pending</option>
-                                                <option value="dikonfirmasi" <?= $row['status'] === 'dikonfirmasi' ? 'selected' : '' ?>>Dikonfirmasi</option>
-                                                <option value="dibatalkan" <?= $row['status'] === 'dibatalkan' ? 'selected' : '' ?>>Dibatalkan</option>
+                                                <?php
+                                                // Populate statuses dynamically
+                                                foreach ($reservation_statuses as $status_option) {
+                                                    $selected = (strtolower($row['reservation_status_name']) === strtolower($status_option['status_name'])) ? 'selected' : '';
+                                                    echo "<option value='{$status_option['status_name']}' {$selected}>{$status_option['status_name']}</option>";
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
@@ -181,16 +195,15 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
         </table>
     </div>
 
-    </main>
-    <?php include '../../views/admin/footer.php'; ?>
+</main>
+<?php include '../../views/admin/footer.php'; ?>
 </div>
 </div>
 
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="logic/add-reservasi.php" method="POST">
-                <div class="modal-header">
+            <form action="logic/logic_reservasi.php" method="POST"> <div class="modal-header">
                     <h5 class="modal-title" id="addModalLabel">Tambah Reservasi Baru</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -227,9 +240,12 @@ $sql = "SELECT r.*, u.username AS user_username, u.nama AS user_nama, u.email, u
                     <div class="mb-3">
                         <label for="addStatus" class="form-label">Status</label>
                         <select class="form-select" id="addStatus" name="status" required>
-                            <option value="pending">Pending</option>
-                            <option value="dikonfirmasi">Dikonfirmasi</option>
-                            <option value="dibatalkan">Dibatalkan</option>
+                            <?php
+                            // Populate statuses dynamically
+                            foreach ($reservation_statuses as $status_option) {
+                                echo "<option value='{$status_option['status_name']}'>{$status_option['status_name']}</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>

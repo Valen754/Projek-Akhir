@@ -8,10 +8,23 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$query = "SELECT * FROM users WHERE id = $user_id";
-$result = $conn->query($query);
+// Query untuk mendapatkan informasi pengguna berdasarkan session, JOIN dengan user_roles untuk mendapatkan role_name
+$query = "SELECT u.*, ur.role_name 
+          FROM users u 
+          JOIN user_roles ur ON u.role_id = ur.id 
+          WHERE u.id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $user = $result->fetch_assoc();
+$stmt->close(); // Close the statement after fetching result
 
+// Jika data pengguna tidak ditemukan, arahkan ke halaman login
+if (!$user) {
+    header("Location: ../../login/login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +44,8 @@ $user = $result->fetch_assoc();
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            height: 100vh;
         }
 
         .profile-kasir-container {
@@ -164,7 +179,8 @@ $user = $result->fetch_assoc();
         <div class="profile-kasir-header">
             <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ?? 'default-avatar.png'; ?>"
                 alt="Avatar" class="profile-kasir-avatar">
-        </div>
+            <h2><?php echo htmlspecialchars($user['nama']); ?></h2>
+            <p><?php echo htmlspecialchars($user['role_name']); ?></p> </div>
         <div class="profile-kasir-info">
             <span><?php echo htmlspecialchars($user['nama']); ?></span>
         </div>

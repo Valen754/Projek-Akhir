@@ -8,31 +8,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Get the form data
         $order_id = $_POST['order_id'];
-        // $customer_name = $_POST['customer_name']; // Dihapus karena kolom ini tidak ada di tabel `pembayaran`
-        $payment_method = $_POST['payment_method'];
-        $status = $_POST['status'];
-        // $notes = isset($_POST['notes']) ? $_POST['notes'] : ''; // Dihapus karena kolom ini tidak ada di tabel `pembayaran`
+        $payment_method_name = $_POST['payment_method']; // Changed variable name to avoid conflict with 'payment_method_id'
+        $status_name = $_POST['status']; // Changed variable name to avoid conflict with 'status_id'
 
         // Validate the data
-        // Validasi disesuaikan karena `customer_name` dan `notes` dihapus
-        if (empty($order_id) || empty($payment_method) || empty($status)) {
+        if (empty($order_id) || empty($payment_method_name) || empty($status_name)) {
             throw new Exception("Order ID, Metode Pembayaran, dan Status harus diisi");
         }
 
-        // Prepare the SQL query to update the order
+        // Get payment_method_id from payment_methods table
+        $query_method_id = "SELECT id FROM payment_methods WHERE method_name = ?";
+        $stmt_method = mysqli_prepare($conn, $query_method_id);
+        if (!$stmt_method) {
+            throw new Exception("Error preparing payment method statement: " . mysqli_error($conn));
+        }
+        mysqli_stmt_bind_param($stmt_method, "s", $payment_method_name);
+        mysqli_stmt_execute($stmt_method);
+        $result_method = mysqli_stmt_get_result($stmt_method);
+        if ($result_method && mysqli_num_rows($result_method) > 0) {
+            $row_method = mysqli_fetch_assoc($result_method);
+            $payment_method_id = $row_method['id'];
+        } else {
+            throw new Exception("Metode Pembayaran tidak ditemukan.");
+        }
+        mysqli_stmt_close($stmt_method);
+
+        // Get status_id from payment_status table
+        $query_status_id = "SELECT id FROM payment_status WHERE status_name = ?";
+        $stmt_status = mysqli_prepare($conn, $query_status_id);
+        if (!$stmt_status) {
+            throw new Exception("Error preparing payment status statement: " . mysqli_error($conn));
+        }
+        mysqli_stmt_bind_param($stmt_status, "s", $status_name);
+        mysqli_stmt_execute($stmt_status);
+        $result_status = mysqli_stmt_get_result($stmt_status);
+        if ($result_status && mysqli_num_rows($result_status) > 0) {
+            $row_status = mysqli_fetch_assoc($result_status);
+            $status_id = $row_status['id'];
+        } else {
+            throw new Exception("Status pembayaran tidak ditemukan.");
+        }
+        mysqli_stmt_close($stmt_status);
+
+        // Prepare the SQL query to update the order using foreign key IDs
         $query = "UPDATE pembayaran SET 
-                    payment_method = ?,
-                    status = ?
-                    WHERE id = ?";
+                      payment_method_id = ?,
+                      status_id = ?
+                  WHERE id = ?";
 
         // Use prepared statement to prevent SQL injection
         $stmt = mysqli_prepare($conn, $query);
         if (!$stmt) {
-            throw new Exception("Error preparing statement: " . mysqli_error($conn));
+            throw new Exception("Error preparing main update statement: " . mysqli_error($conn));
         }
 
-        // Sesuaikan parameter bind_param
-        mysqli_stmt_bind_param($stmt, "ssi", $payment_method, $status, $order_id);
+        // Bind parameters: 'i' for integer IDs
+        mysqli_stmt_bind_param($stmt, "iii", $payment_method_id, $status_id, $order_id);
 
         // Execute the query
         if (!mysqli_stmt_execute($stmt)) {

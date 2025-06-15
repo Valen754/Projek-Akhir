@@ -5,8 +5,12 @@ include '../../koneksi.php'; //
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Ambil detail produk
-    $sql = "SELECT * FROM menu WHERE id = ?";
+    // Ambil detail produk - Updated to join with menu_types and menu_status
+    $sql = "SELECT m.*, mt.type_name, ms.status_name 
+            FROM menu m
+            JOIN menu_types mt ON m.type_id = mt.id
+            JOIN menu_status ms ON m.status_id = ms.id
+            WHERE m.id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -210,8 +214,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         <nav class="navigasi-breadcrumb" aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li><a href="../menu/menu.php">Menu</a></li>
-                <li><?= ucfirst(htmlspecialchars($product['type'])) ?></li>
-                <li class="aktif"><?= htmlspecialchars($product['nama']) ?></li>
+                <li><?= ucfirst(htmlspecialchars($product['type_name'])) ?></li> <li class="aktif"><?= htmlspecialchars($product['nama']) ?></li>
             </ul>
         </nav>
     </div>
@@ -231,7 +234,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <h3 id="price">Rp <?= number_format($product['price'], 0, ',', '.') ?></h3>
                 <button class="add-to-cart-btn" data-id="<?= $product['id'] ?>"
                     data-nama="<?= htmlspecialchars($product['nama']) ?>" data-harga="<?= $product['price'] ?>"
-                    data-foto="<?= htmlspecialchars($product['url_foto']) ?>" data-stok="<?= $product['status'] ?>"
+                    data-foto="<?= htmlspecialchars($product['url_foto']) ?>" data-status="<?= htmlspecialchars($product['status_name']) ?>"
                     style="background:#6d4c2b;color:#fff;padding:10px 24px;border:none;border-radius:6px;font-size:16px;cursor:pointer;margin-top:12px;">
                     <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
                 </button>
@@ -326,13 +329,11 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
     <?php include '../../views/footer.php'; // ?>
 
-    <!-- Tombol Buka Keranjang -->
     <button id="openCartBtn"
         style="position:fixed;bottom:32px;right:32px;z-index:999;background:#6d4c2b;color:#fff;padding:12px 20px;border:none;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-size:18px;">
         <i class="fas fa-shopping-cart"></i> <span id="cartCount" style="color: white;">0</span>
     </button>
 
-    <!-- Modal Keranjang -->
     <div id="cartModal"
         style="display:none;position:fixed;z-index:10000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);">
         <div
@@ -361,7 +362,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         </div>
     </div>
 
-        <!-- Modal Tambah ke Keranjang -->
     <div id="cartInputModal"
         style="display:none;position:fixed;z-index:10001;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2); color: black;">
         <div
@@ -374,11 +374,11 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <input type="hidden" id="cartInputNama">
                 <input type="hidden" id="cartInputHarga">
                 <input type="hidden" id="cartInputFoto">
-                <input type="hidden" id="cartInputStok">
+                <input type="hidden" id="cartInputStatus"> 
                 <div style="margin-bottom:10px;">
                     <label>Jumlah:</label>
                     <input type="number" id="cartInputQty" min="1" value="1" style="width:60px;">
-                    <span id="cartInputStokInfo" style="font-size:12px;color:#888;"></span>
+                    <span id="cartInputStatusInfo" style="font-size:12px;color:#888;"></span>
                 </div>
                 <div style="margin-bottom:10px;">
                     <label>Catatan:</label>
@@ -397,16 +397,35 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', function (e) {
                     e.preventDefault();
-                    const { id, nama, harga, foto, stok } = this.dataset;
+                    // Changed from stok to status
+                    const { id, nama, harga, foto, status } = this.dataset; 
                     document.getElementById('cartInputId').value = id;
                     document.getElementById('cartInputNama').value = nama;
                     document.getElementById('cartInputHarga').value = harga;
                     document.getElementById('cartInputFoto').value = foto;
-                    document.getElementById('cartInputStok').value = stok;
-                    document.getElementById('cartInputQty').value = "1";
-                    document.getElementById('cartInputQty').max = stok;
-                    document.getElementById('cartInputStokInfo').textContent = `(Stok: ${stok})`;
+                    // Changed from cartInputStok to cartInputStatus
+                    document.getElementById('cartInputStatus').value = status; 
                     document.getElementById('cartInputNote').value = '';
+
+                    const cartInputQty = document.getElementById('cartInputQty');
+                    const cartInputStatusInfo = document.getElementById('cartInputStatusInfo');
+                    const cartInputFormSubmit = document.querySelector('#cartInputForm button[type="submit"]');
+
+                    if (status.toLowerCase() === 'habis') { // Check status_name
+                        cartInputQty.value = "0";
+                        cartInputQty.setAttribute('readonly', true); // Make quantity read-only
+                        cartInputStatusInfo.textContent = `(Stok: Habis)`; // Display out of stock message
+                        cartInputStatusInfo.style.color = 'red';
+                        cartInputFormSubmit.disabled = true; // Disable submit button
+                    } else { // Status is 'tersedia' or other
+                        cartInputQty.value = "1";
+                        cartInputQty.removeAttribute('readonly');
+                        cartInputQty.max = ''; // No max as quantity is not tracked per item
+                        cartInputStatusInfo.textContent = `(Stok: Tersedia)`; // Display available message
+                        cartInputStatusInfo.style.color = 'green';
+                        cartInputFormSubmit.disabled = false;
+                    }
+
                     document.getElementById('cartInputModal').style.display = 'block';
                 });
             });
@@ -511,27 +530,33 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                         const nama = document.getElementById('cartInputNama').value;
                         const harga = parseInt(document.getElementById('cartInputHarga').value);
                         const foto = document.getElementById('cartInputFoto').value;
-                        const stok = parseInt(document.getElementById('cartInputStok').value);
+                        // Changed from stok to status
+                        const status = document.getElementById('cartInputStatus').value; 
                         const qty = parseInt(document.getElementById('cartInputQty').value);
                         const note = document.getElementById('cartInputNote').value;
-                        if (!id || !nama || !harga || !foto || !stok) {
+
+                        if (!id || !nama || !harga || !foto || !status) { // Changed stok to status
                             throw new Error('Data menu tidak lengkap');
                         }
-                        if (qty < 1 || qty > stok) {
+
+                        if (status.toLowerCase() === 'habis') { // Check status_name
+                            alert('Menu ini sudah habis dan tidak bisa ditambahkan ke keranjang.');
+                            return;
+                        }
+                        
+                        if (qty < 1) { // Only validate minimum quantity
                             alert('Jumlah tidak valid!');
                             return;
                         }
+
                         const cart = loadCart();
                         let found = cart.find(item => item.id === id && (item.note || '') === note);
                         if (found) {
-                            if (found.qty + qty <= stok) {
-                                found.qty += qty;
-                            } else {
-                                alert('Stok tidak mencukupi!');
-                                return;
-                            }
+                            // If quantity is not tracked, simply add the quantity
+                            found.qty += qty;
                         } else {
-                            cart.push({ id, nama, harga, foto, qty, stok, note });
+                            // No 'stok' property needed if not tracked in DB
+                            cart.push({ id, nama, harga, foto, qty, note }); 
                         }
                         saveCart(cart);
                         document.getElementById('cartInputModal').style.display = 'none';
@@ -598,10 +623,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                     }
                     const selectedItems = checkedIdx.map(idx => {
                         const item = cart[idx];
-                        if (item.qty > item.stok) {
-                            alert(`Stok untuk ${item.nama} tidak mencukupi. Tersedia: ${item.stok}`);
-                            return null;
-                        }
+                        // Removed stock validation here as 'stok' is not a number and not tracked by quantity
                         return {
                             id: item.id,
                             name: item.nama,
@@ -611,12 +633,17 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                             foto: item.foto
                         };
                     });
-                    if (selectedItems.includes(null)) {
+                    // Filter out any nulls that might arise if future validation were added.
+                    const finalItems = selectedItems.filter(item => item !== null);
+                    if (finalItems.length === 0) {
+                        alert('Tidak ada item yang valid untuk checkout setelah validasi.');
                         return;
                     }
-                    sessionStorage.setItem('checkout_items', JSON.stringify(selectedItems));
+
+                    sessionStorage.setItem('checkout_items', JSON.stringify(finalItems));
                     localStorage.removeItem('cart');
-                    window.location.href = 'checkout.php';
+                    // This file is in pages/detail/, so checkout.php is in the same directory.
+                    window.location.href = 'checkout.php'; 
                 });
             }
             // Initialize cart count on page load

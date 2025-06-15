@@ -2,47 +2,79 @@
 include '../../views/header.php';
 include '../../koneksi.php';
 
+session_start();
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login/login.php");
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
-$query = "SELECT * FROM users WHERE id = $user_id";
-$result = $conn->query($query);
-$user = $result->fetch_assoc();
+$error = '';
+
+// Use prepared statement for fetching user data
+$sql_fetch_user = "SELECT * FROM users WHERE id = ?";
+$stmt_fetch_user = $conn->prepare($sql_fetch_user);
+$stmt_fetch_user->bind_param("i", $user_id);
+$stmt_fetch_user->execute();
+$result_fetch_user = $stmt_fetch_user->get_result();
+$user = $result_fetch_user->fetch_assoc();
+$stmt_fetch_user->close();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $no_telp = mysqli_real_escape_string($conn, $_POST['no_telp']);
-    $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
+    $nama = trim($_POST['nama']);
+    $email = trim($_POST['email']);
+    $no_telp = trim($_POST['no_telp']);
+    $alamat = trim($_POST['alamat']);
 
     // Handle upload foto
-    $foto = $user['profile_picture'];
+    $foto_lama = $user['profile_picture']; // Get current picture name
+    $new_foto_name = $foto_lama; // Default to old picture
+
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
         $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($ext, $allowed)) {
-            $newName = 'user_' . $user_id . '_' . time() . '.' . $ext;
-            $uploadPath = '../../asset/user_picture/' . $newName;
+            $new_foto_name = 'user_' . $user_id . '_' . time() . '.' . $ext;
+            $uploadPath = '../../asset/user_picture/' . $new_foto_name;
+
             if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadPath)) {
-                $foto = $newName;
+                // Delete old picture if it's not the default one and exists
+                if (!empty($foto_lama) && $foto_lama != 'default-avatar.png' && file_exists('../../asset/user_picture/' . $foto_lama)) {
+                    unlink('../../asset/user_picture/' . $foto_lama);
+                }
             } else {
                 $error = "Gagal upload foto.";
             }
         } else {
-            $error = "Format foto tidak didukung.";
+            $error = "Format foto tidak didukung (hanya JPG, JPEG, PNG, GIF).";
         }
     }
 
-    // Update data user
-    $update = "UPDATE users SET nama='$nama', email='$email', no_telp='$no_telp', alamat='$alamat', profile_picture='$foto' WHERE id=$user_id";
-    if (empty($error) && $conn->query($update)) {
-        echo "<script>alert('Profil berhasil diperbarui!');window.location='profil.php';</script>";
-        exit();
-    } elseif (empty($error)) {
-        $error = "Gagal memperbarui profil.";
+    // Update data user using prepared statement
+    $update_sql = "UPDATE users SET nama=?, email=?, no_telp=?, alamat=?, profile_picture=?, updated_at=CURRENT_TIMESTAMP WHERE id=?";
+    $stmt_update = $conn->prepare($update_sql);
+
+    if (!$stmt_update) {
+        $error = "Gagal menyiapkan statement update: " . $conn->error;
+    } else {
+        $stmt_update->bind_param("sssssi", $nama, $email, $no_telp, $alamat, $new_foto_name, $user_id);
+        
+        if ($stmt_update->execute()) {
+            // Re-fetch user data to update the displayed information after successful update
+            $stmt_fetch_user = $conn->prepare($sql_fetch_user);
+            $stmt_fetch_user->bind_param("i", $user_id);
+            $stmt_fetch_user->execute();
+            $result_fetch_user = $stmt_fetch_user->get_result();
+            $user = $result_fetch_user->fetch_assoc();
+            $stmt_fetch_user->close();
+
+            echo "<script>alert('Profil berhasil diperbarui!');window.location='profil.php';</script>";
+            exit();
+        } else {
+            $error = "Gagal memperbarui profil: " . $stmt_update->error;
+        }
+        $stmt_update->close();
     }
 }
 ?>
@@ -137,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<div class='error'>$error</div>"; ?>
         <form method="POST" enctype="multipart/form-data">
             <div class="profile-preview">
-                <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ? $user['profile_picture'] : 'default-avatar.png'; ?>"
+                <img src="../../asset/user_picture/<?php echo $user['profile_picture'] ? htmlspecialchars($user['profile_picture']) : 'default-avatar.png'; ?>"
                     alt="Foto Profil">
             </div>
             <label for="foto">Foto Profil</label>

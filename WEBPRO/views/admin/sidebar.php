@@ -7,7 +7,6 @@ $user_query = mysqli_query($conn, "SELECT * FROM users WHERE id = $user_id");
 $user = mysqli_fetch_assoc($user_query);
 $profile_picture = !empty($user['profile_picture']) ? '../../asset/user_picture/' . $user['profile_picture'] : '../../asset/user_picture/default.jpg';
 $username = $user['username'];
-$role = $user['role'];
 ?>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">

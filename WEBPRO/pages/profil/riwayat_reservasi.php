@@ -10,9 +10,11 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Query untuk mendapatkan data reservasi pengguna, termasuk email dan no_telp dari tabel users
-$query = "SELECT r.*, u.email, u.no_telp 
+// Updated to join with reservation_status
+$query = "SELECT r.*, u.email, u.no_telp, rs.status_name AS reservation_status_name 
           FROM reservasi r 
           JOIN users u ON r.user_id = u.id 
+          JOIN reservation_status rs ON r.status_id = rs.id -- Join to get status name
           WHERE r.user_id = ? ORDER BY r.tanggal_reservasi DESC";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $user_id);
@@ -181,8 +183,8 @@ $result = $stmt->get_result();
                             <td><?php echo htmlspecialchars($row['no_telp']); ?></td>
                             <td><?php echo htmlspecialchars($row['message']); ?></td>
                             <td>
-                                <span class="<?php echo 'status-' . strtolower($row['status']); ?>">
-                                    <?php echo htmlspecialchars($row['status']); ?>
+                                <span class="<?php echo 'status-' . strtolower($row['reservation_status_name']); ?>">
+                                    <?php echo htmlspecialchars($row['reservation_status_name']); ?>
                                 </span>
                             </td>
                         </tr>

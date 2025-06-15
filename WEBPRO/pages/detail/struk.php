@@ -11,14 +11,20 @@ $order_id = (int) $_GET['id'];
 
 // Get order details
 // Query SQL disesuaikan untuk mengambil kolom yang sesuai dengan skema database
-$sql = "SELECT p.id, p.user_id, p.order_date, p.status, p.payment_method, p.order_type, 
-               u.nama AS customer_name, -- Mengambil customer_name dari tabel users
-               dp.menu_id, dp.quantity, dp.price_per_item as price, dp.item_notes as notes, 
-               m.nama as menu_name 
+$sql = "SELECT p.id, p.user_id, p.order_date,
+               ps.status_name AS order_status_name,          -- Get status name from payment_status
+               pm.method_name AS payment_method_name,         -- Get method name from payment_methods
+               ot.type_name AS order_type_name,               -- Get type name from order_types
+               u.nama AS customer_name, 
+               dp.menu_id, dp.quantity, dp.price_per_item AS price, dp.item_notes AS notes, 
+               m.nama AS menu_name 
         FROM pembayaran p 
-        JOIN users u ON p.user_id = u.id -- Join dengan tabel users untuk customer_name
-        JOIN detail_pembayaran dp ON p.id = dp.pembayaran_id -- Perbaikan: order_id diubah menjadi pembayaran_id
+        JOIN users u ON p.user_id = u.id 
+        JOIN detail_pembayaran dp ON p.id = dp.pembayaran_id 
         JOIN menu m ON dp.menu_id = m.id 
+        JOIN payment_status ps ON p.status_id = ps.id        -- Join to get status name
+        JOIN payment_methods pm ON p.payment_method_id = pm.id -- Join to get method name
+        JOIN order_types ot ON p.order_type_id = ot.id       -- Join to get order type name
         WHERE p.id = ?";
 
 $stmt = $conn->prepare($sql);
@@ -33,7 +39,7 @@ if ($result->num_rows === 0) {
 
 $items = [];
 $order = null;
-$calculated_subtotal = 0; // Variabel untuk menghitung subtotal
+$calculated_subtotal = 0;
 
 while ($row = $result->fetch_assoc()) {
     if (!$order) {
@@ -41,29 +47,27 @@ while ($row = $result->fetch_assoc()) {
         $order = [
             'id' => $row['id'],
             'customer_name' => $row['customer_name'],
-            'order_type' => $row['order_type'] ?? 'dine_in',
-            'payment_method' => $row['payment_method'],
+            'order_type_name' => $row['order_type_name'],     // Use fetched type name
+            'payment_method_name' => $row['payment_method_name'], // Use fetched method name
+            'order_status_name' => $row['order_status_name'], // Use fetched status name
             'order_date' => $row['order_date']
         ];
     }
 
-    // Menambahkan item ke array items dan menghitung subtotal
     $item_total = $row['price'] * $row['quantity'];
     $items[] = [
         'name' => $row['menu_name'],
         'quantity' => $row['quantity'],
         'price' => $row['price'],
         'notes' => $row['notes'],
-        'total' => $item_total // Menyimpan total per item
+        'total' => $item_total
     ];
-    $calculated_subtotal += $item_total; // Menambahkan ke subtotal keseluruhan
+    $calculated_subtotal += $item_total;
 }
 
-// Menghitung pajak dan total keseluruhan setelah semua item diproses
 $tax = round($calculated_subtotal * 0.10);
 $total = $calculated_subtotal + $tax;
 
-// Menambahkan total_amount, subtotal, dan tax ke array order
 $order['subtotal'] = $calculated_subtotal;
 $order['tax'] = $tax;
 $order['total'] = $total;
@@ -182,9 +186,7 @@ $order['total'] = $total;
 
         <div class="struk-info">
             <div>Customer: <?php echo htmlspecialchars($order['customer_name']); ?></div>
-            <div>Jenis: <?php echo $order['order_type'] === 'dine_in' ? 'Dine In' : 'Take Away'; ?></div>
-            <div>Pembayaran: <?php echo ucfirst($order['payment_method']); ?></div>
-        </div>
+            <div>Jenis: <?php echo htmlspecialchars($order['order_type_name']); ?></div> <div>Pembayaran: <?php echo htmlspecialchars($order['payment_method_name']); ?></div> </div>
 
         <?php foreach ($items as $item): ?>
             <div class="struk-item">

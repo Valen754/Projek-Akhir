@@ -15,11 +15,13 @@ if ($_SESSION['role'] !== 'kasir') {
 }
 
 // Query untuk mendapatkan reservasi yang sudah dikonfirmasi beserta nama, email, dan no_telp user
-$sql = "SELECT reservasi.*, users.nama, users.email, users.no_telp 
-        FROM reservasi 
-        JOIN users ON reservasi.user_id = users.id 
-        WHERE reservasi.status = 'dikonfirmasi' 
-        ORDER BY reservasi.created_at DESC";
+// Updated to join with reservation_status
+$sql = "SELECT r.*, u.nama, u.email, u.no_telp, rs.status_name AS reservation_status_name 
+        FROM reservasi r 
+        JOIN users u ON r.user_id = u.id 
+        JOIN reservation_status rs ON r.status_id = rs.id -- Join to get status name
+        WHERE rs.status_name = 'dikonfirmasi' 
+        ORDER BY r.created_at DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -96,13 +98,13 @@ $result = $conn->query($sql);
                         <div class="reservasi-grid">
                             <?php while ($row = $result->fetch_assoc()): ?>
                                 <div class="reservasi-card">
-                                    <h3>Kode Reservasi: <?php echo $row['kode_reservasi']; ?></h3>
+                                    <h3>Kode Reservasi: <?php echo htmlspecialchars($row['kode_reservasi']); ?></h3>
                                     <p><strong>Nama:</strong> <?php echo htmlspecialchars($row['nama']); ?></p>
                                     <p><strong>Email:</strong> <?php echo htmlspecialchars($row['email']); ?></p>
                                     <p><strong>No. Telepon:</strong> <?php echo htmlspecialchars($row['no_telp']); ?></p>
-                                    <p><strong>Jumlah Orang:</strong> <?php echo $row['jumlah_orang']; ?></p>
-                                    <p><strong>Tanggal:</strong> <?php echo $row['tanggal_reservasi']; ?></p>
-                                    <p><strong>Pesan:</strong> <?php echo $row['message']; ?></p>
+                                    <p><strong>Jumlah Orang:</strong> <?php echo htmlspecialchars($row['jumlah_orang']); ?></p>
+                                    <p><strong>Tanggal:</strong> <?php echo htmlspecialchars($row['tanggal_reservasi']); ?></p>
+                                    <p><strong>Pesan:</strong> <?php echo htmlspecialchars($row['message']); ?></p>
                                     <p class="status status-dikonfirmasi">Status: Dikonfirmasi</p>
                                 </div>
                             <?php endwhile; ?>

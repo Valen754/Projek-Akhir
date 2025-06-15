@@ -185,30 +185,38 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 </head>
 
 <body>
+
     <?php
-
-
-    // Query untuk menghitung jumlah menu berdasarkan kategori
-    $countQuery = "SELECT type, COUNT(*) as total FROM menu GROUP BY type";
+    // Query untuk menghitung jumlah menu berdasarkan kategori - Updated to join with menu_types
+    $countQuery = "SELECT mt.type_name AS type, COUNT(m.id) as total 
+                   FROM menu m 
+                   JOIN menu_types mt ON m.type_id = mt.id 
+                   GROUP BY mt.type_name";
     $countResult = $conn->query($countQuery);
 
     $menuCounts = [];
+    $totalAllMenus = 0;
     if ($countResult->num_rows > 0) {
         while ($countRow = $countResult->fetch_assoc()) {
             $menuCounts[$countRow['type']] = $countRow['total'];
+            $totalAllMenus += $countRow['total'];
         }
     }
 
     // Ambil daftar menu yang difavoritkan oleh user yang sedang login
     $favorite_menus = [];
     if ($user_id) {
-        $query_favorites = "SELECT menu_id FROM favorites WHERE user_id = $user_id";
-        $result_favorites = $conn->query($query_favorites);
+        $query_favorites = "SELECT menu_id FROM favorites WHERE user_id = ?";
+        $stmt_favorites = $conn->prepare($query_favorites);
+        $stmt_favorites->bind_param("i", $user_id);
+        $stmt_favorites->execute();
+        $result_favorites = $stmt_favorites->get_result();
         if ($result_favorites) {
             while ($row_fav = $result_favorites->fetch_assoc()) {
                 $favorite_menus[] = $row_fav['menu_id'];
             }
         }
+        $stmt_favorites->close();
     }
     ?>
 
@@ -223,32 +231,32 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
             <li>
                 <a class="nav-link <?php echo (!isset($_GET['type']) || empty($_GET['type'])) ? 'active' : ''; ?>"
                     href="menu.php">
-                    All <span>(<?php echo array_sum($menuCounts); ?>)</span>
+                    All <span>(<?php echo $totalAllMenus; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'kopi') ? 'active' : ''; ?>"
-                    href="menu.php?type=kopi">
-                    Coffe <span>(<?php echo isset($menuCounts['kopi']) ? $menuCounts['kopi'] : 0; ?>)</span>
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'Kopi') ? 'active' : ''; ?>"
+                    href="menu.php?type=Kopi">
+                    Coffee <span>(<?php echo isset($menuCounts['Kopi']) ? $menuCounts['Kopi'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'minuman') ? 'active' : ''; ?>"
-                    href="menu.php?type=minuman">
-                    Non Coffe <span>(<?php echo isset($menuCounts['minuman']) ? $menuCounts['minuman'] : 0; ?>)</span>
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'Minuman') ? 'active' : ''; ?>"
+                    href="menu.php?type=Minuman">
+                    Non Coffee <span>(<?php echo isset($menuCounts['Minuman']) ? $menuCounts['Minuman'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'makanan_berat') ? 'active' : ''; ?>"
-                    href="menu.php?type=makanan_berat">
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'Makanan_Berat') ? 'active' : ''; ?>"
+                    href="menu.php?type=Makanan_Berat">
                     Foods
-                    <span>(<?php echo isset($menuCounts['makanan_berat']) ? $menuCounts['makanan_berat'] : 0; ?>)</span>
+                    <span>(<?php echo isset($menuCounts['Makanan_Berat']) ? $menuCounts['Makanan_Berat'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'cemilan') ? 'active' : ''; ?>"
-                    href="menu.php?type=cemilan">
-                    Snacks <span>(<?php echo isset($menuCounts['cemilan']) ? $menuCounts['cemilan'] : 0; ?>)</span>
+                <a class="nav-link <?php echo (isset($_GET['type']) && $_GET['type'] == 'Cemilan') ? 'active' : ''; ?>"
+                    href="menu.php?type=Cemilan">
+                    Snacks <span>(<?php echo isset($menuCounts['Cemilan']) ? $menuCounts['Cemilan'] : 0; ?>)</span>
                 </a>
             </li>
             <li>
@@ -263,17 +271,36 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
             <div class="tab-pane active" id="semua">
                 <div class="row">
                     <?php
-                    // Mengubah query untuk menggunakan kolom 'status' yang ada di tabel 'menu'
-                    $sql = "SELECT * FROM menu WHERE status = 'tersedia'";
+                    // Mengubah query untuk menggunakan kolom status_name dan type_name
+                    $sql_where = "WHERE ms.status_name = 'Tersedia'"; // Initial filter for available items
+
                     if (isset($_GET['type']) && !empty($_GET['type'])) {
-                        $type = $conn->real_escape_string($_GET['type']); // Sanitasi input
-                        if ($type === 'favorit' && !empty($favorite_menus)) {
+                        $type_filter = $conn->real_escape_string($_GET['type']); // Sanitasi input
+
+                        if ($type_filter === 'favorit' && !empty($favorite_menus)) {
                             $menu_ids = implode(',', $favorite_menus);
-                            // Mengubah query untuk menggunakan kolom 'status'
-                            $sql = "SELECT * FROM menu WHERE id IN ($menu_ids) AND status = 'tersedia'";
-                        } elseif ($type !== 'favorit') {
-                            $sql .= " AND type = '$type'"; // Menambahkan filter status='tersedia' secara implisit dari baris awal
+                            $sql = "SELECT m.*, mt.type_name, ms.status_name 
+                                    FROM menu m 
+                                    JOIN menu_types mt ON m.type_id = mt.id
+                                    JOIN menu_status ms ON m.status_id = ms.id
+                                    WHERE m.id IN ($menu_ids) AND ms.status_name = 'Tersedia'";
+                        } elseif ($type_filter !== 'favorit') {
+                            $sql = "SELECT m.*, mt.type_name, ms.status_name 
+                                    FROM menu m 
+                                    JOIN menu_types mt ON m.type_id = mt.id
+                                    JOIN menu_status ms ON m.status_id = ms.id
+                                    WHERE mt.type_name = '$type_filter' AND ms.status_name = 'Tersedia'";
+                        } else {
+                            // If 'favorit' is selected but no favorites, or invalid type, show nothing.
+                            $sql = "SELECT m.*, mt.type_name, ms.status_name FROM menu m JOIN menu_types mt ON m.type_id = mt.id JOIN menu_status ms ON m.status_id = ms.id WHERE 0"; // Empty result
                         }
+                    } else {
+                        // Default query for "All" category
+                        $sql = "SELECT m.*, mt.type_name, ms.status_name 
+                                FROM menu m 
+                                JOIN menu_types mt ON m.type_id = mt.id
+                                JOIN menu_status ms ON m.status_id = ms.id
+                                WHERE ms.status_name = 'Tersedia'";
                     }
 
                     $result = $conn->query($sql);
@@ -299,7 +326,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                                                 data-nama="<?php echo htmlspecialchars($row['nama']); ?>"
                                                 data-harga="<?php echo $row['price']; ?>"
                                                 data-foto="<?php echo htmlspecialchars($row['url_foto']); ?>"
-                                                data-stok="<?php echo ($row['status'] == 'tersedia') ? '1000' : '0'; // Menggunakan status sebagai indikator stok, bisa diganti dengan angka default besar jika tersedia ?>" title="Tambah ke Keranjang">
+                                                data-status="<?php echo htmlspecialchars($row['status_name']); ?>" title="Tambah ke Keranjang">
                                                 <i class="fas fa-shopping-cart"></i>
                                             </button>
                                             <?php if ($user_id): ?>
@@ -335,8 +362,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                                         <div class="card-title">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?>
                                         </div>
                                         <div class="card-title" style="color:#6d4c2b;">
-                                             <?php echo htmlspecialchars($row['status']); // Menggunakan status daripada quantity ?>
-                                        </div>
+                                            <?php echo htmlspecialchars($row['status_name']); ?> </div>
                                     </div>
                                 </div>
                             </div>
@@ -366,15 +392,15 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                 <h3 style="font-size:24px;color:#2c3e50;text-align:center;margin-bottom:20px;">Keranjang Belanja</h3>
 
                 <div id="cartItems" style="flex:1;overflow-y:auto;margin-bottom:16px;">
-                    </div>
+                </div>
 
                 <div id="cartSubtotal"
                     style="font-size:16px;color:#2c3e50;font-weight:normal;margin-top:8px;text-align:center;">
-                    </div>
+                </div>
                 <div id="cartTax" style="font-size:16px;color:#2c3e50;font-weight:normal;margin-top:8px;text-align:center;">
-                    </div>
+                </div>
                 <div id="cartTotal" style="font-size:18px;color:#2c3e50;font-weight:bold;margin-top:8px;text-align:center;">
-                    </div>
+                </div>
 
                 <div style="text-align:center;margin-top:16px;">
                     <button id="checkoutBtn"
@@ -614,18 +640,34 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                 document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                     button.addEventListener('click', function (e) {
                         e.preventDefault();
-                        const { id, nama, harga, foto, stok, note } = this.dataset;
+                        const { id, nama, harga, foto, status, note } = this.dataset; // Changed 'stok' to 'status'
 
                         // Update modal inputs
                         document.getElementById('cartInputId').value = id;
                         document.getElementById('cartInputNama').value = nama;
                         document.getElementById('cartInputHarga').value = harga;
                         document.getElementById('cartInputFoto').value = foto;
-                        document.getElementById('cartInputStok').value = stok;
+                        document.getElementById('cartInputStok').value = status; // Pass status instead of numerical stock
                         document.getElementById('cartInputQty').value = "1";
-                        document.getElementById('cartInputQty').max = stok;
-                        document.getElementById('cartInputStokInfo').textContent = `(Stok: ${stok})`;
+                        // Removed cartInputQty.max = stok; as stock is not numerical
+                        document.getElementById('cartInputStokInfo').textContent = `(Status: ${status})`; // Display status text
                         document.getElementById('cartInputNote').value = note || '';
+
+                        // Disable quantity input and submit if status is 'habis'
+                        const cartInputQty = document.getElementById('cartInputQty');
+                        const cartInputFormSubmit = document.querySelector('#cartInputForm button[type="submit"]');
+
+                        if (status.toLowerCase() === 'habis') {
+                            cartInputQty.value = "0";
+                            cartInputQty.setAttribute('readonly', true);
+                            cartInputStokInfo.style.color = 'red';
+                            cartInputFormSubmit.disabled = true;
+                        } else {
+                            cartInputQty.removeAttribute('readonly');
+                            cartInputStokInfo.style.color = '#888';
+                            cartInputFormSubmit.disabled = false;
+                        }
+
 
                         // Show modal
                         document.getElementById('cartInputModal').style.display = 'block';
@@ -642,16 +684,21 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                             const nama = document.getElementById('cartInputNama').value;
                             const harga = parseInt(document.getElementById('cartInputHarga').value);
                             const foto = document.getElementById('cartInputFoto').value;
-                            const stok = parseInt(document.getElementById('cartInputStok').value);
+                            const status = document.getElementById('cartInputStok').value; // Get status from input
                             const qty = parseInt(document.getElementById('cartInputQty').value);
                             const note = document.getElementById('cartInputNote').value;
 
-                            if (!id || !nama || !harga || !foto || !stok) {
+                            if (!id || !nama || !harga || !foto || !status) {
                                 throw new Error('Data menu tidak lengkap');
                             }
 
-                            if (qty < 1 || qty > stok) {
-                                alert('Jumlah tidak valid!');
+                            if (status.toLowerCase() === 'habis') { // Check status for adding to cart
+                                alert('Menu ini sudah habis dan tidak bisa ditambahkan ke keranjang.');
+                                return;
+                            }
+
+                            if (qty < 1) {
+                                alert('Jumlah tidak valid! Minimal 1.');
                                 return;
                             }
 
@@ -659,14 +706,10 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                             let found = cart.find(item => item.id === id && (item.note || '') === note);
 
                             if (found) {
-                                if (found.qty + qty <= stok) {
-                                    found.qty += qty;
-                                } else {
-                                    alert('Stok tidak mencukupi!');
-                                    return;
-                                }
+                                // Since 'stok' is not a numeric quantity from DB, assume always add if 'tersedia'
+                                found.qty += qty;
                             } else {
-                                cart.push({ id, nama, harga, foto, qty, stok, note });
+                                cart.push({ id, nama, harga, foto, qty, note }); // 'stok' property removed from cart item
                             }
 
                             saveCart(cart);
@@ -751,10 +794,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
                         const selectedItems = checkedIdx.map(idx => {
                             const item = cart[idx];
-                            if (item.qty > item.stok) {
-                                alert(`Stok untuk ${item.nama} tidak mencukupi.  ${item.stok}`);
-                                return null;
-                            }
+                            // No numeric stock validation needed here based on DB schema.
                             return {
                                 id: item.id,
                                 name: item.nama,
@@ -806,8 +846,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                     <input type="hidden" id="cartInputNama">
                     <input type="hidden" id="cartInputHarga">
                     <input type="hidden" id="cartInputFoto">
-                    <input type="hidden" id="cartInputStok">
-                    <div style="margin-bottom:10px;">
+                    <input type="hidden" id="cartInputStok"> <div style="margin-bottom:10px;">
                         <label>Jumlah:</label>
                         <input type="number" id="cartInputQty" min="1" value="1" style="width:60px;">
                         <span id="cartInputStokInfo" style="font-size:12px;color:#888;"></span>

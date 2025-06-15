@@ -14,8 +14,25 @@ if ($_SESSION['role'] !== 'kasir') {
     exit();
 }
 
-// Ambil menu tersedia
-$query = "SELECT * FROM menu WHERE status = 'tersedia'";
+// Fetch all order types for radio buttons
+$order_types_query = mysqli_query($conn, "SELECT id, type_name FROM order_types ORDER BY type_name ASC");
+$order_types = [];
+while ($row = mysqli_fetch_assoc($order_types_query)) {
+    $order_types[] = $row;
+}
+
+// Fetch all payment methods for dropdown
+$payment_methods_query = mysqli_query($conn, "SELECT id, method_name FROM payment_methods ORDER BY method_name ASC");
+$payment_methods = [];
+while ($row = mysqli_fetch_assoc($payment_methods_query)) {
+    $payment_methods[] = $row;
+}
+
+// Ambil menu tersedia - Updated to join with menu_status
+$query = "SELECT m.*, ms.status_name 
+          FROM menu m
+          JOIN menu_status ms ON m.status_id = ms.id
+          WHERE ms.status_name = 'Tersedia'"; // Filter by status_name
 $result = mysqli_query($conn, $query);
 ?>
 
@@ -31,13 +48,11 @@ $result = mysqli_query($conn, $query);
 
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <?php $activePage = 'kasir'; ?>
             <?php include '../../views/kasir/sidebar.php'; ?>
         </div>
 
-        <!-- Main Content -->
         <main>
             <header>
                 <h1>Kasir - Tapal Kuda</h1>
@@ -69,14 +84,12 @@ $result = mysqli_query($conn, $query);
             </section>
         </main>
 
-        <!-- Orders Panel -->
         <aside class="orders-panel">
             <header>
                 <h2>Pesanan <span>(0 item)</span></h2>
             </header>
 
             <ul class="order-list" id="orderList">
-                <!-- Dinamis isi keranjang -->
             </ul>
 
             <footer>
@@ -97,29 +110,30 @@ $result = mysqli_query($conn, $query);
         </aside>
     </div>
 
-    <!-- Modal/Form Checkout (hidden by default) -->
     <div id="checkoutModal"
         style="display:none; position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(30,36,50,0.85); z-index:999; justify-content:center; align-items:center;">
-        <form id="checkoutForm" action="logic/checkout.php" method="post" style="background:#222b3a;padding:32px;border-radius:12px;max-width:340px;width:100%;margin:auto;box-shadow:0 2px 24px #0006;color:#fff;">
+        <form id="checkoutForm" action="logic/checkout.php" method="post"
+            style="background:#222b3a;padding:32px;border-radius:12px;max-width:340px;width:100%;margin:auto;box-shadow:0 2px 24px #0006;color:#fff;">
             <h2 style="margin-bottom:20px;">Pembayaran</h2>
             <label>Nama Customer (opsional):<br>
                 <input type="text" name="customer_name"
                     style="width:100%;margin-bottom:12px;padding:8px;border-radius:8px;border:none;">
             </label>
-            <label>
-                <input type="radio" name="jenis_order" value="dine_in" checked>
-                Dine In
-                <br>
-                <input type="radio" name="jenis_order" value="take_away">
-                Take Away
-                <br>
+            <label>Jenis Pesanan:<br>
+                <?php foreach ($order_types as $type_option): ?>
+                    <input type="radio" name="jenis_order" value="<?= htmlspecialchars($type_option['type_name']) ?>"
+                        <?= (strtolower($type_option['type_name']) == 'dine in') ? 'checked' : '' ?>>
+                    <?= htmlspecialchars($type_option['type_name']) ?><br>
+                <?php endforeach; ?>
             </label>
             <label>Metode Pembayaran:<br>
                 <select name="payment_method" required
                     style="width:100%;margin-bottom:18px;padding:8px;border-radius:8px;">
-                    <option value="cash">Cash</option>
-                    <option value="e-wallet">E-Wallet</option>
-                    <option value="qris">QRIS</option>
+                    <?php foreach ($payment_methods as $method_option): ?>
+                        <option value="<?= htmlspecialchars($method_option['method_name']) ?>">
+                            <?= htmlspecialchars($method_option['method_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </label>
             <label>Kode Voucher (jika ada):<br>
@@ -134,7 +148,7 @@ $result = mysqli_query($conn, $query);
         </form>
     </div>
 
-        <script>
+    <script>
         // Pencarian menu lokal
         document.getElementById("searchInput").addEventListener("input", function () {
             const value = this.value.toLowerCase();
@@ -251,22 +265,22 @@ $result = mysqli_query($conn, $query);
         }
 
         // Submit checkout
-document.getElementById("checkoutForm").onsubmit = function (e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    fetch('logic/checkout.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = 'struk.php?id=' + data.order_id;
-        } else {
-            alert("Transaksi gagal: " + data.message);
-        }
-    });
-};
+        document.getElementById("checkoutForm").onsubmit = function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('logic/checkout.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = 'struk.php?id=' + data.order_id;
+                    } else {
+                        alert("Transaksi gagal: " + data.message);
+                    }
+                });
+        };
 
     </script>
 

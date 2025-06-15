@@ -6,34 +6,48 @@ include '../../koneksi.php';
 
 
 // Query untuk Total Pendapatan
-// Menggabungkan tabel pembayaran dan detail_pembayaran untuk menghitung total_amount
+// Menggabungkan tabel pembayaran, detail_pembayaran, dan payment_status untuk menghitung total_amount
 $total_pendapatan_query = "SELECT SUM(dp.quantity * dp.price_per_item) as total 
-                           FROM pembayaran p
-                           JOIN detail_pembayaran dp ON p.id = dp.pembayaran_id
-                           WHERE p.status = 'completed'"; // Status 'Completed' diubah menjadi 'completed' (huruf kecil)
+                             FROM pembayaran p
+                             JOIN detail_pembayaran dp ON p.id = dp.pembayaran_id
+                             JOIN payment_status ps ON p.status_id = ps.id -- Join with payment_status table
+                             WHERE ps.status_name = 'Completed'"; // Filter by status_name
 $total_pendapatan_result = mysqli_query($conn, $total_pendapatan_query);
 $total_pendapatan = mysqli_fetch_assoc($total_pendapatan_result)['total'];
 
 
 $total_pesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM pembayaran"))['total'];
-$total_pelanggan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role = 'member'"))['total'];
 
+// Query untuk Total Pelanggan
+// Menggabungkan tabel users dan user_roles untuk mendapatkan role_name
+$total_pelanggan_query = "SELECT COUNT(u.id) as total 
+                          FROM users u
+                          JOIN user_roles ur ON u.role_id = ur.id
+                          WHERE ur.role_name = 'member'"; // Filter by role_name
+$total_pelanggan_result = mysqli_query($conn, $total_pelanggan_query);
+$total_pelanggan = mysqli_fetch_assoc($total_pelanggan_result)['total'];
 
 
 $reservasi_baru = [];
 // Query untuk Reservasi Baru
-// Menggabungkan tabel reservasi dan users untuk mendapatkan email
+// Menggabungkan tabel reservasi, users, dan reservation_status
 $result_reservasi = mysqli_query($conn, "SELECT r.id, r.kode_reservasi, u.email, r.tanggal_reservasi 
-                                        FROM reservasi r
-                                        JOIN users u ON r.user_id = u.id
-                                        WHERE r.status = 'pending'");
+                                         FROM reservasi r
+                                         JOIN users u ON r.user_id = u.id
+                                         JOIN reservation_status rs ON r.status_id = rs.id -- Join with reservation_status table
+                                         WHERE rs.status_name = 'pending'"); // Filter by status_name
 while ($row_reservasi = mysqli_fetch_assoc($result_reservasi)) {
     $reservasi_baru[] = $row_reservasi;
 }
+
+// NOTE: Query for $menu_low_stock is not present in this file. 
+// If 'quantity' refers to stock, ensure your 'menu' table has a 'stock' column or similar, 
+// or consider if this functionality needs a different approach based on your schema.
+// The provided SQL dump for 'menu' table does not have a 'quantity' column for stock.
+$menu_low_stock = []; // Initialize to prevent errors if not set elsewhere.
 ?>
 
 <main>
-
     <div class="container-fluid px-4">
         <h1 class="mt-4">Dashboard Admin</h1>
         <ol class="breadcrumb mb-4">

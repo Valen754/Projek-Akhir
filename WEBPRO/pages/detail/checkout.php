@@ -1,7 +1,21 @@
 <?php
-
 include '../../koneksi.php';
 include '../../views/header.php';
+
+// Fetch all order types for radio buttons
+$order_types_query = mysqli_query($conn, "SELECT id, type_name FROM order_types ORDER BY type_name ASC");
+$order_types = [];
+while ($row = mysqli_fetch_assoc($order_types_query)) {
+    $order_types[] = $row;
+}
+
+// Fetch all payment methods for dropdown
+$payment_methods_query = mysqli_query($conn, "SELECT id, method_name FROM payment_methods ORDER BY method_name ASC");
+$payment_methods = [];
+while ($row = mysqli_fetch_assoc($payment_methods_query)) {
+    $payment_methods[] = $row;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -175,8 +189,7 @@ include '../../views/header.php';
             <div class="error-message" id="errorMessage"></div>
 
             <div id="checkoutPreview" class="checkout-preview">
-                <!-- Items will be displayed here via JavaScript -->
-            </div>
+                </div>
 
             <div class="form-group">
                 <label>Nama Customer:</label>
@@ -186,21 +199,26 @@ include '../../views/header.php';
             <div class="form-group">
                 <label>Jenis Pesanan:</label>
                 <div class="radio-group">
-                    <label>
-                        <input type="radio" name="jenis_order" value="dine_in" checked> Dine In
-                    </label>
-                    <label>
-                        <input type="radio" name="jenis_order" value="take_away"> Take Away
-                    </label>
+                    <?php foreach ($order_types as $type_option): ?>
+                        <label>
+                            <input type="radio" name="jenis_order"
+                                value="<?= htmlspecialchars($type_option['type_name']) ?>"
+                                <?= (strtolower($type_option['type_name']) == 'dine_in') ? 'checked' : '' ?>>
+                            <?= ucwords(str_replace('_', ' ', htmlspecialchars($type_option['type_name']))) ?>
+                        </label>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Metode Pembayaran:</label>
                 <select name="payment_method" id="paymentMethodSelect" required>
-                    <option value="cash" style="color: black;">Cash</option>
-                    <option value="e-wallet" style="color: black;">E-Wallet</option>
-                    <option value="qris" style="color: black;">QRIS</option>
+                    <?php foreach ($payment_methods as $method_option): ?>
+                        <option value="<?= htmlspecialchars($method_option['method_name']) ?>"
+                            style="color: black;">
+                            <?= htmlspecialchars($method_option['method_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -281,6 +299,9 @@ include '../../views/header.php';
             const paymentSelect = document.getElementById('paymentMethodSelect');
             const qrisContainer = document.getElementById('qrisImageContainer');
 
+            // Initial state based on selected option
+            qrisContainer.style.display = paymentSelect.value === 'qris' ? 'block' : 'none';
+
             paymentSelect.addEventListener('change', function () {
                 qrisContainer.style.display = this.value === 'qris' ? 'block' : 'none';
             });
@@ -289,7 +310,8 @@ include '../../views/header.php';
             document.querySelector('.checkout-form').addEventListener('submit', function (e) {
                 if (paymentSelect.value === 'qris') {
                     const img = document.getElementById('qrisImg');
-                    if (img.naturalWidth === 0) {
+                    // Check if the image failed to load (naturalWidth will be 0)
+                    if (img.naturalWidth === 0 && img.src.includes('qr.jpg')) { // Added check for qr.jpg in src
                         e.preventDefault();
                         document.getElementById('qrisImgError').style.display = 'block';
                     }

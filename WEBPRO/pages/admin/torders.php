@@ -15,10 +15,24 @@ if ($filter == 'hari') {
     $where = "WHERE YEAR(o.order_date) = YEAR(CURDATE())";
 } elseif ($filter == 'tanggal' && !empty($_GET['tanggal'])) {
     $tanggal = $_GET['tanggal'];
-    $where = "WHERE DATE(o.order_date) = '$tanggal'";
+    $where = "WHERE DATE(o.order_date) = '" . mysqli_real_escape_string($conn, $tanggal) . "'";
 }
 
-// Query SQL untuk mengambil data orders
+// Fetch all payment methods for dropdowns
+$payment_methods_query = mysqli_query($conn, "SELECT id, method_name FROM payment_methods ORDER BY method_name ASC");
+$payment_methods = [];
+while ($row = mysqli_fetch_assoc($payment_methods_query)) {
+    $payment_methods[] = $row;
+}
+
+// Fetch all payment statuses for dropdowns
+$payment_statuses_query = mysqli_query($conn, "SELECT id, status_name FROM payment_status ORDER BY status_name ASC");
+$payment_statuses = [];
+while ($row = mysqli_fetch_assoc($payment_statuses_query)) {
+    $payment_statuses[] = $row;
+}
+
+// Query SQL untuk mengambil data orders - Updated to join with payment_status and payment_methods
 $sql_orders = "SELECT
                 o.id AS order_id,
                 o.user_id,
@@ -26,18 +40,21 @@ $sql_orders = "SELECT
                 u.nama AS customer_name, -- Mengambil nama pelanggan dari tabel users
                 o.order_date,
                 SUM(dp.quantity * dp.price_per_item) AS total_amount, -- Menghitung total_amount dari detail_pembayaran
-                o.status,
-                o.payment_method
-                -- o.notes dihapus karena tidak ada di tabel pembayaran
+                ps.status_name AS status, -- Mengambil nama status dari payment_status
+                pm.method_name AS payment_method -- Mengambil nama metode pembayaran dari payment_methods
             FROM
                 pembayaran o
             JOIN
                 users u ON o.user_id = u.id
+            JOIN
+                payment_status ps ON o.status_id = ps.id -- Join with payment_status
+            JOIN
+                payment_methods pm ON o.payment_method_id = pm.id -- Join with payment_methods
             LEFT JOIN
                 detail_pembayaran dp ON o.id = dp.pembayaran_id
             $where
             GROUP BY
-                o.id, o.user_id, u.username, u.nama, o.order_date, o.status, o.payment_method
+                o.id, o.user_id, u.username, u.nama, o.order_date, ps.status_name, pm.method_name
             ORDER BY
                 o.order_date DESC";
 
@@ -144,7 +161,7 @@ $result_orders = mysqli_query($conn, $sql_orders);
                 if (mysqli_num_rows($result_orders) > 0) {
                     while ($order = mysqli_fetch_assoc($result_orders)) {
                         $statusBadge = '';
-                        switch ($order['status']) {
+                        switch (strtolower($order['status'])) { // Use status_name for badge
                             case 'completed':
                                 $statusBadge = 'success';
                                 break;
@@ -153,6 +170,9 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                 break;
                             case 'cancelled':
                                 $statusBadge = 'danger';
+                                break;
+                            default:
+                                $statusBadge = 'secondary'; // Default if status is unknown
                                 break;
                         }
                         ?>
@@ -189,7 +209,7 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                     m.price as menu_price
                                     FROM detail_pembayaran dp 
                                     JOIN menu m ON dp.menu_id = m.id 
-                                    WHERE dp.pembayaran_id = " . $order['order_id']; // <-- Diubah menjadi pembayaran_id
+                                    WHERE dp.pembayaran_id = " . $order['order_id'];
                                     $detail_result = mysqli_query($conn, $detail_query);
                                     ?>
                                     <h5>Detail Pesanan #<?= $order['order_id'] ?></h5>
@@ -207,9 +227,9 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                                 <tr>
                                                     <td><?= htmlspecialchars($detail['menu_name']) ?></td>
                                                     <td><?= $detail['quantity'] ?></td>
-                                                    <td>Rp <?= number_format($detail['menu_price'], 0, ',', '.') ?></td>
+                                                    <td>Rp <?= number_format($detail['price_per_item'], 0, ',', '.') ?></td>
                                                     <td>Rp
-                                                        <?= number_format($detail['menu_price'] * $detail['quantity'], 0, ',', '.') ?>
+                                                        <?= number_format($detail['price_per_item'] * $detail['quantity'], 0, ',', '.') ?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -220,13 +240,10 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <?php
-                                    // Kolom 'notes' tidak ada di tabel 'pembayaran'
-                                    // if ($order['notes']): ?>
-                                        <?php // endif; ?>
                                 </div>
                             </td>
-                        </tr> <div class="modal fade" id="editModal<?= $order['order_id'] ?>" tabindex="-1"
+                        </tr> 
+                        <div class="modal fade" id="editModal<?= $order['order_id'] ?>" tabindex="-1"
                             aria-labelledby="editModalLabel<?= $order['order_id'] ?>" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="logic/edit-orders.php" method="POST">
@@ -241,28 +258,35 @@ $result_orders = mysqli_query($conn, $sql_orders);
                                             <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
 
                                             <div class="mb-3">
-                                                <label for="customer_name" class="form-label">Nama Pelanggan</label>
-                                                <input type="text" class="form-control" id="customer_name" name="customer_name"
-                                                    value="<?= htmlspecialchars($order['customer_name']) ?>">
+                                                <label for="customer_name_<?= $order['order_id'] ?>" class="form-label">Nama Pelanggan</label>
+                                                <input type="text" class="form-control" id="customer_name_<?= $order['order_id'] ?>" name="customer_name"
+                                                    value="<?= htmlspecialchars($order['customer_name']) ?>" readonly>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="payment_method" class="form-label">Metode Pembayaran</label>
-                                                <select class="form-select" id="payment_method" name="payment_method">
-                                                    <option value="cash" <?= $order['payment_method'] == 'cash' ? 'selected' : '' ?>>Cash</option>
-                                                    <option value="qris" <?= $order['payment_method'] == 'qris' ? 'selected' : '' ?>>QRIS</option>
-                                                    <option value="debit" <?= $order['payment_method'] == 'debit' ? 'selected' : '' ?>>Debit</option>
+                                                <label for="payment_method_<?= $order['order_id'] ?>" class="form-label">Metode Pembayaran</label>
+                                                <select class="form-select" id="payment_method_<?= $order['order_id'] ?>" name="payment_method">
+                                                    <?php foreach ($payment_methods as $method): ?>
+                                                        <option value="<?= htmlspecialchars($method['method_name']) ?>"
+                                                            <?= (strtolower($order['payment_method']) == strtolower($method['method_name'])) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($method['method_name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="status" class="form-label">Status</label>
-                                                <select class="form-select" id="status" name="status">
-                                                    <option value="completed" <?= $order['status'] == 'completed' ? 'selected' : '' ?>>Completed</option>
-                                                    <option value="cancelled" <?= $order['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                                <label for="status_<?= $order['order_id'] ?>" class="form-label">Status</label>
+                                                <select class="form-select" id="status_<?= $order['order_id'] ?>" name="status">
+                                                    <?php foreach ($payment_statuses as $status_option): ?>
+                                                        <option value="<?= htmlspecialchars($status_option['status_name']) ?>"
+                                                            <?= (strtolower($order['status']) == strtolower($status_option['status_name'])) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($status_option['status_name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            </div>
+                                        </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Batal</button>
@@ -282,8 +306,8 @@ $result_orders = mysqli_query($conn, $sql_orders);
         </table>
     </div>
 
-    </main>
-    <?php include '../../views/admin/footer.php'; ?>
+</main>
+<?php include '../../views/admin/footer.php'; ?>
 </div>
 </div>
 

@@ -14,9 +14,13 @@ if ($_SESSION['role'] !== 'kasir') {
     exit();
 }
 
-// Query untuk mendapatkan informasi pengguna berdasarkan session
+// Query untuk mendapatkan informasi pengguna berdasarkan session - Updated to join with user_roles and gender_types
 $user_id = $_SESSION['user_id']; // Ambil user_id dari session
-$sql = "SELECT * FROM users WHERE id = ?";
+$sql = "SELECT u.*, ur.role_name, gt.gender_name 
+        FROM users u 
+        LEFT JOIN user_roles ur ON u.role_id = ur.id 
+        LEFT JOIN gender_types gt ON u.gender_id = gt.id 
+        WHERE u.id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -113,6 +117,7 @@ if (!$user) {
             color: #e07b6c;
             font-weight: 500;
             letter-spacing: 1px;
+            /* Use role_name from the joined query */
         }
         .profile-info {
             margin-top: 10px;
@@ -194,31 +199,29 @@ if (!$user) {
         <main>
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="../../asset/user_picture/<?php echo $user['profile_picture']; ?>" alt="Profile Photo"
+                    <img src="../../asset/user_picture/<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Photo"
                         class="profile-photo">
-                    <h1><?php echo $user['nama']; ?></h1>
-                    <p><?php echo $user['role']; ?></p>
-                </div>
+                    <h1><?php echo htmlspecialchars($user['nama']); ?></h1>
+                    <p><?php echo htmlspecialchars($user['role_name']); ?></p> </div>
                 <div class="profile-info">
                     <div class="info-item">
                         <span class="info-label">Name</span>
-                        <span class="info-value"><?php echo $user['nama']; ?></span>
+                        <span class="info-value"><?php echo htmlspecialchars($user['nama']); ?></span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Email</span>
-                        <span class="info-value"><?php echo $user['email']; ?></span>
+                        <span class="info-value"><?php echo htmlspecialchars($user['email']); ?></span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Phone</span>
-                        <span class="info-value"><?php echo $user['no_telp']; ?></span>
+                        <span class="info-value"><?php echo htmlspecialchars($user['no_telp']); ?></span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Gender</span>
-                        <span class="info-value"><?php echo $user['gender']; ?></span>
-                    </div>
+                        <span class="info-value"><?php echo htmlspecialchars($user['gender_name']); ?></span> </div>
                     <div class="info-item">
                         <span class="info-label">Address</span>
-                        <span class="info-value"><?php echo $user['alamat']; ?></span>
+                        <span class="info-value"><?php echo htmlspecialchars($user['alamat']); ?></span>
                     </div>
                 </div>
                 <a href="edit_kasir.php" class="edit-button" style="margin-top:20px;display:inline-block;">

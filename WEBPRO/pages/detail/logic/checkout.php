@@ -9,8 +9,8 @@ try {
     }
 
     $customer_name = htmlspecialchars($_POST['customer_name']);
-    $jenis_order = htmlspecialchars($_POST['jenis_order']);
-    $payment_method = htmlspecialchars($_POST['payment_method']);
+    $jenis_order_name = htmlspecialchars($_POST['jenis_order']); // Renamed variable
+    $payment_method_name = htmlspecialchars($_POST['payment_method']); // Renamed variable
     $items = json_decode($_POST['items'], true);
 
     if (!$items || empty($items)) {
@@ -61,26 +61,59 @@ try {
         throw new Exception('User not logged in');
     }
 
-    // Insert pembayaran
-    $status = 'completed';   // Default status for new orders
-    // Kolom 'notes' tidak ada di tabel 'pembayaran', sehingga dihapus
-    // Kolom 'total_amount' dan 'customer_name' juga tidak ada, dihapus
-    $sql = "INSERT INTO pembayaran (user_id, order_date, status, payment_method, order_type) 
+    // Get status_id from payment_status table
+    $status_name = 'completed'; // Default status for new orders
+    $query_status_id = "SELECT id FROM payment_status WHERE status_name = ?";
+    $stmt_status = $conn->prepare($query_status_id);
+    if (!$stmt_status) { throw new Exception('Error preparing status statement: ' . $conn->error); }
+    $stmt_status->bind_param("s", $status_name);
+    $stmt_status->execute();
+    $result_status = $stmt_status->get_result();
+    if ($result_status && $row_status = $result_status->fetch_assoc()) {
+        $status_id = $row_status['id'];
+    } else { throw new Exception('Payment status not found.'); }
+    $stmt_status->close();
+
+    // Get payment_method_id from payment_methods table
+    $query_method_id = "SELECT id FROM payment_methods WHERE method_name = ?";
+    $stmt_method = $conn->prepare($query_method_id);
+    if (!$stmt_method) { throw new Exception('Error preparing payment method statement: ' . $conn->error); }
+    $stmt_method->bind_param("s", $payment_method_name);
+    $stmt_method->execute();
+    $result_method = $stmt_method->get_result();
+    if ($result_method && $row_method = $result_method->fetch_assoc()) {
+        $payment_method_id = $row_method['id'];
+    } else { throw new Exception('Payment method not found.'); }
+    $stmt_method->close();
+
+    // Get order_type_id from order_types table
+    $query_order_type_id = "SELECT id FROM order_types WHERE type_name = ?";
+    $stmt_order_type = $conn->prepare($query_order_type_id);
+    if (!$stmt_order_type) { throw new Exception('Error preparing order type statement: ' . $conn->error); }
+    $stmt_order_type->bind_param("s", $jenis_order_name);
+    $stmt_order_type->execute();
+    $result_order_type = $stmt_order_type->get_result();
+    if ($result_order_type && $row_order_type = $result_order_type->fetch_assoc()) {
+        $order_type_id = $row_order_type['id'];
+    } else { throw new Exception('Order type not found.'); }
+    $stmt_order_type->close();
+
+
+    // Insert pembayaran using foreign key IDs
+    $sql = "INSERT INTO pembayaran (user_id, order_date, status_id, payment_method_id, order_type_id) 
              VALUES (?, NOW(), ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         throw new Exception('Error preparing pembayaran statement: ' . $conn->error);
     }
-    // Sesuaikan bind_param: i (user_id), s (status), s (payment_method), s (order_type)
-    $stmt->bind_param("isss", $user_id, $status, $payment_method, $jenis_order);
+    // Bind parameters: i (user_id), i (status_id), i (payment_method_id), i (order_type_id)
+    $stmt->bind_param("iiii", $user_id, $status_id, $payment_method_id, $order_type_id);
     if (!$stmt->execute()) {
         throw new Exception('Error executing pembayaran insert: ' . $stmt->error);
     }
     $order_id = $conn->insert_id;
 
     // Insert detail pembayaran (tanpa update stok)
-    // Kolom 'order_id' diubah menjadi 'pembayaran_id'
-    // Kolom 'subtotal' dihapus karena tidak ada di tabel 'detail_pembayaran'
     $sql_items = "INSERT INTO detail_pembayaran (pembayaran_id, menu_id, quantity, price_per_item, item_notes) VALUES (?, ?, ?, ?, ?)";
     // $sql_stock = "UPDATE menu SET quantity = quantity - ? WHERE id = ?"; // <-- DIKOMENTARI: KOLOM 'QUANTITY' TIDAK ADA DI TABEL 'MENU'
 
@@ -91,7 +124,6 @@ try {
     // $stmt_stock = $conn->prepare($sql_stock); // <-- DIKOMENTARI
 
     foreach ($items as $item) {
-        // $item_subtotal = $item['price'] * $item['quantity']; // Dihapus karena tidak ada kolom 'subtotal' di detail_pembayaran
         $item_notes = $item['note'] ?? ''; // Menggunakan 'note' dari JS, fallback ke string kosong
 
         // Insert order item

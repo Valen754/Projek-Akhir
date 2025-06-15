@@ -19,16 +19,21 @@ if ($_SESSION['role'] !== 'kasir') {
 $sql_orders = "SELECT
                 p.id AS order_id,
                 p.order_date,
-                p.status,
+                ps.status_name AS order_status_name,          -- Get status name from payment_status
                 u.username AS kasir_username,
-                u.nama AS customer_name, -- Mengambil nama pelanggan dari tabel users
-                p.payment_method,
-                p.order_type
-                -- p.total_amount dan p.notes dihapus karena tidak ada di tabel pembayaran
+                u.nama AS customer_name,
+                pm.method_name AS payment_method_name,         -- Get method name from payment_methods
+                ot.type_name AS order_type_name               -- Get type name from order_types
             FROM
                 pembayaran p
             JOIN
                 users u ON p.user_id = u.id
+            JOIN
+                payment_status ps ON p.status_id = ps.id        -- Join to get status name
+            JOIN
+                payment_methods pm ON p.payment_method_id = pm.id -- Join to get method name
+            JOIN
+                order_types ot ON p.order_type_id = ot.id       -- Join to get order type name
             ORDER BY
                 p.order_date DESC";
 $result_orders = $conn->query($sql_orders);
@@ -150,18 +155,17 @@ $result_orders = $conn->query($sql_orders);
                                         <td><?= htmlspecialchars($order['customer_name'] ?? $order['kasir_username']); ?></td>
                                         <td><?= date('d M Y H:i:s', strtotime($order['order_date'])); ?></td>
                                         <td>Rp <?= number_format($current_order_total, 0, ',', '.'); ?></td>
-                                        <td><?= htmlspecialchars($order['payment_method']); ?></td>
-                                        <td>
+                                        <td><?= htmlspecialchars($order['payment_method_name']); ?></td> <td>
                                             <span class="badge bg-<?php
-                                            if ($order['status'] == 'completed')
+                                            // Use fetched status name for badge class
+                                            if ($order['order_status_name'] == 'Completed')
                                                 echo 'success';
-                                            else if ($order['status'] == 'pending')
+                                            else if ($order['order_status_name'] == 'Pending')
                                                 echo 'warning';
                                             else
                                                 echo 'danger';
                                             ?>">
-                                                <?= ucfirst(htmlspecialchars($order['status'])); ?>
-                                            </span>
+                                                <?= ucfirst(htmlspecialchars($order['order_status_name'])); ?> </span>
                                         </td>
                                         <td>
                                             <button class="order-detail-toggle btn btn-sm btn-info"
@@ -178,18 +182,17 @@ $result_orders = $conn->query($sql_orders);
                                                 <ul>
                                                     <?php
                                                     $sql_order_details = "SELECT
-                                                        dp.quantity,
-                                                        dp.price_per_item,
-                                                        -- dp.subtotal dihapus karena tidak ada di tabel detail_pembayaran
-                                                        dp.item_notes,
-                                                        m.nama AS menu_nama,
-                                                        m.url_foto
+                                                    dp.quantity,
+                                                    dp.price_per_item,
+                                                    dp.item_notes,
+                                                    m.nama AS menu_nama,
+                                                    m.url_foto
                                                     FROM
-                                                        detail_pembayaran dp
+                                                    detail_pembayaran dp
                                                     JOIN
-                                                        menu m ON dp.menu_id = m.id
+                                                    menu m ON dp.menu_id = m.id
                                                     WHERE
-                                                        dp.pembayaran_id = ?"; // Perbaikan: order_id diubah menjadi pembayaran_id
+                                                    dp.pembayaran_id = ?";
                                                     $stmt_order_details = $conn->prepare($sql_order_details);
                                                     $stmt_order_details->bind_param("i", $order['order_id']);
                                                     $stmt_order_details->execute();
@@ -221,9 +224,6 @@ $result_orders = $conn->query($sql_orders);
                                                     $stmt_order_details->close();
                                                     ?>
                                                 </ul>
-                                                <?php // if (!empty($order['notes'])): ?>
-                                                    <?php //= htmlspecialchars($order['notes']); ?></p>
-                                                <?php // endif; ?>
                                             </div>
                                         </td>
                                     </tr>

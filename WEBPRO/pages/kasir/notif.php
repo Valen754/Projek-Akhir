@@ -14,11 +14,13 @@ if ($_SESSION['role'] !== 'kasir') {
     exit();
 }
 
-// Query untuk mendapatkan reservasi dengan status 'pending'
-$sql = "SELECT reservasi.*, users.nama FROM reservasi 
-        JOIN users ON reservasi.user_id = users.id 
-        WHERE reservasi.status = 'pending' 
-        ORDER BY reservasi.created_at";
+// Query untuk mendapatkan reservasi dengan status 'pending' - Updated to join with reservation_status
+$sql = "SELECT r.*, u.nama 
+        FROM reservasi r 
+        JOIN users u ON r.user_id = u.id 
+        JOIN reservation_status rs ON r.status_id = rs.id -- Join to get status name
+        WHERE rs.status_name = 'pending' 
+        ORDER BY r.created_at";
 $result = $conn->query($sql);
 ?>
 
@@ -110,20 +112,20 @@ $result = $conn->query($sql);
                             ?>
                             <div class="notification-card">
                                 <div class="notification-info">
-                                    <h3>Kode Reservasi: <?php echo $row['kode_reservasi']; ?></h3>
-                                    <p><strong>Nama:</strong> <?php echo $row['nama']; ?></p>
-                                    <p><strong>Jumlah Orang:</strong> <?php echo $row['jumlah_orang']; ?></p>
-                                    <p><strong>Tanggal:</strong> <?php echo $row['tanggal_reservasi']; ?></p>
-                                    <p><strong>Pesan:</strong> <?php echo $row['message']; ?></p>
+                                    <h3>Kode Reservasi: <?php echo htmlspecialchars($row['kode_reservasi']); ?></h3>
+                                    <p><strong>Nama:</strong> <?php echo htmlspecialchars($row['nama']); ?></p>
+                                    <p><strong>Jumlah Orang:</strong> <?php echo htmlspecialchars($row['jumlah_orang']); ?></p>
+                                    <p><strong>Tanggal:</strong> <?php echo htmlspecialchars($row['tanggal_reservasi']); ?></p>
+                                    <p><strong>Pesan:</strong> <?php echo htmlspecialchars($row['message']); ?></p>
                                 </div>
                                 <div class="actions">
                                     <form action="logic/update_reservasi.php" method="POST" style="display: inline;">
-                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
                                         <input type="hidden" name="action" value="confirm">
                                         <button type="submit" class="btn-confirm">Konfirmasi</button>
                                     </form>
                                     <button
-                                        onclick="document.getElementById('cancelModal').style.display='block'; document.getElementById('reservationId').value='<?php echo $row['id']; ?>'"
+                                        onclick="document.getElementById('cancelModal').style.display='block'; document.getElementById('reservationId').value='<?php echo htmlspecialchars($row['id']); ?>'"
                                         class="btn-cancel">Batalkan</button>
                                 </div>
                             </div>
@@ -163,7 +165,8 @@ $result = $conn->query($sql);
                     style="background:#6d4c2b;color:#fff;padding:8px 18px;border:none;border-radius:4px;cursor:pointer;">Tambah</button>
             </form>
         </div>
-    </div>    <div id="cancelModal"
+    </div> 
+    <div id="cancelModal"
         style="display:none;position:fixed;z-index:10001;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);">
         <div
             style="background:#fff;padding:24px 32px;border-radius:8px;max-width:450px;margin:120px auto 0;box-shadow:0 2px 8px rgba(0,0,0,0.15);position:relative;">
@@ -201,8 +204,7 @@ $result = $conn->query($sql);
             ($_GET['status'] === 'success' ? '#155724' : '#721c24') . ";'>" .
             htmlspecialchars($_GET['message']) . "</div>";
     }
-    ?>    <!-- Minimal JavaScript untuk modal -->
-    <script>
+    ?>     <script>
         // Tutup modal ketika mengklik di luar modal
         window.onclick = function (event) {
             if (event.target.id === 'cancelModal') {

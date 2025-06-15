@@ -15,7 +15,7 @@
 <body>
     <?php
     include '../../views/header.php';
-    include 'logic/logic_reservasi.php';
+    include 'logic/logic_reservasi.php'; // This file is now expected to handle form submission and redirect
     include '../../koneksi.php';
 
 
@@ -27,9 +27,19 @@
         'no_telp' => ''
     ];
     if ($user_id) {
-        $query = $conn->query("SELECT nama, email, no_telp FROM users WHERE id = '$user_id'");
-        if ($query && $query->num_rows > 0) {
-            $user = $query->fetch_assoc();
+        // Use prepared statement for fetching user data
+        $query_user = $conn->prepare("SELECT nama, email, no_telp FROM users WHERE id = ?");
+        if ($query_user) {
+            $query_user->bind_param("i", $user_id);
+            $query_user->execute();
+            $result_user = $query_user->get_result();
+            if ($result_user && $result_user->num_rows > 0) {
+                $user = $result_user->fetch_assoc();
+            }
+            $query_user->close();
+        } else {
+            // Handle error if prepare fails
+            echo "Error preparing user query: " . $conn->error;
         }
     }
     ?>
@@ -43,15 +53,13 @@
                 Silakan isi detail reservasi Anda di bawah ini untuk memastikan tempat Anda tersedia."
             </p>
 
-            <!-- Pesan sukses atau error -->
-            <?php if (isset($success)): ?>
-                <div class="alert alert-success"><?php echo $success; ?></div>
-            <?php elseif (isset($error)): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
+            <?php if (isset($_GET['msg']) && $_GET['msg'] === 'success'): ?>
+                <div class="alert alert-success">Reservasi berhasil dibuat! Kode reservasi Anda: <strong><?php echo htmlspecialchars($_GET['kode'] ?? ''); ?></strong></div>
+            <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'error'): ?>
+                <div class="alert alert-danger">Terjadi kesalahan: <?php echo htmlspecialchars($_GET['err'] ?? ''); ?></div>
             <?php endif; ?>
 
-            <form method="POST" action="">
-                <div style="flex: 1 1 45%; margin: 10px;">
+            <form method="POST" action="logic/logic_reservasi.php"> <div style="flex: 1 1 45%; margin: 10px;">
                     <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Name</label>
                     <input name="name" type="text"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);"
@@ -77,27 +85,27 @@
                         People</label>
                     <input name="number_of_people" type="number"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);"
-                        min="1" required value="<?php echo $_POST['number_of_people'] ?? ''; ?>" />
+                        min="1" required value="<?php echo htmlspecialchars($_POST['number_of_people'] ?? ''); ?>" />
                 </div>
 
                 <div style="flex: 1 1 45%; margin: 10px;">
                     <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Date</label>
                     <input name="date" type="date"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);"
-                        required value="<?php echo $_POST['date'] ?? ''; ?>" />
+                        required value="<?php echo htmlspecialchars($_POST['date'] ?? ''); ?>" />
                 </div>
 
                 <div style="flex: 1 1 45%; margin: 10px;">
                     <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Hour</label>
                     <input name="hour" type="time"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);"
-                        required value="<?php echo $_POST['hour'] ?? ''; ?>" />
+                        required value="<?php echo htmlspecialchars($_POST['hour'] ?? ''); ?>" />
                 </div>
 
                 <div style="flex: 1 1 100%; margin: 10px;">
                     <label style="display: block; margin-bottom: 5px; color: #3b2f2f; font-size: 14px;">Message</label>
                     <textarea name="message"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100px;"><?php echo $_POST['message'] ?? ''; ?></textarea>
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; color: #000000; background-color: #f5f0e1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); height: 100px;"><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
                 </div>
 
                 <button type="submit" name="submit_reservation" class="btn btn-primary mt-3">
