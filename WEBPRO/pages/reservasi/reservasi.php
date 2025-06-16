@@ -15,7 +15,7 @@
 <body>
     <?php
     include '../../views/header.php';
-    include 'logic/logic_reservasi.php'; // This file is now expected to handle form submission and redirect
+
     include '../../koneksi.php';
 
 
