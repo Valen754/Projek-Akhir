@@ -1,5 +1,12 @@
 <?php
+session_start();
+// Cek apakah user sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php?message=Anda harus login terlebih dahulu");
+    exit();
+}
 
+include '../../../koneksi.php';
 $user_id = $_SESSION['user_id'] ?? null;
 
 if (isset($_POST['submit_reservation']) && $user_id) {
