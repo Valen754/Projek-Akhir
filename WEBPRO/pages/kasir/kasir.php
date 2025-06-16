@@ -14,25 +14,25 @@ if ($_SESSION['role'] !== 'kasir') {
     exit();
 }
 
-// Fetch all order types for radio buttons
+// Fetch all order types for radio buttons (Diperlukan untuk form checkout)
 $order_types_query = mysqli_query($conn, "SELECT id, type_name FROM order_types ORDER BY type_name ASC");
 $order_types = [];
 while ($row = mysqli_fetch_assoc($order_types_query)) {
     $order_types[] = $row;
 }
 
-// Fetch all payment methods for dropdown
+// Fetch all payment methods for dropdown (Diperlukan untuk form checkout)
 $payment_methods_query = mysqli_query($conn, "SELECT id, method_name FROM payment_methods ORDER BY method_name ASC");
 $payment_methods = [];
 while ($row = mysqli_fetch_assoc($payment_methods_query)) {
     $payment_methods[] = $row;
 }
 
-// Ambil menu tersedia - Updated to join with menu_status
+// Ambil menu tersedia - Query diubah agar sesuai dengan status_id di tabel `menu`
 $query = "SELECT m.*, ms.status_name 
           FROM menu m
           JOIN menu_status ms ON m.status_id = ms.id
-          WHERE ms.status_name = 'Tersedia'"; // Filter by status_name
+          WHERE ms.status_name = 'Tersedia'"; // Filter berdasarkan status_name 'Tersedia'
 $result = mysqli_query($conn, $query);
 ?>
 
@@ -86,11 +86,10 @@ $result = mysqli_query($conn, $query);
 
         <aside class="orders-panel">
             <header>
-                <h2>Pesanan <span>(0 item)</span></h2>
-            </header>
+                <h2>Pesanan <span id="orderItemCount">(0 item)</span></h2> </header>
 
             <ul class="order-list" id="orderList">
-            </ul>
+                </ul>
 
             <footer>
                 <div class="subtotal">
@@ -112,7 +111,7 @@ $result = mysqli_query($conn, $query);
 
     <div id="checkoutModal"
         style="display:none; position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(30,36,50,0.85); z-index:999; justify-content:center; align-items:center;">
-        <form id="checkoutForm" action="logic/checkout.php" method="post"
+        <form id="checkoutForm" action="logic/checkout.php" method="post" 
             style="background:#222b3a;padding:32px;border-radius:12px;max-width:340px;width:100%;margin:auto;box-shadow:0 2px 24px #0006;color:#fff;">
             <h2 style="margin-bottom:20px;">Pembayaran</h2>
             <label>Nama Customer (opsional):<br>
@@ -140,7 +139,9 @@ $result = mysqli_query($conn, $query);
                 <input type="text" name="voucher_code"
                     style="width:100%;margin-bottom:18px;padding:8px;border-radius:8px;border:none;">
             </label>
-            <button type="submit"
+            <input type="hidden" name="items" id="checkoutItemsInput"> 
+
+            <button type="submit" id="submitCheckoutBtn"
                 style="width:100%;background:#e07b6c;padding:12px 0;border:none;border-radius:10px;font-weight:700;color:#fff;">Bayar
                 & Cetak Struk</button>
             <button type="button" onclick="closeModal()"
@@ -176,6 +177,15 @@ $result = mysqli_query($conn, $query);
 
         // Load cart saat halaman dibuka
         window.onload = function () {
+            // Tampilkan pesan error jika ada dari redirect backend
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorMsg = urlParams.get('error_msg');
+            if (errorMsg) {
+                alert("Error: " + decodeURIComponent(errorMsg));
+                // Opsional: Hapus parameter error_msg dari URL setelah ditampilkan
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
             fetch('logic/get_cart.php')
                 .then(res => res.json())
                 .then(data => {
@@ -186,6 +196,9 @@ $result = mysqli_query($conn, $query);
         function updateCartUI(data) {
             const list = document.getElementById("orderList");
             const headerText = document.querySelector(".orders-panel header h2 span");
+            const bayarBtn = document.getElementById("bayarBtn");
+            const submitCheckoutBtn = document.getElementById("submitCheckoutBtn"); // Dapatkan tombol submit di dalam modal
+
             let total = 0;
             let html = '';
             data.forEach(item => {
@@ -223,6 +236,27 @@ $result = mysqli_query($conn, $query);
             document.querySelector(".discount span:last-child").textContent = "Rp" + diskon.toLocaleString();
             document.getElementById("pajakHarga").textContent = "Rp" + pajak.toLocaleString();
             document.getElementById("totalHarga").textContent = "Rp" + totalAkhir.toLocaleString();
+
+            // Aktifkan/nonaktifkan tombol "Bayar Sekarang" dan tombol submit modal berdasarkan jumlah item di keranjang
+            if (data.length > 0) {
+                bayarBtn.disabled = false;
+                bayarBtn.style.opacity = '1';
+                bayarBtn.style.cursor = 'pointer';
+                if (submitCheckoutBtn) { // Pastikan tombol ada sebelum mencoba mengaktifkan
+                    submitCheckoutBtn.disabled = false;
+                    submitCheckoutBtn.style.opacity = '1';
+                    submitCheckoutBtn.style.cursor = 'pointer';
+                }
+            } else {
+                bayarBtn.disabled = true;
+                bayarBtn.style.opacity = '0.5'; // Redupkan tampilan jika nonaktif
+                bayarBtn.style.cursor = 'not-allowed';
+                if (submitCheckoutBtn) { // Pastikan tombol ada sebelum mencoba menonaktifkan
+                    submitCheckoutBtn.disabled = true;
+                    submitCheckoutBtn.style.opacity = '0.5';
+                    submitCheckoutBtn.style.cursor = 'not-allowed';
+                }
+            }
         }
 
         function changeQty(id, delta) {
@@ -257,29 +291,62 @@ $result = mysqli_query($conn, $query);
 
         // Tampilkan modal saat klik bayar
         document.getElementById("bayarBtn").onclick = function () {
-            document.getElementById("checkoutModal").style.display = "flex";
+            // Hanya buka jika tidak dinonaktifkan
+            if (!this.disabled) {
+                document.getElementById("checkoutModal").style.display = "flex";
+            }
         };
         // Tutup modal
         function closeModal() {
             document.getElementById("checkoutModal").style.display = "none";
         }
 
-        // Submit checkout
+        // Submit checkout: HAPUS fetch() untuk submit tradisional
         document.getElementById("checkoutForm").onsubmit = function (e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            fetch('logic/checkout.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = 'struk.php?id=' + data.order_id;
-                    } else {
-                        alert("Transaksi gagal: " + data.message);
-                    }
+            // Pastikan tombol submit di dalam modal tidak dinonaktifkan sebelum melanjutkan
+            const submitBtn = document.getElementById("submitCheckoutBtn");
+            if (submitBtn && submitBtn.disabled) {
+                alert("Transaksi tidak dapat dilakukan: Keranjang kosong atau ada masalah.");
+                e.preventDefault(); // Mencegah submit tradisional juga
+                return;
+            }
+
+            // Saat ini, form akan disubmit secara tradisional (bukan AJAX)
+            // Jadi, tidak perlu lagi ada fetch() di sini.
+            // Browser akan otomatis mengikuti redirect dari logic/checkout.php
+            // Pastikan data keranjang disisipkan ke input hidden sebelum submit
+            const checkoutItems = [];
+            document.querySelectorAll('#orderList li').forEach(itemElement => {
+                // Contoh cara mengambil data dari setiap item di orderList
+                // Anda mungkin perlu menyesuaikan selector dan cara ambil datanya
+                const menuId = itemElement.querySelector('.delete-btn').dataset.id; // Contoh ambil ID
+                const quantity = parseInt(itemElement.querySelector('.qty').textContent);
+                const priceText = itemElement.querySelector('.price').textContent;
+                const price = parseInt(priceText.replace('Rp', '').replace(/\./g, ''));
+                const name = itemElement.querySelector('.name').textContent;
+                const notes = itemElement.querySelector('input[type="text"]').value;
+                const fotoUrl = itemElement.querySelector('img').src;
+                const fotoName = fotoUrl.substring(fotoUrl.lastIndexOf('/') + 1);
+
+                checkoutItems.push({
+                    id: menuId,
+                    name: name,
+                    price: price,
+                    quantity: quantity,
+                    note: notes,
+                    foto: fotoName
                 });
+            });
+
+            // Isi input hidden dengan data keranjang dalam format JSON
+            document.getElementById('checkoutItemsInput').value = JSON.stringify(checkoutItems);
+
+            // Biarkan form disubmit secara tradisional
+            // Hapus e.preventDefault() yang ada jika ingin submit tradisional sepenuhnya
+            // Jika Anda ingin menunda submit untuk validasi JavaScript lain, 
+            // biarkan e.preventDefault() dan submit secara manual setelah validasi lulus.
+            // Namun, karena kita ingin submit tradisional, e.preventDefault() harus dihapus.
+            // Atau, hanya panggil e.preventDefault() jika validasi GAGAL.
         };
 
     </script>
